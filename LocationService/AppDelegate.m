@@ -7,15 +7,13 @@
 //
 
 #import "AppDelegate.h"
-
-#import "ViewController.h"
-
+#import "AppHelper.h"
+#import "LoginViewController.h"
 @implementation AppDelegate
 
 - (void)dealloc
 {
     [_window release];
-    [_viewController release];
     [super dealloc];
 }
 
@@ -23,13 +21,13 @@
 {
     self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
     // Override point for customization after application launch.
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        self.viewController = [[[ViewController alloc] initWithNibName:@"ViewController_iPhone" bundle:nil] autorelease];
-    } else {
-        self.viewController = [[[ViewController alloc] initWithNibName:@"ViewController_iPad" bundle:nil] autorelease];
-    }
-    self.window.rootViewController = self.viewController;
+   
+    LoginViewController *login=[[[LoginViewController alloc] init] autorelease];
+    
+    self.window.rootViewController =login;
     [self.window makeKeyAndVisible];
+    //[AppHelper runAnimation:nil];
+   
     return YES;
 }
 
