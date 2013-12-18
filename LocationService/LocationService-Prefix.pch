@@ -13,4 +13,6 @@
     #import <Foundation/Foundation.h>
     #import "Global.h"
     #import "BasicViewController.h"
+    #import "NSString+TPCategory.h"
+    #import "UIColor+TPCategory.h"
 #endif

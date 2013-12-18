@@ -11,5 +11,11 @@
 @interface TKDynamicPasswordCell : UITableViewCell<UITextFieldDelegate>
 @property (nonatomic,strong) UITextField *textField;
 @property (nonatomic,strong) UIButton *button;
+@property (nonatomic,strong) UILabel *label;
 @property(nonatomic,readonly) BOOL hasValue;
+@property(nonatomic,readonly) BOOL hasVeryFailed;
+@property(nonatomic,readonly) NSDate *minDate;
+@property(nonatomic,readonly) NSDate *maxDate;
+
+- (void)startTimerWithTime:(NSString*)time;
 @end

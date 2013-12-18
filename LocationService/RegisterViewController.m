@@ -9,10 +9,13 @@
 #import "RegisterViewController.h"
 #import "TKLabelCell.h"
 #import "TKTextFieldCell.h"
+#import "NSString+TPCategory.h"
+#import "UIButton+TPCategory.h"
+#import "AppUI.h"
 @interface RegisterViewController ()<UITableViewDataSource,UITableViewDelegate>{
     UITableView *_tableView;
 }
-
+- (void)backClick;
 @end
 
 @implementation RegisterViewController
@@ -34,7 +37,37 @@
 {
     [super viewDidLoad];
     
-    _tableView=[[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
+    UIImage *image=[UIImage imageNamed:@"logintop.jpg"];
+    CGRect r=self.view.bounds;
+    r.size=image.size;
+    UIImageView *imageView=[[UIImageView alloc] initWithFrame:r];
+    [imageView setImage:image];
+    [self.view addSubview:imageView];
+    [imageView release];
+    
+   
+    
+    FXLabel *fx=[AppUI showLabelTitle:@"注册" frame:CGRectMake(0, 0, image.size.width, image.size.height)];
+    r=fx.frame;
+    r.origin.x=(self.view.bounds.size.width-r.size.width)/2.0;
+    r.origin.y=(image.size.height-r.size.height)/2.0;
+    fx.frame=r;
+    [self.view addSubview:fx];
+    
+    
+    UIButton *btn=[UIButton backButtonTarget:self action:@selector(backClick) forControlEvents:UIControlEventTouchUpInside];
+    r=btn.frame;
+    r.origin.x=5;
+    r.origin.y=(image.size.height-r.size.height)/2;
+    btn.frame=r;
+    [self.view addSubview:btn];
+    
+    
+    r=self.view.bounds;
+    r.origin.y=image.size.height;
+    r.size.height-=image.size.height;
+    
+    _tableView=[[UITableView alloc] initWithFrame:r style:UITableViewStylePlain];
     _tableView.delegate=self;
     _tableView.dataSource=self;
     _tableView.separatorStyle=UITableViewCellSeparatorStyleNone;
@@ -80,7 +113,16 @@
     self.cells=[NSMutableArray arrayWithObjects:cell1,cell2,cell3,cell4,cell5,cell6,cell7,cell8,cell9,cell10, nil];
 
 }
-
+- (void)backClick{
+    CATransition *animation = [CATransition animation];
+    [animation setDuration:0.5];
+    [animation setType:kCATransitionReveal];
+    [animation setSubtype:kCATransitionFromLeft];
+    [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]];
+    [[self.view layer] addAnimation:animation forKey:@"dissMissToView"];
+    //self.modalTransitionStyle=UI;
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

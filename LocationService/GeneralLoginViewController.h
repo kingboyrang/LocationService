@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-
-@interface GeneralLoginViewController : UIViewController
+@interface GeneralLoginViewController : BasicViewController
 @property(nonatomic,strong) NSMutableArray *cells;
 @end

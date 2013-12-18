@@ -35,7 +35,7 @@
     CGFloat leftx=10;
     if (!_lightLabel) {
         NSString *title=@"记住密码,自动登录";
-        CGSize size=[title textSize:[UIFont boldSystemFontOfSize:15.0] withWidth:frame.size.width-leftx];
+        CGSize size=[title textSize:[UIFont boldSystemFontOfSize:DeviceFontSize] withWidth:frame.size.width-leftx];
         _lightLabel=[[UILabel alloc] initWithFrame:CGRectMake(leftx,(frame.size.height-size.height)/2.0,size.width, size.height)];
         _lightLabel.font=[UIFont fontWithName:DeviceFontName size:DeviceFontSize];
         _lightLabel.text=title;

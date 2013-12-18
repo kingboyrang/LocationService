@@ -26,6 +26,9 @@
     
     self.window.rootViewController =login;
     [self.window makeKeyAndVisible];
+    
+   
+
     //[AppHelper runAnimation:nil];
    
     return YES;

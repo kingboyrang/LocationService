@@ -11,6 +11,7 @@
 #define DeviceWidth [UIScreen mainScreen].bounds.size.width
 #define DeviceHeight [UIScreen mainScreen].bounds.size.height
 #define StatusBarHeight 20 //状态栏高度
+#define TabHeight 82 //工具栏高度
 //路径设置
 #define DocumentPath [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0]
 #define CachePath [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0]
@@ -28,8 +29,8 @@
 #define DataNameSpace @"http://tempuri.org/"
 
 //字体设置
-#define DeviceFontName @"Arial"
-#define DeviceFontSize 15.0
+#define DeviceFontName @"Helvetica-Bold"
+#define DeviceFontSize 16.0
 
 
 

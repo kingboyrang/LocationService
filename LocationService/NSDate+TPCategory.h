@@ -61,6 +61,8 @@ typedef struct TKDateInformation TKDateInformation;
 - (NSDate *)endOfWeek;
 //日期添加几天
 -(NSDate*)dateByAddingDays:(NSInteger)day;
+//日期添加几分钟
+-(NSDate*)dateByAddingMinutes:(NSInteger)minute;
 //日期格式化
 - (NSString *)stringWithFormat:(NSString *)format;
 //字符串转换成时间

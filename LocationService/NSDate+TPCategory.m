@@ -72,6 +72,11 @@
     return  [self dateByAddingTimeInterval:day*interval];
      ***/
 }
+//日期添加几分钟
+-(NSDate*)dateByAddingMinutes:(NSInteger)minute{
+    NSTimeInterval interval =60;//表示1分钟
+    return  [self dateByAddingTimeInterval:minute*interval];
+}
 //日期格式化
 - (NSString *)stringWithFormat:(NSString *)format {
 	NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];

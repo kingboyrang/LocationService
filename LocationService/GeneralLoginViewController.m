@@ -9,22 +9,29 @@
 #import "GeneralLoginViewController.h"
 #import "TKLabelCell.h"
 #import "TKTextFieldCell.h"
-#import "TKRegisterCheckCell.h"
 #import "UIColor+TPCategory.h"
 #import "RegisterCheck.h"
 #import "TKLoginButtonCell.h"
 #import "TKEmptyCell.h"
 #import "RegisterViewController.h"
-@interface GeneralLoginViewController ()<UITableViewDataSource,UITableViewDelegate>{
+#import <QuartzCore/QuartzCore.h>
+#import "AlertHelper.h"
+#import "MainViewController.h"
+#import "Account.h"
+@interface GeneralLoginViewController ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>{
     UITableView *_tableView;
+    ServiceHelper *_helper;
+    RegisterCheck *_registerCheck;
 }
 - (void)buttonRegister;
+- (void)buttonLoginClick;
 @end
 
 @implementation GeneralLoginViewController
 - (void)dealloc{
     [super dealloc];
     [_tableView release];
+    [_registerCheck release];
 }
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -38,6 +45,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
     
     _tableView=[[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
     _tableView.delegate=self;
@@ -58,6 +66,7 @@
     cell2.textField.layer.cornerRadius=5.0;
     cell2.textField.layer.borderColor=[UIColor colorFromHexRGB:@"4a7ebb"].CGColor;
     cell2.textField.textColor=[UIColor colorFromHexRGB:@"4a7ebb"];
+    cell2.textField.delegate=self;
     
     TKLabelCell *cell3=[[[TKLabelCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
     cell3.label.text=@"密码";
@@ -69,9 +78,11 @@
     cell4.textField.layer.borderColor=[UIColor colorFromHexRGB:@"4a7ebb"].CGColor;
     cell4.textField.textColor=[UIColor colorFromHexRGB:@"4a7ebb"];
     cell4.textField.secureTextEntry=YES;
+    cell4.textField.delegate=self;
     
     
     TKLoginButtonCell *cell5=[[[TKLoginButtonCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
+    [cell5.button addTarget:self action:@selector(buttonLoginClick) forControlEvents:UIControlEventTouchUpInside];
     
     self.cells=[NSMutableArray arrayWithObjects:cell1,cell2,cell3,cell4,cell5, nil];
 }
@@ -81,11 +92,96 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+//登录
+- (void)buttonLoginClick{
+    TKTextFieldCell *cell1=self.cells[1];
+    if (!cell1.hasValue) {
+        [AlertHelper initWithTitle:@"提示" message:@"请输入帐号/手机号!"];
+        [cell1.textField becomeFirstResponder];
+        return;
+    }
+    TKTextFieldCell *cell2=self.cells[3];
+    if (!cell2.hasValue) {
+        [AlertHelper initWithTitle:@"提示" message:@"请输入密码!"];
+        [cell2.textField becomeFirstResponder];
+        return;
+    }
+    if (!self.hasNetWork) {
+        [self showErrorNetWorkNotice:nil];
+        return;
+    }
+    
+    NSMutableArray *params=[NSMutableArray arrayWithCapacity:2];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[cell1.textField.text Trim],@"userName", nil]];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[cell2.textField.text Trim],@"pwd", nil]];
+    
+    ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
+    args.methodName=@"UIDLogin";
+    args.soapParams=params;
+    
+    [self showLoadingAnimatedWithTitle:@"正在登录,请稍等..."];
+    [self.serviceHelper asynService:args success:^(ServiceResult *result) {
+    
+        //登陆成功
+        [Account loginWithUserId:[cell1.textField.text Trim] password:[cell2.textField.text Trim] rememberPassword:_registerCheck.hasRemember];
+        MainViewController *main=[[MainViewController alloc] init];
+        [self presentViewController:main animated:YES completion:nil];
+        [main release];
+        
+    } failed:^(NSError *error, NSDictionary *userInfo) {
+        [self hideLoadingFailedWithTitle:@"输入的帐号密码错误,请重新输入!" completed:nil];
+    }];
+    
+}
 //注册
 - (void)buttonRegister{
     RegisterViewController *controller=[[RegisterViewController alloc] initWithNibName:@"RegisterViewController" bundle:nil];
-    [self presentViewController:controller animated:YES completion:nil];
+    CATransition *animation = [CATransition animation];
+    [animation setDuration:0.5];
+    [animation setType:kCATransitionPush];
+    [animation setSubtype:kCATransitionFromRight];
+    [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
+    [[controller.view layer] addAnimation:animation forKey:@"SwitchToView"];
+    [self presentViewController:controller animated:NO completion:nil];
     [controller release];
+}
+#pragma mark UITextFieldDelegate Methods
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    // return NO to not change text
+    BOOL boo=YES;
+    TKTextFieldCell *cell=self.cells[1];
+    if (cell.textField==textField) {
+        if(strlen([textField.text UTF8String]) >= 11 && range.length != 1)
+            boo=NO;
+    }else{
+        if(strlen([textField.text UTF8String]) >= 12 && range.length != 1)
+             boo=NO;
+    }
+    TKTextFieldCell *cell1=self.cells[3];
+    TKLoginButtonCell *btn=self.cells[4];
+    if ([[cell.textField.text Trim] length]>0&&[[cell1.textField.text Trim] length]>0) {
+        btn.button.enabled=YES;
+    }else{
+        btn.button.enabled=NO;
+    }
+    return boo;
+}
+- (void)textFieldDidEndEditing:(UITextField *)textField;
+{
+    TKTextFieldCell *cell=self.cells[1];
+    TKTextFieldCell *cell1=self.cells[3];
+    TKLoginButtonCell *btn=self.cells[4];
+    if ([[cell.textField.text Trim] length]>0&&[[cell1.textField.text Trim] length]>0) {
+        btn.button.enabled=YES;
+    }else{
+        btn.button.enabled=NO;
+    }
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField{
+    [textField resignFirstResponder];
+    return YES;
 }
 #pragma mark UITableViewDataSource Methods
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
@@ -106,9 +202,9 @@
     
     UIView *bgView=[[[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 45)] autorelease];
     bgView.backgroundColor=[UIColor clearColor];
-    RegisterCheck *check=[[[RegisterCheck alloc] initWithFrame:CGRectMake(0, 15, self.view.bounds.size.width-20, 30)] autorelease];
-    [check.registerButton addTarget:self action:@selector(buttonRegister) forControlEvents:UIControlEventTouchUpInside];
-    [bgView addSubview:check];
+    _registerCheck=[[RegisterCheck alloc] initWithFrame:CGRectMake(0, 15, self.view.bounds.size.width-20, 30)];
+    [_registerCheck.registerButton addTarget:self action:@selector(buttonRegister) forControlEvents:UIControlEventTouchUpInside];
+    [bgView addSubview:_registerCheck];
     
     return bgView;
 }

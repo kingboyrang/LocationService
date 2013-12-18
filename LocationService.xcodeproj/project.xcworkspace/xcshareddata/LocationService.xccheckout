@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>B5DD77B1-A1AD-4B1E-807D-0EA7C1EC34D7</string>
+	<key>IDESourceControlProjectName</key>
+	<string>LocationService</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>200CCE2F-3962-4553-BD93-B645C85779F8</key>
+		<string>https://github.com/kingboyrang/LocationService.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>LocationService.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>200CCE2F-3962-4553-BD93-B645C85779F8</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/kingboyrang/LocationService.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>200CCE2F-3962-4553-BD93-B645C85779F8</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>200CCE2F-3962-4553-BD93-B645C85779F8</string>
+			<key>IDESourceControlWCCName</key>
+			<string>LocationService</string>
+		</dict>
+	</array>
+</dict>
+</plist>

@@ -25,6 +25,8 @@
     [_button setTitle:@"登录" forState:UIControlStateNormal];
     [_button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
      _button.titleLabel.font=[UIFont fontWithName:DeviceFontName size:DeviceFontSize];
+    _button.enabled=NO;
+    
       [self.contentView addSubview:_button];
     
     

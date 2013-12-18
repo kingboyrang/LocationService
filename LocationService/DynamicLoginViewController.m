@@ -15,10 +15,12 @@
 #import "UIColor+TPCategory.h"
 #import "TKLoginButtonCell.h"
 #import "RegisterCheck.h"
+#import "AlertHelper.h"
 @interface DynamicLoginViewController ()<UITableViewDataSource,UITableViewDelegate>{
     UITableView *_tableView;
 }
 - (void)buttonRegister;
+- (void)buttonDynamicPwdClick;
 @end
 
 @implementation DynamicLoginViewController
@@ -66,6 +68,7 @@
     cell4.textField.layer.cornerRadius=5.0;
     cell4.textField.layer.borderColor=[UIColor colorFromHexRGB:@"4a7ebb"].CGColor;
     cell4.textField.textColor=[UIColor colorFromHexRGB:@"4a7ebb"];
+    [cell4.button addTarget:self action:@selector(buttonDynamicPwdClick) forControlEvents:UIControlEventTouchUpInside];
     
     TKLoginButtonCell *cell5=[[[TKLoginButtonCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
     
@@ -77,6 +80,46 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+//动态密码
+- (void)buttonDynamicPwdClick{
+    TKDynamicPasswordCell *cell1=self.cells[3];
+    
+   
+    
+    
+    TKTextFieldCell *cell=self.cells[1];
+    if (!cell.hasValue) {
+        [AlertHelper initWithTitle:@"提示" message:@"手机号码不为空!"];
+        return;
+    }else{
+        if (![cell.textField.text isNumberString]) {
+            [AlertHelper initWithTitle:@"提示" message:@"手机号码只能为数字!"];
+            return;
+        }
+    }
+    if (!self.hasNetWork) {
+        [self showErrorNetWorkNotice:nil];
+        return;
+    }
+    ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
+    args.methodName=@"GetDynamicCode";
+    args.soapParams=[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:cell.textField.text,@"mobileNum", nil], nil];
+    [self.serviceHelper asynService:args success:^(ServiceResult *result) {
+        
+        NSString *xml=[result.xmlString stringByReplacingOccurrencesOfString:result.xmlnsAttr withString:@""];
+        [result.xmlParse setDataSource:xml];
+        XmlNode *node=[result.xmlParse soapXmlSelectSingleNode:@"//GetDynamicCodeResult"];
+        NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:[node.InnerXml dataUsingEncoding:NSUTF8StringEncoding] options:1 error:nil];
+        if ([dic objectForKey:@"code"]) {//表示成功
+            NSString *time1=[dic objectForKey:@"codeTime"];
+            [cell1 startTimerWithTime:time1];
+        }
+        
+        
+    } failed:^(NSError *error, NSDictionary *userInfo) {
+        NSLog(@"error=%@\n",error.description);
+    }];
 }
 //注册
 - (void)buttonRegister{
