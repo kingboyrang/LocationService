@@ -16,17 +16,23 @@
 #import "TKLoginButtonCell.h"
 #import "RegisterCheck.h"
 #import "AlertHelper.h"
-@interface DynamicLoginViewController ()<UITableViewDataSource,UITableViewDelegate>{
+#import "RegisterViewController.h"
+#import "Account.h"
+#import "MainViewController.h"
+@interface DynamicLoginViewController ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>{
     UITableView *_tableView;
+    RegisterCheck *_registerCheck;
 }
 - (void)buttonRegister;
 - (void)buttonDynamicPwdClick;
+- (void)buttonLoginClick;
 @end
 
 @implementation DynamicLoginViewController
 - (void)dealloc{
     [super dealloc];
     [_tableView release];
+    [_registerCheck release];
 }
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -58,6 +64,7 @@
     cell2.textField.layer.cornerRadius=5.0;
     cell2.textField.layer.borderColor=[UIColor colorFromHexRGB:@"4a7ebb"].CGColor;
     cell2.textField.textColor=[UIColor colorFromHexRGB:@"4a7ebb"];
+    cell2.textField.delegate=self;
     
     TKLabelCell *cell3=[[[TKLabelCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
     cell3.label.text=@"密      码";
@@ -68,9 +75,11 @@
     cell4.textField.layer.cornerRadius=5.0;
     cell4.textField.layer.borderColor=[UIColor colorFromHexRGB:@"4a7ebb"].CGColor;
     cell4.textField.textColor=[UIColor colorFromHexRGB:@"4a7ebb"];
+     cell4.textField.delegate=self;
     [cell4.button addTarget:self action:@selector(buttonDynamicPwdClick) forControlEvents:UIControlEventTouchUpInside];
     
     TKLoginButtonCell *cell5=[[[TKLoginButtonCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
+    [cell5.button addTarget:self action:@selector(buttonLoginClick) forControlEvents:UIControlEventTouchUpInside];
     
     self.cells=[NSMutableArray arrayWithObjects:cell1,cell2,cell3,cell4,cell5, nil];
 	// Do any additional setup after loading the view.
@@ -81,22 +90,93 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+-(void)dynamicCodeTimeOut{
+    TKLoginButtonCell *btn=self.cells[4];
+    btn.button.enabled=NO;
+}
+//登录
+- (void)buttonLoginClick{
+   TKTextFieldCell *cell1=self.cells[1];
+   TKDynamicPasswordCell *cell2=self.cells[3];
+    if (!cell1.hasValue) {
+        [AlertHelper initWithTitle:@"提示" message:@"手机号码不为空!"];
+        [cell1.textField becomeFirstResponder];
+        return;
+    }
+    if (![cell1.textField.text isNumberString]) {
+        [AlertHelper initWithTitle:@"提示" message:@"手机号码只能为数字!"];
+        [cell1.textField becomeFirstResponder];
+        return;
+    }
+    if(strlen([cell1.textField.text UTF8String])<11)
+    {
+        [AlertHelper initWithTitle:@"提示" message:@"手机号码必须为11位！"];
+        [cell1.textField becomeFirstResponder];
+        return;
+    }
+    if (!cell2.hasValue) {
+        [AlertHelper initWithTitle:@"提示" message:@"动态密码不为空!"];
+        [cell2.textField becomeFirstResponder];
+        return;
+    }
+    if (!self.hasNetWork) {
+        [self showErrorNetWorkNotice:nil];
+        return;
+    }
+    NSMutableArray *params=[NSMutableArray arrayWithCapacity:2];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[cell1.textField.text Trim],@"mobileNum", nil]];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[cell2.textField.text Trim],@"code", nil]];
+    
+    ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
+    args.methodName=@"DynamicLogin";
+    args.soapParams=params;
+    
+    [self.serviceHelper asynService:args success:^(ServiceResult *result) {
+        if (result.hasSuccess) {
+            XmlNode *node=[result methodNode];
+            NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:[node.InnerText dataUsingEncoding:NSUTF8StringEncoding] options:1 error:nil];
+            if ([dic objectForKey:@"Account"]) {
+                
+                [self hideLoadingViewAnimated:^(AnimateLoadView *hideView) {
+                    //登录
+                    [Account loginDynamicWithUserId:[cell1.textField.text Trim] password:[cell2.textField.text Trim] rememberPassword:_registerCheck.hasRemember withData:dic];
+                    
+                    MainViewController *main=[[MainViewController alloc] init];
+                    [self presentViewController:main animated:YES completion:nil];
+                    [main release];
+                }];
+                
+            }else{
+               [self hideLoadingFailedWithTitle:@"输入的帐号或密码错误,请重新输入!" completed:nil];
+            }
+            
+        }else{
+           [self hideLoadingFailedWithTitle:@"输入的帐号或密码错误,请重新输入!" completed:nil];
+        }
+        
+    } failed:^(NSError *error, NSDictionary *userInfo) {
+        [self hideLoadingFailedWithTitle:@"输入的帐号或密码错误,请重新输入!" completed:nil];
+    }];
+
+}
 //动态密码
 - (void)buttonDynamicPwdClick{
     TKDynamicPasswordCell *cell1=self.cells[3];
-    
-   
-    
-    
+
     TKTextFieldCell *cell=self.cells[1];
     if (!cell.hasValue) {
         [AlertHelper initWithTitle:@"提示" message:@"手机号码不为空!"];
         return;
-    }else{
-        if (![cell.textField.text isNumberString]) {
-            [AlertHelper initWithTitle:@"提示" message:@"手机号码只能为数字!"];
-            return;
-        }
+    }
+    if (![cell.textField.text isNumberString]) {
+        [AlertHelper initWithTitle:@"提示" message:@"手机号码只能为数字!"];
+        return;
+    }
+    if(strlen([cell.textField.text UTF8String])<11)
+    {
+        [AlertHelper initWithTitle:@"提示" message:@"手机号码必须为11位！"];
+        [cell.textField becomeFirstResponder];
+        return;
     }
     if (!self.hasNetWork) {
         [self showErrorNetWorkNotice:nil];
@@ -106,24 +186,73 @@
     args.methodName=@"GetDynamicCode";
     args.soapParams=[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:cell.textField.text,@"mobileNum", nil], nil];
     [self.serviceHelper asynService:args success:^(ServiceResult *result) {
-        
-        NSString *xml=[result.xmlString stringByReplacingOccurrencesOfString:result.xmlnsAttr withString:@""];
-        [result.xmlParse setDataSource:xml];
-        XmlNode *node=[result.xmlParse soapXmlSelectSingleNode:@"//GetDynamicCodeResult"];
-        NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:[node.InnerXml dataUsingEncoding:NSUTF8StringEncoding] options:1 error:nil];
-        if ([dic objectForKey:@"code"]) {//表示成功
-            NSString *time1=[dic objectForKey:@"codeTime"];
-            [cell1 startTimerWithTime:time1];
+        BOOL boo=NO;
+        if (result.hasSuccess) {
+            XmlNode *node=[result methodNode];
+            NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:[node.InnerXml dataUsingEncoding:NSUTF8StringEncoding] options:1 error:nil];
+            if ([dic objectForKey:@"code"]) {//表示成功
+                boo=YES;
+                cell1.dynamicCode=[dic objectForKey:@"code"];
+                NSString *time1=[dic objectForKey:@"codeTime"];
+                [cell1 startTimerWithTime:time1];
+            }
         }
-        
-        
+        if (!boo) {
+            [self showMessageWithTitle:@"手机号码错误或未注册!"];
+        }
     } failed:^(NSError *error, NSDictionary *userInfo) {
-        NSLog(@"error=%@\n",error.description);
+        [self showMessageWithTitle:@"手机号码错误或未注册!"];
     }];
 }
 //注册
 - (void)buttonRegister{
-    
+   RegisterViewController *controller=[[RegisterViewController alloc] init];
+    CATransition *animation = [CATransition animation];
+    [animation setDuration:0.5];
+    [animation setType:kCATransitionPush];
+    [animation setSubtype:kCATransitionFromRight];
+    [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
+    [[controller.view layer] addAnimation:animation forKey:@"SwitchToView"];
+    [self presentViewController:controller animated:NO completion:nil];
+    [controller release];
+}
+#pragma mark UITextFieldDelegate Methods
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    // return NO to not change text
+    BOOL boo=YES;
+    TKTextFieldCell *cell=self.cells[1];
+    if (cell.textField==textField) {
+        if(strlen([textField.text UTF8String]) >= 11 && range.length != 1)
+            boo=NO;
+    }else{
+        if(strlen([textField.text UTF8String]) >= 12 && range.length != 1)
+            boo=NO;
+    }
+    TKTextFieldCell *cell1=self.cells[3];
+    TKLoginButtonCell *btn=self.cells[4];
+    if ([[cell.textField.text Trim] length]>0&&[[cell1.textField.text Trim] length]>0) {
+        btn.button.enabled=YES;
+    }else{
+        btn.button.enabled=NO;
+    }
+    return boo;
+}
+- (void)textFieldDidEndEditing:(UITextField *)textField;
+{
+    TKTextFieldCell *cell=self.cells[1];
+    TKTextFieldCell *cell1=self.cells[3];
+    TKLoginButtonCell *btn=self.cells[4];
+    if ([[cell.textField.text Trim] length]>0&&[[cell1.textField.text Trim] length]>0) {
+        btn.button.enabled=YES;
+    }else{
+        btn.button.enabled=NO;
+    }
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField{
+    [textField resignFirstResponder];
+    return YES;
 }
 #pragma mark UITableViewDataSource Methods
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
@@ -141,9 +270,9 @@
     
     UIView *bgView=[[[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 45)] autorelease];
     bgView.backgroundColor=[UIColor clearColor];
-    RegisterCheck *check=[[[RegisterCheck alloc] initWithFrame:CGRectMake(0, 15, self.view.bounds.size.width-20, 30)] autorelease];
-    [check.registerButton addTarget:self action:@selector(buttonRegister) forControlEvents:UIControlEventTouchUpInside];
-    [bgView addSubview:check];
+    _registerCheck=[[RegisterCheck alloc] initWithFrame:CGRectMake(0, 15, self.view.bounds.size.width-20, 30)];
+    [_registerCheck.registerButton addTarget:self action:@selector(buttonRegister) forControlEvents:UIControlEventTouchUpInside];
+    [bgView addSubview:_registerCheck];
     
     return bgView;
 }

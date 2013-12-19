@@ -16,10 +16,7 @@ static NSString *defaultWebServiceUrl=@"http://ibdcloud.com:8083/User_APP.asmx";
 static NSString *defaultWebServiceNameSpace=@"http://tempuri.org/";
 
 @implementation ServiceArgs
-@synthesize serviceURL,serviceNameSpace;
-@synthesize methodName,soapMessage;
-@synthesize webURL,headers,defaultSoapMesage;
-@synthesize soapParams;
+
 
 
 +(void)setWebServiceURL:(NSString*)url
@@ -49,20 +46,20 @@ static NSString *defaultWebServiceNameSpace=@"http://tempuri.org/";
     return [NSURL URLWithString:[self serviceURL]];
 }
 -(NSString*)serviceURL{
-    if (serviceURL) {
-        return serviceURL;
+    if (_serviceURL&&[_serviceURL length]>0) {
+        return _serviceURL;
     }
     return defaultWebServiceUrl;
 }
 -(NSString*)serviceNameSpace{
-    if (serviceNameSpace) {
-        return serviceNameSpace;
+    if (_serviceNameSpace&&[_serviceNameSpace length]>0) {
+        return _serviceNameSpace;
     }
     return defaultWebServiceNameSpace;
 }
 -(NSString*)soapMessage{
-    if (soapMessage) {
-        return soapMessage;
+    if (_soapMessage&&[_soapMessage length]>0) {
+        return _soapMessage;
     }
     return [self stringSoapMessage:[self soapParams]];
 }
@@ -74,6 +71,7 @@ static NSString *defaultWebServiceNameSpace=@"http://tempuri.org/";
     [dic setValue:[NSString stringWithFormat:@"%@%@",[self serviceNameSpace],[self methodName]] forKey:@"SOAPAction"];
     return dic;
 }
+
 #pragma mark -
 #pragma mark 私有方法
 -(NSString*)paramsFormatString:(NSArray*)params{

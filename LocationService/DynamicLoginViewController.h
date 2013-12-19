@@ -10,4 +10,6 @@
 
 @interface DynamicLoginViewController : BasicViewController
 @property(nonatomic,strong) NSMutableArray *cells;
+//动态密码超时
+-(void)dynamicCodeTimeOut;
 @end

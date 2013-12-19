@@ -13,6 +13,7 @@
     int second;
 }
 - (void)timerFireMethod:(NSTimer*)theTimer;
+- (void)startTimer;
 @end
 
 @implementation TKDynamicPasswordCell
@@ -43,6 +44,7 @@
     _label.font=[UIFont fontWithName:DeviceFontName size:DeviceFontSize];
     _label.textColor=[UIColor redColor];
     _label.backgroundColor=[UIColor clearColor];
+    //_label.text=@"已超时,请重新获取!";
     [self.contentView addSubview:_label];
     
     
@@ -65,10 +67,12 @@
     return NO;
 }
 - (void)startTimerWithTime:(NSString*)time{
-    
+    _label.text=@"";
+    _hasVeryFailed=NO;
+    _button.enabled=NO;
    
     NSDateFormatter *format=[[NSDateFormatter alloc] init];
-    [format setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    [format setDateFormat:@"yyyy-MM-dd KK:mm:ss"];
     NSDate *fromdate=[format dateFromString:time];
     NSTimeZone *fromzone = [NSTimeZone systemTimeZone];
     NSInteger frominterval = [fromzone secondsFromGMTForDate: fromdate];
@@ -77,19 +81,42 @@
     
     _maxDate=[_minDate dateByAddingMinutes:3];
     
-    NSDate *date = [NSDate date];
+    
+    NSDateFormatter *format1=[[NSDateFormatter alloc] init];
+    [format1 setDateFormat:@"yyyy-MM-dd KK:mm:ss"];
+    NSString *formatString=[format1 stringFromDate:[NSDate date]];
+    
+    NSDate *date = [format1 dateFromString:formatString];
     NSTimeZone *zone = [NSTimeZone systemTimeZone];
     NSInteger interval = [zone secondsFromGMTForDate: date];
     NSDate *localeDate = [date  dateByAddingTimeInterval: interval];
-    NSLog(@"enddate=%@",localeDate);
-    
-    NSTimeInterval s=[_maxDate timeIntervalSinceDate:localeDate];
-    
-    //两个日期之间相隔多少秒
-     second=(int)s;
-     _label.text=[NSString stringWithFormat:@"%d秒",second];
-    _button.enabled=NO;
-     [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(timerFireMethod:) userInfo:nil repeats:YES];
+    [format1 release];
+
+
+    NSTimeInterval s1=[_minDate timeIntervalSinceDate:localeDate];
+    if (s1>0) {
+        second=180;
+        [self performSelector:@selector(startTimer) withObject:nil afterDelay:s1];
+    }else{
+        NSTimeInterval s=[_maxDate timeIntervalSinceDate:localeDate];
+        //两个日期之间相隔多少秒
+        second=(int)s;
+        if (second<=0||second>180) {
+            _label.text=@"已超时!";
+            _button.enabled=YES;
+            _hasVeryFailed=YES;
+            if (self.controlers&&[self.controlers respondsToSelector:@selector(dynamicCodeTimeOut)]) {
+                [self.controlers performSelector:@selector(dynamicCodeTimeOut) withObject:nil];
+            }
+            return;
+        }
+        [self startTimer];
+    }
+}
+- (void)startTimer{
+    _label.text=[NSString stringWithFormat:@"%d秒",second];
+ 
+    [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(timerFireMethod:) userInfo:nil repeats:YES];
 }
 - (void)timerFireMethod:(NSTimer*)theTimer
 {
@@ -99,8 +126,10 @@
        _label.text=@"已超时!";
         _button.enabled=YES;
         _hasVeryFailed=YES;
+        if (self.controlers&&[self.controlers respondsToSelector:@selector(dynamicCodeTimeOut)]) {
+            [self.controlers performSelector:@selector(dynamicCodeTimeOut) withObject:nil];
+        }
     }else{
-       _hasVeryFailed=NO;
        _label.text=[NSString stringWithFormat:@"%d秒",second];
     }
 }

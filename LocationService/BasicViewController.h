@@ -36,4 +36,6 @@
 -(void) showSuccessViewWithHide:(void (^)(AnimateErrorView *successView))process completed:(void (^)(AnimateErrorView *successView))complete;
 
 - (void) showErrorNetWorkNotice:(void (^)(void))dismissError;
+- (void) showMessageWithTitle:(NSString*)title;
+- (void) showMessageWithTitle:(NSString*)title innerView:(UIView*)view dismissed:(void(^)())completed;
 @end

@@ -33,7 +33,7 @@
     [self.view addSubview:way];
     [way release];
     
-    GeneralLoginViewController *_general=[[[GeneralLoginViewController alloc] initWithNibName:@"GeneralLoginViewController" bundle:nil] autorelease];
+    GeneralLoginViewController *_general=[[[GeneralLoginViewController alloc] init] autorelease];
     DynamicLoginViewController *_dynamic=[[[DynamicLoginViewController alloc] init] autorelease];
     [self addChildViewController:_general];
     [self addChildViewController:_dynamic];

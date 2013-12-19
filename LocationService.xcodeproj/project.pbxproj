@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		01036A9E1862F8D700300DBF /* EditPwdViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01036A9D1862F8D700300DBF /* EditPwdViewController.m */; };
+		01036AA01862FF4000300DBF /* ico19.png in Resources */ = {isa = PBXBuildFile; fileRef = 01036A9F1862FF4000300DBF /* ico19.png */; };
+		010813A01862D04500EB3EC1 /* RegisterSuccessViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0108139F1862D04400EB3EC1 /* RegisterSuccessViewController.m */; };
 		012097CF185ECA6600437EA3 /* load01.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 012097CB185ECA6600437EA3 /* load01.jpg */; };
 		012097D0185ECA6600437EA3 /* load01@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 012097CC185ECA6600437EA3 /* load01@2x.jpg */; };
 		012097D1185ECA6600437EA3 /* load02.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 012097CD185ECA6600437EA3 /* load02.jpg */; };
@@ -31,11 +34,12 @@
 		016924C718618DE60040E0C9 /* WBStickyNoticeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 016924B818618DE60040E0C9 /* WBStickyNoticeView.m */; };
 		016924C818618DE60040E0C9 /* WBSuccessNoticeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 016924BA18618DE60040E0C9 /* WBSuccessNoticeView.m */; };
 		016924CA18618ECE0040E0C9 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 016924C918618ECE0040E0C9 /* CoreLocation.framework */; };
+		016924CD1862984C0040E0C9 /* LoginButtons.m in Sources */ = {isa = PBXBuildFile; fileRef = 016924CC1862984C0040E0C9 /* LoginButtons.m */; };
+		016924CF1862A33C0040E0C9 /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 016924CE1862A33C0040E0C9 /* Entitlements.plist */; };
 		0189889A185FD8E10073B253 /* LoginWay.m in Sources */ = {isa = PBXBuildFile; fileRef = 01898899185FD8E10073B253 /* LoginWay.m */; };
 		0189889E185FE0990073B253 /* BasicViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0189889D185FE0990073B253 /* BasicViewController.m */; };
 		018988A0185FE1710073B253 /* logintop.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 0189889F185FE1710073B253 /* logintop.jpg */; };
 		018988A4185FE3960073B253 /* GeneralLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 018988A2185FE3960073B253 /* GeneralLoginViewController.m */; };
-		018988A5185FE3960073B253 /* GeneralLoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 018988A3185FE3960073B253 /* GeneralLoginViewController.xib */; };
 		018988A8185FE88B0073B253 /* DynamicLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 018988A7185FE88B0073B253 /* DynamicLoginViewController.m */; };
 		018988AF185FE8F70073B253 /* TKLabelCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 018988AE185FE8F70073B253 /* TKLabelCell.m */; };
 		018988B6185FEBC70073B253 /* TKTextFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 018988B5185FEBC70073B253 /* TKTextFieldCell.m */; };
@@ -51,7 +55,6 @@
 		018988DF18604DF80073B253 /* RIButtonItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 018988DB18604DF80073B253 /* RIButtonItem.m */; };
 		018988E018604DF80073B253 /* AlertHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 018988DD18604DF80073B253 /* AlertHelper.m */; };
 		018988E418604EF60073B253 /* RegisterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 018988E218604EF60073B253 /* RegisterViewController.m */; };
-		018988E518604EF60073B253 /* RegisterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 018988E318604EF60073B253 /* RegisterViewController.xib */; };
 		018989061861293F0073B253 /* ico01.png in Resources */ = {isa = PBXBuildFile; fileRef = 018988FC1861293F0073B253 /* ico01.png */; };
 		018989071861293F0073B253 /* ico01f.png in Resources */ = {isa = PBXBuildFile; fileRef = 018988FD1861293F0073B253 /* ico01f.png */; };
 		018989081861293F0073B253 /* ico02.png in Resources */ = {isa = PBXBuildFile; fileRef = 018988FE1861293F0073B253 /* ico02.png */; };
@@ -117,6 +120,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		01036A9C1862F8D700300DBF /* EditPwdViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditPwdViewController.h; sourceTree = "<group>"; };
+		01036A9D1862F8D700300DBF /* EditPwdViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditPwdViewController.m; sourceTree = "<group>"; };
+		01036A9F1862FF4000300DBF /* ico19.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ico19.png; sourceTree = "<group>"; };
+		0108139E1862D04400EB3EC1 /* RegisterSuccessViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegisterSuccessViewController.h; sourceTree = "<group>"; };
+		0108139F1862D04400EB3EC1 /* RegisterSuccessViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegisterSuccessViewController.m; sourceTree = "<group>"; };
 		012097CB185ECA6600437EA3 /* load01.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = load01.jpg; sourceTree = "<group>"; };
 		012097CC185ECA6600437EA3 /* load01@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "load01@2x.jpg"; sourceTree = "<group>"; };
 		012097CD185ECA6600437EA3 /* load02.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = load02.jpg; sourceTree = "<group>"; };
@@ -159,6 +167,9 @@
 		016924B918618DE60040E0C9 /* WBSuccessNoticeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WBSuccessNoticeView.h; sourceTree = "<group>"; };
 		016924BA18618DE60040E0C9 /* WBSuccessNoticeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WBSuccessNoticeView.m; sourceTree = "<group>"; };
 		016924C918618ECE0040E0C9 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		016924CB1862984C0040E0C9 /* LoginButtons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginButtons.h; sourceTree = "<group>"; };
+		016924CC1862984C0040E0C9 /* LoginButtons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginButtons.m; sourceTree = "<group>"; };
+		016924CE1862A33C0040E0C9 /* Entitlements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Entitlements.plist; sourceTree = "<group>"; };
 		01898898185FD8E10073B253 /* LoginWay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginWay.h; sourceTree = "<group>"; };
 		01898899185FD8E10073B253 /* LoginWay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginWay.m; sourceTree = "<group>"; };
 		0189889C185FE0990073B253 /* BasicViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BasicViewController.h; sourceTree = "<group>"; };
@@ -166,7 +177,6 @@
 		0189889F185FE1710073B253 /* logintop.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = logintop.jpg; sourceTree = "<group>"; };
 		018988A1185FE3960073B253 /* GeneralLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeneralLoginViewController.h; sourceTree = "<group>"; };
 		018988A2185FE3960073B253 /* GeneralLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneralLoginViewController.m; sourceTree = "<group>"; };
-		018988A3185FE3960073B253 /* GeneralLoginViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GeneralLoginViewController.xib; sourceTree = "<group>"; };
 		018988A6185FE88B0073B253 /* DynamicLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DynamicLoginViewController.h; sourceTree = "<group>"; };
 		018988A7185FE88B0073B253 /* DynamicLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DynamicLoginViewController.m; sourceTree = "<group>"; };
 		018988AD185FE8F70073B253 /* TKLabelCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TKLabelCell.h; sourceTree = "<group>"; };
@@ -196,7 +206,6 @@
 		018988DD18604DF80073B253 /* AlertHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlertHelper.m; sourceTree = "<group>"; };
 		018988E118604EF60073B253 /* RegisterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegisterViewController.h; sourceTree = "<group>"; };
 		018988E218604EF60073B253 /* RegisterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegisterViewController.m; sourceTree = "<group>"; };
-		018988E318604EF60073B253 /* RegisterViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RegisterViewController.xib; sourceTree = "<group>"; };
 		018988FC1861293F0073B253 /* ico01.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ico01.png; sourceTree = "<group>"; };
 		018988FD1861293F0073B253 /* ico01f.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ico01f.png; sourceTree = "<group>"; };
 		018988FE1861293F0073B253 /* ico02.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ico02.png; sourceTree = "<group>"; };
@@ -361,12 +370,14 @@
 				012097DF185ED07E00437EA3 /* LoginViewController.m */,
 				018988A1185FE3960073B253 /* GeneralLoginViewController.h */,
 				018988A2185FE3960073B253 /* GeneralLoginViewController.m */,
-				018988A3185FE3960073B253 /* GeneralLoginViewController.xib */,
 				018988A6185FE88B0073B253 /* DynamicLoginViewController.h */,
 				018988A7185FE88B0073B253 /* DynamicLoginViewController.m */,
 				018988E118604EF60073B253 /* RegisterViewController.h */,
 				018988E218604EF60073B253 /* RegisterViewController.m */,
-				018988E318604EF60073B253 /* RegisterViewController.xib */,
+				0108139E1862D04400EB3EC1 /* RegisterSuccessViewController.h */,
+				0108139F1862D04400EB3EC1 /* RegisterSuccessViewController.m */,
+				01036A9C1862F8D700300DBF /* EditPwdViewController.h */,
+				01036A9D1862F8D700300DBF /* EditPwdViewController.m */,
 			);
 			name = LoginRegister;
 			sourceTree = "<group>";
@@ -426,6 +437,8 @@
 				018988B8185FF4EE0073B253 /* TKDynamicPasswordCell.m */,
 				018988D118603C040073B253 /* TKLoginButtonCell.h */,
 				018988D218603C040073B253 /* TKLoginButtonCell.m */,
+				016924CB1862984C0040E0C9 /* LoginButtons.h */,
+				016924CC1862984C0040E0C9 /* LoginButtons.m */,
 			);
 			name = UI;
 			sourceTree = "<group>";
@@ -597,6 +610,7 @@
 		01BE3FCE185EACB6005C25D9 = {
 			isa = PBXGroup;
 			children = (
+				016924CE1862A33C0040E0C9 /* Entitlements.plist */,
 				01BE3FE0185EACB6005C25D9 /* LocationService */,
 				01BE3FD9185EACB6005C25D9 /* Frameworks */,
 				01BE3FD8185EACB6005C25D9 /* Products */,
@@ -686,6 +700,7 @@
 		01BE4002185EAFD2005C25D9 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				01036A9F1862FF4000300DBF /* ico19.png */,
 				0189892F186140C00073B253 /* notice_error_icon.png */,
 				01898930186140C00073B253 /* notice_error_icon@2x.png */,
 				01898931186140C00073B253 /* notice_success_icon.png */,
@@ -793,6 +808,7 @@
 				012097CF185ECA6600437EA3 /* load01.jpg in Resources */,
 				01BE3FEF185EACB6005C25D9 /* Default@2x.png in Resources */,
 				01BE3FF1185EACB6005C25D9 /* Default-568h@2x.png in Resources */,
+				016924CF1862A33C0040E0C9 /* Entitlements.plist in Resources */,
 				01898935186140C00073B253 /* notice_success_icon.png in Resources */,
 				01BE3FF7185EACB6005C25D9 /* ViewController_iPhone.xib in Resources */,
 				01898936186140C00073B253 /* notice_success_icon@2x.png in Resources */,
@@ -805,18 +821,17 @@
 				018989061861293F0073B253 /* ico01.png in Resources */,
 				01BE3FFA185EACB6005C25D9 /* ViewController_iPad.xib in Resources */,
 				0189890D1861293F0073B253 /* ico04f.png in Resources */,
-				018988E518604EF60073B253 /* RegisterViewController.xib in Resources */,
 				012097D0185ECA6600437EA3 /* load01@2x.jpg in Resources */,
 				016924BD18618DE60040E0C9 /* NoticeView.bundle in Resources */,
 				01898920186133A20073B253 /* leftico.png in Resources */,
 				0189890C1861293F0073B253 /* ico04.png in Resources */,
 				0189890A1861293F0073B253 /* ico03.png in Resources */,
-				018988A5185FE3960073B253 /* GeneralLoginViewController.xib in Resources */,
 				018988A0185FE1710073B253 /* logintop.jpg in Resources */,
 				016924BB18618DE60040E0C9 /* icon-info.png in Resources */,
 				018989081861293F0073B253 /* ico02.png in Resources */,
 				012097D1185ECA6600437EA3 /* load02.jpg in Resources */,
 				018989071861293F0073B253 /* ico01f.png in Resources */,
+				01036AA01862FF4000300DBF /* ico19.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -886,12 +901,15 @@
 				01BE4021185EB0B8005C25D9 /* UITextField+TPCategory.m in Sources */,
 				01B40B3518614D4C004A0133 /* XmlNode.m in Sources */,
 				012097DB185ECDFD00437EA3 /* FileHelper.m in Sources */,
+				016924CD1862984C0040E0C9 /* LoginButtons.m in Sources */,
 				018988DE18604DF80073B253 /* UIAlertView+Blocks.m in Sources */,
 				01B40B2518614CBA004A0133 /* ASIInputStream.m in Sources */,
 				016924C718618DE60040E0C9 /* WBStickyNoticeView.m in Sources */,
 				0189892718613E440073B253 /* AppUI.m in Sources */,
 				018988CC18602A200073B253 /* PagerViewController.m in Sources */,
 				018988B9185FF4EE0073B253 /* TKDynamicPasswordCell.m in Sources */,
+				010813A01862D04500EB3EC1 /* RegisterSuccessViewController.m in Sources */,
+				01036A9E1862F8D700300DBF /* EditPwdViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -936,7 +954,9 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: 澜洲 吴 (M3F85US4G2)";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -956,6 +976,8 @@
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "-lxml2";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "9210E612-CAA4-49BF-9407-5ECFD0668FBB";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -972,7 +994,9 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: 澜洲 吴 (M3F85US4G2)";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -985,6 +1009,8 @@
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				OTHER_LDFLAGS = "-lxml2";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "9210E612-CAA4-49BF-9407-5ECFD0668FBB";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -994,10 +1020,13 @@
 		01BE3FFE185EACB6005C25D9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: 澜洲 吴 (M3F85US4G2)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LocationService/LocationService-Prefix.pch";
 				INFOPLIST_FILE = "LocationService/LocationService-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "9210E612-CAA4-49BF-9407-5ECFD0668FBB";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1005,10 +1034,13 @@
 		01BE3FFF185EACB6005C25D9 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: 澜洲 吴 (M3F85US4G2)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LocationService/LocationService-Prefix.pch";
 				INFOPLIST_FILE = "LocationService/LocationService-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "9210E612-CAA4-49BF-9407-5ECFD0668FBB";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

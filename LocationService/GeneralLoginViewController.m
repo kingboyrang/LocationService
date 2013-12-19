@@ -106,6 +106,12 @@
         [cell2.textField becomeFirstResponder];
         return;
     }
+    if(strlen([cell2.textField.text UTF8String])<6)
+    {
+        [AlertHelper initWithTitle:@"提示" message:@"密码不能少于6位大于12位！"];
+        [cell2.textField becomeFirstResponder];
+        return;
+    }
     if (!self.hasNetWork) {
         [self showErrorNetWorkNotice:nil];
         return;
@@ -119,23 +125,37 @@
     args.methodName=@"UIDLogin";
     args.soapParams=params;
     
-    [self showLoadingAnimatedWithTitle:@"正在登录,请稍等..."];
+    [self showLoadingAnimatedWithTitle:@"正在登录,请稍后..."];
     [self.serviceHelper asynService:args success:^(ServiceResult *result) {
     
-        //登陆成功
-        [Account loginWithUserId:[cell1.textField.text Trim] password:[cell2.textField.text Trim] rememberPassword:_registerCheck.hasRemember];
-        MainViewController *main=[[MainViewController alloc] init];
-        [self presentViewController:main animated:YES completion:nil];
-        [main release];
-        
+        if ([result.xmlString length]>0) {
+            NSString *xml=[result.xmlString stringByReplacingOccurrencesOfString:result.xmlnsAttr withString:@""];
+            [result.xmlParse setDataSource:xml];
+            XmlNode *node=[result.xmlParse soapXmlSelectSingleNode:@"//UIDLoginResult"];
+            NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:[node.InnerText dataUsingEncoding:NSUTF8StringEncoding] options:1 error:nil];
+            if ([dic objectForKey:@"Account"]) {
+                [self hideLoadingViewAnimated:^(AnimateLoadView *hideView) {
+                    //登录
+                    [Account loginGeneralWithUserId:[cell1.textField.text Trim] password:[cell2.textField.text Trim] rememberPassword:_registerCheck.hasRemember withData:dic];
+                    
+                    MainViewController *main=[[MainViewController alloc] init];
+                    [self presentViewController:main animated:YES completion:nil];
+                    [main release];
+                }];
+            }else{
+                [self hideLoadingFailedWithTitle:@"输入的帐号或密码错误,请重新输入!" completed:nil];
+            }
+        }else{
+            [self hideLoadingFailedWithTitle:@"输入的帐号或密码错误,请重新输入!" completed:nil];
+        }
     } failed:^(NSError *error, NSDictionary *userInfo) {
-        [self hideLoadingFailedWithTitle:@"输入的帐号密码错误,请重新输入!" completed:nil];
+        [self hideLoadingFailedWithTitle:@"输入的帐号或密码错误,请重新输入!" completed:nil];
     }];
     
 }
 //注册
 - (void)buttonRegister{
-    RegisterViewController *controller=[[RegisterViewController alloc] initWithNibName:@"RegisterViewController" bundle:nil];
+    RegisterViewController *controller=[[RegisterViewController alloc] init];
     CATransition *animation = [CATransition animation];
     [animation setDuration:0.5];
     [animation setType:kCATransitionPush];

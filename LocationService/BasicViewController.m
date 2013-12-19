@@ -10,6 +10,7 @@
 #import "UIColor+TPCategory.h"
 #import "NetWorkConnection.h"
 #import "WBErrorNoticeView.h"
+#import "WBInfoNoticeView.h"
 @interface BasicViewController (){
     AnimateLoadView *_loadView;
     AnimateErrorView *_errorView;
@@ -59,6 +60,21 @@
         }
     }];
     [notice show];
+}
+- (void) showMessageWithTitle:(NSString*)title{
+    [self showMessageWithTitle:title innerView:self.view dismissed:nil];
+}
+- (void) showMessageWithTitle:(NSString*)title innerView:(UIView*)view dismissed:(void(^)())completed{
+    WBInfoNoticeView *info=[WBInfoNoticeView infoNoticeInView:view title:title];
+    [info setDismissalBlock:^(BOOL dismissedInteractively) {
+        if (dismissedInteractively) {
+            if (completed) {
+                completed();
+            }
+        }
+    }];
+    [info show];
+    info.gradientView.backgroundColor=[UIColor colorFromHexRGB:@"c94018"];
 }
 - (void)didReceiveMemoryWarning
 {

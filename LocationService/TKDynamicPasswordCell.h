@@ -16,6 +16,8 @@
 @property(nonatomic,readonly) BOOL hasVeryFailed;
 @property(nonatomic,readonly) NSDate *minDate;
 @property(nonatomic,readonly) NSDate *maxDate;
+@property(nonatomic,copy) NSString *dynamicCode;//动态密码
+@property(nonatomic,assign) id controlers;
 
 - (void)startTimerWithTime:(NSString*)time;
 @end
