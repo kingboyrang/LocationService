@@ -40,15 +40,6 @@
     _button.titleLabel.font=[UIFont boldSystemFontOfSize:DeviceFontSize];
     [self.contentView addSubview:_button];
     
-    _label=[[UILabel alloc] initWithFrame:CGRectZero];
-    _label.font=[UIFont fontWithName:DeviceFontName size:DeviceFontSize];
-    _label.textColor=[UIColor redColor];
-    _label.backgroundColor=[UIColor clearColor];
-    //_label.text=@"已超时,请重新获取!";
-    [self.contentView addSubview:_label];
-    
-    
-	
 	return self;
 }
 
@@ -66,8 +57,17 @@
     }
     return NO;
 }
-- (void)startTimerWithTime:(NSString*)time{
-    _label.text=@"";
+- (void)resetOrgin{
+    second=1;
+    //[NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(timerFireMethod:) userInfo:nil repeats:YES];
+    _textField.text=@"";
+    [_textField resignFirstResponder];
+    [_button setTitle:@"免费获取" forState:UIControlStateNormal];
+    [_button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    _button.enabled=YES;
+    _hasVeryFailed=NO;
+}
+- (void)startTimerWithTime:(NSString*)time process:(void(^)(NSTimeInterval afterInterval))process{
     _hasVeryFailed=NO;
     _button.enabled=NO;
    
@@ -95,14 +95,21 @@
 
     NSTimeInterval s1=[_minDate timeIntervalSinceDate:localeDate];
     if (s1>0) {
+        if (process) {
+            process(s1);
+        }
         second=180;
         [self performSelector:@selector(startTimer) withObject:nil afterDelay:s1];
     }else{
+        if (process) {
+            process(0);
+        }
         NSTimeInterval s=[_maxDate timeIntervalSinceDate:localeDate];
         //两个日期之间相隔多少秒
         second=(int)s;
         if (second<=0||second>180) {
-            _label.text=@"已超时!";
+            [_button setTitle:@"重新获取" forState:UIControlStateNormal];
+            [_button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
             _button.enabled=YES;
             _hasVeryFailed=YES;
             if (self.controlers&&[self.controlers respondsToSelector:@selector(dynamicCodeTimeOut)]) {
@@ -114,42 +121,37 @@
     }
 }
 - (void)startTimer{
-    _label.text=[NSString stringWithFormat:@"%d秒",second];
- 
+    [_button setTitle:[NSString stringWithFormat:@"%d秒",second] forState:UIControlStateNormal];
+    [_button setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
     [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(timerFireMethod:) userInfo:nil repeats:YES];
 }
 - (void)timerFireMethod:(NSTimer*)theTimer
 {
     second--;
-    if (second==0) {
+    if (second<=0) {
         [theTimer invalidate];
-       _label.text=@"已超时!";
+        [_button setTitle:@"重新获取" forState:UIControlStateNormal];
+        [_button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         _button.enabled=YES;
         _hasVeryFailed=YES;
         if (self.controlers&&[self.controlers respondsToSelector:@selector(dynamicCodeTimeOut)]) {
             [self.controlers performSelector:@selector(dynamicCodeTimeOut) withObject:nil];
         }
     }else{
-       _label.text=[NSString stringWithFormat:@"%d秒",second];
+        [_button setTitle:[NSString stringWithFormat:@"%d秒",second] forState:UIControlStateNormal];
+        
     }
 }
 - (void) layoutSubviews {
     [super layoutSubviews];
     CGRect r=CGRectInset(self.contentView.bounds, 10, 4);
-    r.size.width=self.frame.size.width-r.origin.x*2-_button.frame.size.width-80;
+    r.size.width=self.frame.size.width-r.origin.x*2-_button.frame.size.width-5;
 	_textField.frame =r;
     
     r=_button.frame;
     r.origin.x=_textField.frame.size.width+_textField.frame.origin.x+5;
     r.origin.y=(self.frame.size.height-r.size.height)/2;
     _button.frame=r;
-    
-    r.origin.x+=r.size.width+5;
-    r.size.width=self.frame.size.width-r.origin.x-10;
-    r.size.height=20;
-    r.origin.y=(self.frame.size.height-r.size.height)/2.0;
-    _label.frame=r;
-    
 }
 
 @end

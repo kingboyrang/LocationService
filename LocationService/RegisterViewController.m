@@ -30,6 +30,7 @@
 - (void)buttonSubmit;
 - (void)buttonCancel;
 - (void)checkPhone;
+- (CGRect)fieldToRect:(UITextField*)field;
 @end
 
 @implementation RegisterViewController
@@ -52,6 +53,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+   
     
     UIImage *image=[UIImage imageNamed:@"logintop.jpg"];
     CGRect r=self.view.bounds;
@@ -80,7 +83,7 @@
      ***/
     
     
-    r=DeviceRealRect;
+    r=self.view.bounds;
     r.origin.y=image.size.height;
     r.size.height-=image.size.height+44;
     
@@ -95,7 +98,7 @@
     //_tableView.autoresizingMask=UIViewAutoresizingFlexibleWidth;
     [self.view addSubview:_tableView];
     
-    LoginButtons *buttons=[[LoginButtons alloc] initWithFrame:CGRectMake(0,DeviceRealHeight-44, self.view.bounds.size.width, 44)];
+    LoginButtons *buttons=[[LoginButtons alloc] initWithFrame:CGRectMake(0,self.view.bounds.size.height-44, self.view.bounds.size.width, 44)];
     [buttons.submit addTarget:self action:@selector(buttonSubmit) forControlEvents:UIControlEventTouchUpInside];
     [buttons.cancel addTarget:self action:@selector(buttonCancel) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:buttons];
@@ -336,6 +339,19 @@
     //self.modalTransitionStyle=UI;
     [self dismissViewControllerAnimated:YES completion:nil];
 }
+- (CGRect)fieldToRect:(UITextField*)field{
+    id v=[field superview];
+    while (![v isKindOfClass:[UITableViewCell class]]) {
+          v=[v superview];
+    }
+    UITableViewCell *cell=(UITableViewCell*)v;
+    CGRect r=[_tableView convertRect:cell.frame fromView:_tableView];
+    CGRect r1=[cell convertRect:field.frame fromView:cell];
+    r.origin.y+=44+r1.origin.y;
+    r.origin.x=r1.origin.x;
+    
+    return r;
+}
 #pragma mark UITextFieldDelegate Methods
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
@@ -356,8 +372,26 @@
     }
     return boo;
 }
+-(void)textFieldDidBeginEditing:(UITextField *)textField {
+    
+   
+    
+    CGRect frame = [self fieldToRect:textField];
+    int offset = frame.origin.y + 36 - (self.view.frame.size.height - 216.0);//键盘高度216
+    
+    NSTimeInterval animationDuration = 0.30f;
+    [UIView beginAnimations:@"ResizeForKeyboard" context:nil];
+    [UIView setAnimationDuration:animationDuration];
+    
+    //将视图的Y坐标向上移动offset个单位，以使下面腾出地方用于软键盘的显示
+    if(offset > 0)
+        self.view.frame = CGRectMake(0.0f, -offset, self.view.frame.size.width, self.view.frame.size.height);
+    [UIView commitAnimations];
+}
 - (void)textFieldDidEndEditing:(UITextField *)textField;
 {
+    self.view.frame =CGRectMake(0, 20, self.view.frame.size.width, self.view.frame.size.height);
+    
     TKTextFieldCell *cell=self.cells[1];
     TKTextFieldCell *cell1=self.cells[5];
     if (cell.textField==textField) {

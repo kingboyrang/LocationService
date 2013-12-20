@@ -14,5 +14,5 @@
 }
 @property(nonatomic,readonly) BOOL hasRemember;
 @property(nonatomic,strong) UIButton *registerButton;
-
+-(void)setSelectItemSwitch:(int)index;
 @end

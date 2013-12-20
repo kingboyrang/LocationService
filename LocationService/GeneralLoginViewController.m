@@ -18,20 +18,27 @@
 #import "AlertHelper.h"
 #import "MainViewController.h"
 #import "Account.h"
+#import "LoginButtons.h"
+#import "TKRegisterCheckCell.h"
 @interface GeneralLoginViewController ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>{
     UITableView *_tableView;
     ServiceHelper *_helper;
-    RegisterCheck *_registerCheck;
+    LoginButtons *_buttons;
+    
 }
 - (void)buttonRegister;
 - (void)buttonLoginClick;
+- (void)buttonSubmit;
+- (void)buttonCancel;
+- (BOOL)isUIDString;
+- (void)replaceUIDstring;
 @end
 
 @implementation GeneralLoginViewController
 - (void)dealloc{
     [super dealloc];
     [_tableView release];
-    [_registerCheck release];
+    [_buttons release];
 }
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -46,8 +53,11 @@
 {
     [super viewDidLoad];
     
+       
     
-    _tableView=[[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
+    CGRect r=self.view.bounds;
+    r.size.height-=44*2;
+    _tableView=[[UITableView alloc] initWithFrame:r style:UITableViewStylePlain];
     _tableView.delegate=self;
     _tableView.dataSource=self;
     _tableView.separatorStyle=UITableViewCellSeparatorStyleNone;
@@ -80,23 +90,64 @@
     cell4.textField.secureTextEntry=YES;
     cell4.textField.delegate=self;
     
-    
-    TKLoginButtonCell *cell5=[[[TKLoginButtonCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
-    [cell5.button addTarget:self action:@selector(buttonLoginClick) forControlEvents:UIControlEventTouchUpInside];
+    TKRegisterCheckCell *cell5=[[[TKRegisterCheckCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
+    [cell5.check.registerButton addTarget:self action:@selector(buttonRegister) forControlEvents:UIControlEventTouchUpInside];
     
     self.cells=[NSMutableArray arrayWithObjects:cell1,cell2,cell3,cell4,cell5, nil];
+    
+    _buttons=[[LoginButtons alloc] initWithFrame:CGRectMake(0,_tableView.frame.origin.y+_tableView.frame.size.height, self.view.bounds.size.width, 44)];
+    [_buttons.submit addTarget:self action:@selector(buttonSubmit) forControlEvents:UIControlEventTouchUpInside];
+    [_buttons.cancel addTarget:self action:@selector(buttonCancel) forControlEvents:UIControlEventTouchUpInside];
+    _buttons.submit.enabled=NO;
+    [self.view addSubview:_buttons];
+    
 }
-
+- (BOOL) isUIDString{
+    TKTextFieldCell *cell1=self.cells[1];
+    NSString *emailRegEx =@"^[a-zA-Z0-9_]+$";
+    NSPredicate *regExPredicate = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", emailRegEx];
+    return [regExPredicate evaluateWithObject:cell1.textField.text];
+}
+- (void)replaceUIDstring{
+    NSRegularExpression *regular;
+    regular = [[NSRegularExpression alloc] initWithPattern:@"[^a-zA-Z0-9_]+"
+                                                   options:NSRegularExpressionCaseInsensitive
+                                                     error:nil];
+    TKTextFieldCell *cell1=self.cells[1];
+    NSString *str=[cell1.textField.text Trim];
+    cell1.textField.text = [regular stringByReplacingMatchesInString:str options:NSRegularExpressionCaseInsensitive  range:NSMakeRange(0, [str length]) withTemplate:@""];  
+}
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 //登录
+-(void)buttonSubmit{
+    [self buttonLoginClick];
+}
+//取消 
+-(void)buttonCancel{
+    TKTextFieldCell *cell1=self.cells[1];
+    cell1.textField.text=@"";
+    [cell1.textField resignFirstResponder];
+    TKTextFieldCell *cell2=self.cells[3];
+    cell2.textField.text=@"";
+    [cell2.textField resignFirstResponder];
+    TKRegisterCheckCell *cell3=self.cells[4];
+    [cell3.check setSelectItemSwitch:1];
+    _buttons.submit.enabled=NO;
+}
+//登录
 - (void)buttonLoginClick{
     TKTextFieldCell *cell1=self.cells[1];
     if (!cell1.hasValue) {
         [AlertHelper initWithTitle:@"提示" message:@"请输入帐号/手机号!"];
+        [cell1.textField becomeFirstResponder];
+        return;
+    }
+    if (![self isUIDString]) {
+        [AlertHelper initWithTitle:@"提示" message:@"帐号只能输入字母、数字、下划线!"];
         [cell1.textField becomeFirstResponder];
         return;
     }
@@ -116,7 +167,7 @@
         [self showErrorNetWorkNotice:nil];
         return;
     }
-    
+    TKRegisterCheckCell *cell3=self.cells[4];
     NSMutableArray *params=[NSMutableArray arrayWithCapacity:2];
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[cell1.textField.text Trim],@"userName", nil]];
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[cell2.textField.text Trim],@"pwd", nil]];
@@ -136,7 +187,7 @@
             if ([dic objectForKey:@"Account"]) {
                 [self hideLoadingViewAnimated:^(AnimateLoadView *hideView) {
                     //登录
-                    [Account loginGeneralWithUserId:[cell1.textField.text Trim] password:[cell2.textField.text Trim] rememberPassword:_registerCheck.hasRemember withData:dic];
+                    [Account loginGeneralWithUserId:[cell1.textField.text Trim] password:[cell2.textField.text Trim] rememberPassword:cell3.check.hasRemember withData:dic];
                     
                     MainViewController *main=[[MainViewController alloc] init];
                     [self presentViewController:main animated:YES completion:nil];
@@ -172,18 +223,19 @@
     BOOL boo=YES;
     TKTextFieldCell *cell=self.cells[1];
     if (cell.textField==textField) {
-        if(strlen([textField.text UTF8String]) >= 11 && range.length != 1)
+        [self replaceUIDstring];
+        if(strlen([textField.text UTF8String]) >= 12 && range.length != 1)
             boo=NO;
     }else{
         if(strlen([textField.text UTF8String]) >= 12 && range.length != 1)
              boo=NO;
     }
     TKTextFieldCell *cell1=self.cells[3];
-    TKLoginButtonCell *btn=self.cells[4];
+    //TKLoginButtonCell *btn=self.cells[4];
     if ([[cell.textField.text Trim] length]>0&&[[cell1.textField.text Trim] length]>0) {
-        btn.button.enabled=YES;
+        _buttons.submit.enabled=YES;
     }else{
-        btn.button.enabled=NO;
+        _buttons.submit.enabled=NO;
     }
     return boo;
 }
@@ -191,11 +243,11 @@
 {
     TKTextFieldCell *cell=self.cells[1];
     TKTextFieldCell *cell1=self.cells[3];
-    TKLoginButtonCell *btn=self.cells[4];
+    //TKLoginButtonCell *btn=self.cells[4];
     if ([[cell.textField.text Trim] length]>0&&[[cell1.textField.text Trim] length]>0) {
-        btn.button.enabled=YES;
+        _buttons.submit.enabled=YES;
     }else{
-        btn.button.enabled=NO;
+        _buttons.submit.enabled=NO;
     }
 }
 
@@ -215,26 +267,13 @@
     cell.selectionStyle=UITableViewCellSelectionStyleNone;
     return cell;
 }
-- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
-    return 45;
-}
-- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
-    
-    UIView *bgView=[[[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 45)] autorelease];
-    bgView.backgroundColor=[UIColor clearColor];
-    _registerCheck=[[RegisterCheck alloc] initWithFrame:CGRectMake(0, 15, self.view.bounds.size.width-20, 30)];
-    [_registerCheck.registerButton addTarget:self action:@selector(buttonRegister) forControlEvents:UIControlEventTouchUpInside];
-    [bgView addSubview:_registerCheck];
-    
-    return bgView;
-}
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     id cell=self.cells[indexPath.row];
     if ([cell isKindOfClass:[TKLabelCell class]]) {
         return 30.0;
     }
-    if ([cell isKindOfClass:[TKLoginButtonCell class]]) {
-        return 45.0;
+    if ([cell isKindOfClass:[TKRegisterCheckCell class]]) {
+        return 90;
     }
     return 44.0;
 }

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		01036A9E1862F8D700300DBF /* EditPwdViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01036A9D1862F8D700300DBF /* EditPwdViewController.m */; };
 		01036AA01862FF4000300DBF /* ico19.png in Resources */ = {isa = PBXBuildFile; fileRef = 01036A9F1862FF4000300DBF /* ico19.png */; };
+		01036AA41863EAB100300DBF /* TKSwitchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 01036AA31863EAB100300DBF /* TKSwitchCell.m */; };
 		010813A01862D04500EB3EC1 /* RegisterSuccessViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0108139F1862D04400EB3EC1 /* RegisterSuccessViewController.m */; };
 		012097CF185ECA6600437EA3 /* load01.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 012097CB185ECA6600437EA3 /* load01.jpg */; };
 		012097D0185ECA6600437EA3 /* load01@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 012097CC185ECA6600437EA3 /* load01@2x.jpg */; };
@@ -123,6 +124,8 @@
 		01036A9C1862F8D700300DBF /* EditPwdViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditPwdViewController.h; sourceTree = "<group>"; };
 		01036A9D1862F8D700300DBF /* EditPwdViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditPwdViewController.m; sourceTree = "<group>"; };
 		01036A9F1862FF4000300DBF /* ico19.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ico19.png; sourceTree = "<group>"; };
+		01036AA21863EAB100300DBF /* TKSwitchCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TKSwitchCell.h; sourceTree = "<group>"; };
+		01036AA31863EAB100300DBF /* TKSwitchCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TKSwitchCell.m; sourceTree = "<group>"; };
 		0108139E1862D04400EB3EC1 /* RegisterSuccessViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegisterSuccessViewController.h; sourceTree = "<group>"; };
 		0108139F1862D04400EB3EC1 /* RegisterSuccessViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegisterSuccessViewController.m; sourceTree = "<group>"; };
 		012097CB185ECA6600437EA3 /* load01.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = load01.jpg; sourceTree = "<group>"; };
@@ -482,6 +485,8 @@
 		018988AC185FE8EC0073B253 /* Label */ = {
 			isa = PBXGroup;
 			children = (
+				01036AA21863EAB100300DBF /* TKSwitchCell.h */,
+				01036AA31863EAB100300DBF /* TKSwitchCell.m */,
 				018988CE186030E50073B253 /* TKLabelSwitchCell.h */,
 				018988CF186030E50073B253 /* TKLabelSwitchCell.m */,
 				018988AD185FE8F70073B253 /* TKLabelCell.h */,
@@ -910,6 +915,7 @@
 				018988B9185FF4EE0073B253 /* TKDynamicPasswordCell.m in Sources */,
 				010813A01862D04500EB3EC1 /* RegisterSuccessViewController.m in Sources */,
 				01036A9E1862F8D700300DBF /* EditPwdViewController.m in Sources */,
+				01036AA41863EAB100300DBF /* TKSwitchCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

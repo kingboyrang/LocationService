@@ -11,7 +11,6 @@
 @interface TKDynamicPasswordCell : UITableViewCell<UITextFieldDelegate>
 @property (nonatomic,strong) UITextField *textField;
 @property (nonatomic,strong) UIButton *button;
-@property (nonatomic,strong) UILabel *label;
 @property(nonatomic,readonly) BOOL hasValue;
 @property(nonatomic,readonly) BOOL hasVeryFailed;
 @property(nonatomic,readonly) NSDate *minDate;
@@ -19,5 +18,6 @@
 @property(nonatomic,copy) NSString *dynamicCode;//动态密码
 @property(nonatomic,assign) id controlers;
 
-- (void)startTimerWithTime:(NSString*)time;
+- (void)startTimerWithTime:(NSString*)time process:(void(^)(NSTimeInterval afterInterval))process;
+- (void)resetOrgin;
 @end

@@ -32,41 +32,46 @@
     return self;
 }
 -(void)loadControls:(CGRect)frame{
-    CGFloat leftx=10;
+    CGFloat leftx=0;
     if (!_lightLabel) {
         NSString *title=@"记住密码,自动登录";
         CGSize size=[title textSize:[UIFont boldSystemFontOfSize:DeviceFontSize] withWidth:frame.size.width-leftx];
-        _lightLabel=[[UILabel alloc] initWithFrame:CGRectMake(leftx,(frame.size.height-size.height)/2.0,size.width, size.height)];
+        _lightLabel=[[UILabel alloc] initWithFrame:CGRectMake(leftx,(27-size.height)/2,size.width, size.height)];
         _lightLabel.font=[UIFont fontWithName:DeviceFontName size:DeviceFontSize];
         _lightLabel.text=title;
         _lightLabel.backgroundColor=[UIColor clearColor];
         _lightLabel.textColor=[UIColor blackColor];
         
-        leftx=_lightLabel.frame.size.width+5+_lightLabel.frame.origin.x;
-        UISwitch *switchItem=[[UISwitch alloc] initWithFrame:CGRectMake(leftx, (frame.size.height-30)/2, 40, 30)];
+        leftx=_lightLabel.frame.origin.x+_lightLabel.frame.size.width+5;
+        UISwitch *switchItem=[[UISwitch alloc] initWithFrame:CGRectMake(leftx,0, 79, 27)];
+
         switchItem.on=YES;
+        switchItem.tag=900;
         [switchItem addTarget:self action:@selector(buttonClickTap:) forControlEvents:UIControlEventValueChanged];
         [self addSubview:switchItem];
         [switchItem release];
         
         
+        CGFloat topY=_lightLabel.frame.size.height+_lightLabel.frame.origin.y+30;
         NSString *str=@"注册>>";
         size=[str textSize:[UIFont boldSystemFontOfSize:DeviceFontSize] withWidth:frame.size.width];
-        UILabel *labRegister=[[UILabel alloc] initWithFrame:CGRectMake(frame.size.width-size.width, (frame.size.height-size.height)/2.0, size.width, size.height)];
+        UILabel *labRegister=[[UILabel alloc] initWithFrame:CGRectMake(frame.size.width-size.width-10, topY, size.width, size.height)];
         labRegister.textColor=[UIColor colorFromHexRGB:@"5c1a8e"];
         labRegister.font=[UIFont boldSystemFontOfSize:DeviceFontSize];
         labRegister.text=str;
         labRegister.backgroundColor=[UIColor clearColor];
         [self addSubview:labRegister];
         
+        
         _registerButton=[UIButton buttonWithType:UIButtonTypeCustom];
         _registerButton.frame=labRegister.frame;
         //_registerButton.alpha=0.0;
         [self addSubview:_registerButton];
         [labRegister release];
+        [self addSubview:_lightLabel];
         
     }
-    [self addSubview:_lightLabel];
+    
     
 }
 -(void)addButton:(CGFloat)leftx height:(CGFloat)h index:(NSInteger)tag{
@@ -86,5 +91,9 @@
 -(void)buttonClickTap:(id)sender{
     UISwitch *btn=(UISwitch*)sender;
     _hasRemember=btn.on;
+}
+-(void)setSelectItemSwitch:(int)index{
+   UISwitch *btn=(UISwitch*)[self viewWithTag:900];
+   btn.on=index==1?YES:NO;
 }
 @end

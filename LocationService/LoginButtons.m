@@ -21,6 +21,8 @@
         [_cancel setTitle:@"取消" forState:UIControlStateNormal];
         [_cancel setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         _cancel.titleLabel.font=[UIFont fontWithName:DeviceFontName size:DeviceFontSize];
+         _cancel.showsTouchWhenHighlighted = YES;  //指定按钮被按下时发光
+        [_cancel setTitleColor:[UIColor colorFromHexRGB:@"4a7ebb"] forState:UIControlStateHighlighted];
         [self addSubview:_cancel];
         
         _submit=[UIButton buttonWithType:UIButtonTypeCustom];
@@ -28,6 +30,8 @@
         [_submit setTitle:@"确认" forState:UIControlStateNormal];
         [_submit setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         _submit.titleLabel.font=[UIFont fontWithName:DeviceFontName size:DeviceFontSize];
+        _submit.showsTouchWhenHighlighted = YES;  //指定按钮被按下时发光
+        [_submit setTitleColor:[UIColor colorFromHexRGB:@"4a7ebb"] forState:UIControlStateHighlighted];
         [self addSubview:_submit];
     }
     return self;
