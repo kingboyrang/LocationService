@@ -22,7 +22,6 @@
 #import "TKRegisterCheckCell.h"
 @interface GeneralLoginViewController ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>{
     UITableView *_tableView;
-    ServiceHelper *_helper;
     LoginButtons *_buttons;
     
 }
@@ -32,6 +31,7 @@
 - (void)buttonCancel;
 - (BOOL)isUIDString;
 - (void)replaceUIDstring;
+- (void)pwdDesEncrypWithCompleted:(void(^)(NSString *pwd))completed;
 @end
 
 @implementation GeneralLoginViewController
@@ -52,7 +52,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+    self.showBarView=NO;
        
     
     CGRect r=self.view.bounds;
@@ -101,6 +101,32 @@
     _buttons.submit.enabled=NO;
     [self.view addSubview:_buttons];
     
+}
+- (void)pwdDesEncrypWithCompleted:(void(^)(NSString *pwd))completed{
+    TKTextFieldCell *cell=self.cells[3];
+    NSMutableArray *params=[NSMutableArray arrayWithCapacity:2];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[cell.textField.text Trim],@"text", nil]];
+    
+    ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
+    args.methodName=@"DesEncrypt";
+    args.soapParams=params;
+    
+    [self.serviceHelper asynService:args success:^(ServiceResult *result) {
+        NSString *memo=@"";
+        if (result.hasSuccess) {
+            XmlNode *node=[result methodNode];
+            NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:[node.InnerText dataUsingEncoding:NSUTF8StringEncoding] options:1 error:nil];
+            memo=[dic objectForKey:@"Result"];
+        }
+        if (completed) {
+            completed(memo);
+        }
+        
+    } failed:^(NSError *error, NSDictionary *userInfo) {
+        if (completed) {
+            completed(@"");
+        }
+    }];
 }
 - (BOOL) isUIDString{
     TKTextFieldCell *cell1=self.cells[1];
@@ -167,54 +193,55 @@
         [self showErrorNetWorkNotice:nil];
         return;
     }
-    TKRegisterCheckCell *cell3=self.cells[4];
-    NSMutableArray *params=[NSMutableArray arrayWithCapacity:2];
-    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[cell1.textField.text Trim],@"userName", nil]];
-    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[cell2.textField.text Trim],@"pwd", nil]];
-    
-    ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
-    args.methodName=@"UIDLogin";
-    args.soapParams=params;
-    
     [self showLoadingAnimatedWithTitle:@"正在登录,请稍后..."];
-    [self.serviceHelper asynService:args success:^(ServiceResult *result) {
-    
-        if ([result.xmlString length]>0) {
-            NSString *xml=[result.xmlString stringByReplacingOccurrencesOfString:result.xmlnsAttr withString:@""];
-            [result.xmlParse setDataSource:xml];
-            XmlNode *node=[result.xmlParse soapXmlSelectSingleNode:@"//UIDLoginResult"];
-            NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:[node.InnerText dataUsingEncoding:NSUTF8StringEncoding] options:1 error:nil];
-            if ([dic objectForKey:@"Account"]) {
-                [self hideLoadingViewAnimated:^(AnimateLoadView *hideView) {
-                    //登录
-                    [Account loginGeneralWithUserId:[cell1.textField.text Trim] password:[cell2.textField.text Trim] rememberPassword:cell3.check.hasRemember withData:dic];
-                    
-                    MainViewController *main=[[MainViewController alloc] init];
-                    [self presentViewController:main animated:YES completion:nil];
-                    [main release];
-                }];
+    [self pwdDesEncrypWithCompleted:^(NSString *pwd) {
+        
+        TKRegisterCheckCell *cell3=self.cells[4];
+        NSMutableArray *params=[NSMutableArray arrayWithCapacity:2];
+        [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[cell1.textField.text Trim],@"userName", nil]];
+        [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:pwd,@"pwd", nil]];
+        ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
+        args.methodName=@"UIDLogin";
+        args.soapParams=params;
+        [self.serviceHelper asynService:args success:^(ServiceResult *result) {
+            
+            if ([result.xmlString length]>0) {
+                NSString *xml=[result.xmlString stringByReplacingOccurrencesOfString:result.xmlnsAttr withString:@""];
+                [result.xmlParse setDataSource:xml];
+                XmlNode *node=[result.xmlParse soapXmlSelectSingleNode:@"//UIDLoginResult"];
+                NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:[node.InnerText dataUsingEncoding:NSUTF8StringEncoding] options:1 error:nil];
+                if ([dic objectForKey:@"Account"]) {
+                    [self hideLoadingViewAnimated:^(AnimateLoadView *hideView) {
+                        //登录
+                        [Account loginGeneralWithUserId:[cell1.textField.text Trim] password:[cell2.textField.text Trim] encrypt:pwd rememberPassword:cell3.check.hasRemember withData:dic];
+                        MainViewController *main=[[MainViewController alloc] init];
+                        [self presentViewController:main animated:YES completion:nil];
+                        [main release];
+                    }];
+                }else{
+                    [self hideLoadingFailedWithTitle:@"输入的帐号或密码错误,请重新输入!" completed:nil];
+                }
             }else{
                 [self hideLoadingFailedWithTitle:@"输入的帐号或密码错误,请重新输入!" completed:nil];
             }
-        }else{
+        } failed:^(NSError *error, NSDictionary *userInfo) {
             [self hideLoadingFailedWithTitle:@"输入的帐号或密码错误,请重新输入!" completed:nil];
-        }
-    } failed:^(NSError *error, NSDictionary *userInfo) {
-        [self hideLoadingFailedWithTitle:@"输入的帐号或密码错误,请重新输入!" completed:nil];
+        }];
+
     }];
-    
 }
 //注册
 - (void)buttonRegister{
-    RegisterViewController *controller=[[RegisterViewController alloc] init];
-    CATransition *animation = [CATransition animation];
-    [animation setDuration:0.5];
-    [animation setType:kCATransitionPush];
-    [animation setSubtype:kCATransitionFromRight];
-    [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
-    [[controller.view layer] addAnimation:animation forKey:@"SwitchToView"];
+    /***
+    RegisterViewController *controller=[[[RegisterViewController alloc] init] autorelease];
+    CATransition *animation=[self getAnimation:2 subtype:2];
     [self presentViewController:controller animated:NO completion:nil];
-    [controller release];
+    [controller.view.layer addAnimation:animation forKey:nil];
+    ***/
+    
+    RegisterViewController *controller=[[[RegisterViewController alloc] init] autorelease];
+    [self.navigationController pushViewController:controller animated:YES];
+    
 }
 #pragma mark UITextFieldDelegate Methods
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string

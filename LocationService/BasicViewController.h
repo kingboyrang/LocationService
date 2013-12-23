@@ -7,12 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import <QuartzCore/QuartzCore.h>
 #import "AnimateLoadView.h"
 #import "AnimateErrorView.h"
 #import "ServiceHelper.h"
+#import "NavBarView.h"
 @interface BasicViewController : UIViewController
-
+@property(nonatomic,strong) NavBarView *navBarView;
+@property(nonatomic,assign) BOOL showBarView;
+@property(nonatomic,assign) BOOL showBackButton;
 @property(nonatomic,strong) ServiceHelper *serviceHelper;
 @property(nonatomic,readonly) BOOL hasNetWork;
 //动画操作
@@ -38,4 +41,5 @@
 - (void) showErrorNetWorkNotice:(void (^)(void))dismissError;
 - (void) showMessageWithTitle:(NSString*)title;
 - (void) showMessageWithTitle:(NSString*)title innerView:(UIView*)view dismissed:(void(^)())completed;
+- (CATransition *)getAnimation:(NSInteger)type subtype:(NSInteger)subtype;
 @end

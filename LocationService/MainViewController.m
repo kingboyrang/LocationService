@@ -10,6 +10,8 @@
 #import "UIColor+TPCategory.h"
 #import "UIImage+TPCategory.h"
 #import "BasicNavigationController.h"
+#import "IndexViewController.h"
+#import "MoreViewController.h"
 //获取设备的物理高度
 
 @interface MainViewController ()
@@ -37,8 +39,6 @@
    
     [self _initViewController];//初始化子控制器
     [self _initTabbarView];//创建自定义tabBar
-    
-   
 }
 
 - (void)didReceiveMemoryWarning
@@ -50,8 +50,7 @@
 //初始化子控制器
 - (void)_initViewController {
     
-    UIViewController *viewController1=[[[UIViewController alloc] init] autorelease];
-    viewController1.view.backgroundColor=[UIColor whiteColor];
+    IndexViewController *viewController1=[[[IndexViewController alloc] init] autorelease];
     BasicNavigationController *nav1=[[[BasicNavigationController alloc] initWithRootViewController:viewController1] autorelease];
     nav1.delegate=self;
 
@@ -70,8 +69,7 @@
     BasicNavigationController *nav4=[[[BasicNavigationController alloc] initWithRootViewController:viewController4] autorelease];
     nav4.delegate=self;
     
-    UIViewController *viewController5=[[[UIViewController alloc] init] autorelease];
-    viewController5.view.backgroundColor=[UIColor whiteColor];
+    MoreViewController *viewController5=[[[MoreViewController alloc] init] autorelease];
     BasicNavigationController *nav5=[[[BasicNavigationController alloc] initWithRootViewController:viewController5] autorelease];
     nav5.delegate=self;
     
@@ -169,7 +167,7 @@
 }
 #pragma mark - UINavigationController delegate
 - (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
-    //viewController.hidesBottomBarWhenPushed=YES;
+    viewController.hidesBottomBarWhenPushed=YES;
     //导航控制器子控制器的个数
     int count = navigationController.viewControllers.count;
     if (count == 1) {
@@ -177,7 +175,15 @@
     }else if (count== 2) {
         [self showTabbar:NO];
     }
+    
+    if ( viewController == [navigationController.viewControllers objectAtIndex:0]) {
+        [navigationController setNavigationBarHidden:YES animated:animated];
+    } else if ( [navigationController isNavigationBarHidden] ) {
+       // [navigationController setNavigationBarHidden:NO animated:animated];
+    }
+
 }
+
 #pragma mark 私有方法
 -(void)updateSelectedStatus:(int)selectTag lastIndex:(int)prevIndex{
     UIButton *btn=(UIButton*)[_tabbarView viewWithTag:100+prevIndex];

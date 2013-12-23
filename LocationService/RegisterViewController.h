@@ -10,4 +10,6 @@
 
 @interface RegisterViewController : BasicViewController
 @property(nonatomic,strong) NSMutableArray *cells;
+-(void) showErrorViewAnimated:(void (^)(AnimateErrorView *errorView))process;
+-(void) showLoadingAnimated:(void (^)(AnimateLoadView *errorView))process;
 @end

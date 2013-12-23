@@ -30,6 +30,9 @@
 #define DataWebserviceURL @"http://ibdcloud.com:8889/WebServices/Push.asmx"
 #define DataNameSpace @"http://tempuri.org/"
 
+#define DataWebservice1 @"http://www.ibdcloud.com:8083/Pit_APP.asmx"
+#define DataNameSpace1 @"http://tempuri.org/"
+
 //字体设置
 #define DeviceFontName @"Helvetica-Bold"
 #define DeviceFontSize 16.0

@@ -13,6 +13,7 @@
     [encoder encodeObject:self.Way forKey:@"Way"];
     [encoder encodeObject:self.UserId forKey:@"UserId"];
     [encoder encodeObject:self.Password forKey:@"Password"];
+    [encoder encodeObject:self.encryptPwd forKey:@"encryptPwd"];
     
     [encoder encodeObject:self.Name forKey:@"Name"];
     [encoder encodeObject:self.Phone forKey:@"Phone"];
@@ -27,6 +28,7 @@
         self.Way=[aDecoder decodeObjectForKey:@"Way"];
         self.UserId=[aDecoder decodeObjectForKey:@"UserId"];
         self.Password=[aDecoder decodeObjectForKey:@"Password"];
+        self.encryptPwd=[aDecoder decodeObjectForKey:@"encryptPwd"];
         
         self.Name=[aDecoder decodeObjectForKey:@"Name"];
         self.Phone=[aDecoder decodeObjectForKey:@"Phone"];
@@ -48,18 +50,20 @@
     acc.isRememberPwd=NO;
     acc.UserId=@"";
     acc.Password=@"";
+    acc.encryptPwd=@"";
     acc.Name=@"";
     acc.Phone=@"";
     acc.WorkNo=@"";
     acc.Way=@"";
     [acc save];
 }
-+ (void)loginGeneralWithUserId:(NSString*)userId password:(NSString*)pwd rememberPassword:(BOOL)remember withData:(NSDictionary*)dic{
++ (void)loginGeneralWithUserId:(NSString*)userId password:(NSString*)pwd encrypt:(NSString*)encrypt rememberPassword:(BOOL)remember withData:(NSDictionary*)dic{
     Account *acc=[Account unarchiverAccount];
     acc.isLogin=YES;
     acc.Way=@"1";
     acc.UserId=userId;
     acc.Password=pwd;
+    acc.encryptPwd=encrypt;
     acc.isRememberPwd=remember;
     if (dic) {
         if ([dic objectForKey:@"Name"]!=nil) {
@@ -92,6 +96,18 @@
             acc.WorkNo=[dic objectForKey:@"WorkNo"];
         }
     }
+    [acc save];
+}
++ (void)editPwd:(NSString*)pwd encrypt:(NSString*)encrypt{
+    Account *acc=[Account unarchiverAccount];
+    acc.Password=pwd;
+    acc.encryptPwd=encrypt;
+    [acc save];
+}
++ (void)updateInfo:(NSString*)tel nick:(NSString*)nick{
+    Account *acc=[Account unarchiverAccount];
+    acc.Phone=tel;
+    acc.Name=nick;
     [acc save];
 }
 + (void)registerLoginWithAccount:(Account*)entity{

@@ -28,6 +28,7 @@
 - (void)buttonDynamicPwdClick;
 - (void)buttonLoginClick;
 - (void)buttonCancel;
+- (void)replacePhonestring;
 @end
 
 @implementation DynamicLoginViewController
@@ -48,6 +49,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.showBarView=NO;
+    
     CGRect r=self.view.bounds;
     r.size.height-=44*2;
     _tableView=[[UITableView alloc] initWithFrame:r style:UITableViewStylePlain];
@@ -102,6 +105,15 @@
 }
 -(void)dynamicCodeTimeOut{
     _buttons.submit.enabled=NO;
+}
+- (void)replacePhonestring{
+    NSRegularExpression *regular;
+    regular = [[NSRegularExpression alloc] initWithPattern:@"[^0-9]+"
+                                                   options:NSRegularExpressionCaseInsensitive
+                                                     error:nil];
+    TKTextFieldCell *cell1=self.cells[1];
+    NSString *str=[cell1.textField.text Trim];
+    cell1.textField.text = [regular stringByReplacingMatchesInString:str options:NSRegularExpressionCaseInsensitive  range:NSMakeRange(0, [str length]) withTemplate:@""];
 }
 //取消
 - (void)buttonCancel{
@@ -237,14 +249,8 @@
 }
 //注册
 - (void)buttonRegister{
-   RegisterViewController *controller=[[RegisterViewController alloc] init];
-    CATransition *animation = [CATransition animation];
-    [animation setDuration:0.5];
-    [animation setType:kCATransitionPush];
-    [animation setSubtype:kCATransitionFromRight];
-    [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
-    [[controller.view layer] addAnimation:animation forKey:@"SwitchToView"];
-    [self presentViewController:controller animated:NO completion:nil];
+    RegisterViewController *controller=[[RegisterViewController alloc] init];
+    [self.navigationController pushViewController:controller animated:YES];
     [controller release];
 }
 #pragma mark UITextFieldDelegate Methods
@@ -254,6 +260,7 @@
     BOOL boo=YES;
     TKTextFieldCell *cell=self.cells[1];
     if (cell.textField==textField) {
+        [self replacePhonestring];
         if(strlen([textField.text UTF8String]) >= 11 && range.length != 1)
             boo=NO;
     }else{

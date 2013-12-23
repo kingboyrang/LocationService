@@ -25,7 +25,6 @@
     UIImageView *_accountImageView;
     UIImageView *_phoneImageView;
 }
-- (void)backClick;
 - (void)updateShowInfo;
 - (void)buttonSubmit;
 - (void)buttonCancel;
@@ -49,43 +48,20 @@
     }
     return self;
 }
-
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self.navBarView setNavBarTitle:@"注册"];
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+    self.showBackButton=NO;
    
     
-    UIImage *image=[UIImage imageNamed:@"logintop.jpg"];
-    CGRect r=self.view.bounds;
-    r.size=image.size;
-    UIImageView *imageView=[[UIImageView alloc] initWithFrame:r];
-    [imageView setImage:image];
-    [self.view addSubview:imageView];
-    [imageView release];
-    
-   
-    
-    FXLabel *fx=[AppUI showLabelTitle:@"注册" frame:CGRectMake(0, 0, image.size.width, image.size.height)];
-    r=fx.frame;
-    r.origin.x=(self.view.bounds.size.width-r.size.width)/2.0;
-    r.origin.y=(image.size.height-r.size.height)/2.0;
-    fx.frame=r;
-    [self.view addSubview:fx];
-    
-    /***
-    UIButton *btn=[UIButton backButtonTarget:self action:@selector(backClick) forControlEvents:UIControlEventTouchUpInside];
-    r=btn.frame;
-    r.origin.x=5;
-    r.origin.y=(image.size.height-r.size.height)/2;
-    btn.frame=r;
-    [self.view addSubview:btn];
-     ***/
-    
-    
-    r=self.view.bounds;
-    r.origin.y=image.size.height;
-    r.size.height-=image.size.height+44;
+   CGRect r=self.view.bounds;
+    r.origin.y=44;
+    r.size.height-=44*2;
     
     
     _tableView=[[UITableView alloc] initWithFrame:r style:UITableViewStylePlain];
@@ -168,8 +144,35 @@
     _phoneImageView.hidden=YES;
 
 }
+-(void) showErrorViewAnimated:(void (^)(AnimateErrorView *errorView))process{
+    AnimateErrorView *errorView = [self errorView];
+    if (process) {
+        process(errorView);
+    }
+    [self.view addSubview:errorView];
+    [self.view bringSubviewToFront:errorView];
+    CGRect r=errorView.frame;
+    r.origin.y=46;
+    [UIView animateWithDuration:0.5f animations:^{
+        errorView.frame=r;
+    }];
+}
+-(void) showLoadingAnimated:(void (^)(AnimateLoadView *errorView))process{
+    AnimateLoadView *loadingView = [self loadingView];
+    if (process) {
+        process(loadingView);
+    }
+    [self.view addSubview:loadingView];
+    [loadingView.activityIndicatorView startAnimating];
+    CGRect r=loadingView.frame;
+    r.origin.y=46;
+    [UIView animateWithDuration:0.5f animations:^{
+        loadingView.frame=r;
+    }];
+}
 //注册
 - (void)buttonSubmit{
+    
     TKTextFieldCell *cell1=self.cells[1];
     if (!cell1.hasValue) {
         [AlertHelper initWithTitle:@"提示" message:@"帐号不为空!"];
@@ -232,13 +235,7 @@
                 
                 RegisterSuccessViewController *registerSuccess=[[RegisterSuccessViewController alloc] init];
                 registerSuccess.Entity=acc;
-                CATransition *animation = [CATransition animation];
-                [animation setDuration:0.5];
-                [animation setType:kCATransitionPush];
-                [animation setSubtype:kCATransitionFromRight];
-                [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
-                [[registerSuccess.view layer] addAnimation:animation forKey:@"SwitchToView"];
-                [self presentViewController:registerSuccess animated:NO completion:nil];
+                [self.navigationController pushViewController:registerSuccess animated:YES];
                 [registerSuccess release];
             }else{
                [self hideLoadingFailedWithTitle:@"网络不稳定,稍后再试!" completed:nil];
@@ -253,6 +250,8 @@
 }
 //取消 
 - (void)buttonCancel{
+    [self.navigationController popViewControllerAnimated:YES];
+    /***
     CATransition *animation = [CATransition animation];
     [animation setDuration:0.5];
     [animation setType:kCATransitionReveal];
@@ -261,6 +260,7 @@
     [[self.view layer] addAnimation:animation forKey:@"dissMissToView"];
     //self.modalTransitionStyle=UI;
     [self dismissViewControllerAnimated:YES completion:nil];
+     ***/
 }
 //判断帐号是否存在 
 - (void)updateShowInfo{
@@ -329,16 +329,6 @@
 
     
 }
-- (void)backClick{
-    CATransition *animation = [CATransition animation];
-    [animation setDuration:0.5];
-    [animation setType:kCATransitionReveal];
-    [animation setSubtype:kCATransitionFromLeft];
-    [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]];
-    [[self.view layer] addAnimation:animation forKey:@"dissMissToView"];
-    //self.modalTransitionStyle=UI;
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
 - (CGRect)fieldToRect:(UITextField*)field{
     id v=[field superview];
     while (![v isKindOfClass:[UITableViewCell class]]) {
@@ -390,7 +380,7 @@
 }
 - (void)textFieldDidEndEditing:(UITextField *)textField;
 {
-    self.view.frame =CGRectMake(0, 20, self.view.frame.size.width, self.view.frame.size.height);
+    self.view.frame =CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
     
     TKTextFieldCell *cell=self.cells[1];
     TKTextFieldCell *cell1=self.cells[5];

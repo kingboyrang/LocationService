@@ -16,6 +16,7 @@
     AnimateErrorView *_errorView;
     AnimateErrorView *_successView;
 }
+-(void)buttonBackClick;
 @end
 
 @implementation BasicViewController
@@ -31,15 +32,36 @@
     if(_successView){
         [_successView release],_successView=nil;
     }
-    [_serviceHelper release];
+    //[_serviceHelper release];
 }
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+        
     }
     return self;
+}
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    if (self.showBarView) {
+        if (![self.view.subviews containsObject:_navBarView]) {
+            _navBarView=[[NavBarView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 44)];
+            //CGRectMake(0, 0, DeviceWidth, 44)
+            [self.view addSubview:_navBarView];
+            
+            if (self.showBackButton) {
+                if (self.navigationController) {
+                    if ([self.navigationController.viewControllers count]>1) {
+                        [_navBarView setBackButtonWithTarget:self action:@selector(buttonBackClick)];
+                    }
+                }
+            }
+        }
+    }
+}
+-(void)buttonBackClick{
+    [self.navigationController popViewControllerAnimated:YES];
 }
 - (void)viewDidLoad
 {
@@ -47,6 +69,11 @@
     [super viewDidLoad];
     self.serviceHelper=[[ServiceHelper alloc] init];
     self.view.backgroundColor=[UIColor whiteColor];
+    //[self showNavigationBackButton];
+    self.showBarView=YES;
+    self.showBackButton=YES;
+    
+    
     
 }
 - (BOOL)hasNetWork{
@@ -220,5 +247,70 @@
         }];
         [self performSelector:@selector(hideSuccessViewAnimated:) withObject:complete afterDelay:2.0f];
     }];
+}
+-(CATransition *)getAnimation:(NSInteger)type subtype:(NSInteger)subtype{
+    CATransition *animation = [CATransition animation];
+    //animation.delegate = self;
+    animation.duration = 0.5;
+    animation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+    switch (type) {
+        case 1:
+            animation.type = kCATransitionFade;
+            break;
+        case 2:
+            animation.type = kCATransitionPush;
+            break;
+        case 3:
+            animation.type = kCATransitionReveal;
+            break;
+        case 4:
+            animation.type = kCATransitionMoveIn;
+            break;
+        case 5:
+            animation.type = @"cube";
+            break;
+        case 6:
+            animation.type = @"suckEffect";
+            break;
+        case 7:
+            animation.type = @"oglFlip";
+            break;
+        case 8:
+            animation.type = @"rippleEffect";//波纹
+            break;
+        case 9:
+            animation.type = @"pageCurl";
+            break;
+        case 10:
+            animation.type = @"pageUnCurl";
+            break;
+        case 11:
+            animation.type = @"cameraIrisHollowOpen";
+            break;
+        case 12:
+            animation.type = @"cameraIrisHollowClose";
+            break;
+        default:
+            animation.type = kCATransitionFade;
+            break;
+    }
+    switch (subtype) {
+        case 0:
+            animation.subtype = kCATransitionFromLeft;
+            break;
+        case 1:
+            animation.subtype = kCATransitionFromBottom;
+            break;
+        case 2:
+            animation.subtype = kCATransitionFromRight;
+            break;
+        case 3:
+            animation.subtype = kCATransitionFromTop;
+            break;
+        default:
+            animation.subtype = kCATransitionFromLeft;
+            break;
+    }
+    return animation;
 }
 @end

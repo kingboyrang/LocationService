@@ -26,9 +26,19 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view.
+	
+    /***
+    for (UIView *v in self.view.subviews) {
+        NSLog(@"class=%@,frame=%@",[v class],NSStringFromCGRect(v.frame));
+    }
+     ***/
 }
-
+- (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated
+{
+    if (![self.topViewController isKindOfClass:[viewController class]]) {
+        [super pushViewController:viewController animated:animated];
+    }
+}
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

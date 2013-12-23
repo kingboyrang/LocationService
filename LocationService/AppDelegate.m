@@ -9,6 +9,8 @@
 #import "AppDelegate.h"
 #import "AppHelper.h"
 #import "LoginViewController.h"
+#import "BasicNavigationController.h"
+#import "Account.h"
 @implementation AppDelegate
 
 - (void)dealloc
@@ -23,8 +25,8 @@
     // Override point for customization after application launch.
    
     LoginViewController *login=[[[LoginViewController alloc] init] autorelease];
-    
-    self.window.rootViewController =login;
+    BasicNavigationController *nav=[[[BasicNavigationController alloc] initWithRootViewController:login] autorelease];
+    self.window.rootViewController =nav;
     [self.window makeKeyAndVisible];
     
    

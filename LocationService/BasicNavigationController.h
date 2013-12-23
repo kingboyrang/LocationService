@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "NavBarView.h"
 @interface BasicNavigationController : UINavigationController
-
 @end
