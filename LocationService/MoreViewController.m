@@ -14,6 +14,7 @@
 #import "UserInfoViewController.h"
 #import "Account.h"
 #import "BasicNavigationController.h"
+#import "SupervisionViewController.h"
 @interface MoreViewController ()
 
 @end
@@ -35,8 +36,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    
     
 	CGRect rect=self.view.bounds;
     rect.size.height-=TabHeight+44;
@@ -91,6 +90,11 @@
     return cell;
 }
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.row==0) {
+        SupervisionViewController *edit=[[SupervisionViewController alloc] init];
+        [self.navigationController pushViewController:edit animated:YES];
+        [edit release];
+    }
     if (indexPath.row==3) {
         UserInfoViewController *edit=[[UserInfoViewController alloc] init];
         [self.navigationController pushViewController:edit animated:YES];

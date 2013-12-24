@@ -25,7 +25,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        _hasRemember=NO;
+        _hasRemember=YES;
         self.backgroundColor=[UIColor clearColor];
         [self loadControls:frame];
     }

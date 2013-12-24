@@ -10,7 +10,9 @@
 #import "AppHelper.h"
 #import "LoginViewController.h"
 #import "BasicNavigationController.h"
+#import "MainViewController.h"
 #import "Account.h"
+
 @implementation AppDelegate
 
 - (void)dealloc
@@ -23,16 +25,20 @@
 {
     self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
     // Override point for customization after application launch.
-   
-    LoginViewController *login=[[[LoginViewController alloc] init] autorelease];
-    BasicNavigationController *nav=[[[BasicNavigationController alloc] initWithRootViewController:login] autorelease];
-    self.window.rootViewController =nav;
+    Account *acc=[Account unarchiverAccount];
+    if (acc.isRememberPwd) {//记住密码
+        acc.isLogin=YES;
+        [acc save];
+        MainViewController *main=[[[MainViewController alloc] init] autorelease];
+         self.window.rootViewController=main;
+    }else{
+        [Account closed];
+        LoginViewController *login=[[[LoginViewController alloc] init] autorelease];
+        BasicNavigationController *nav=[[[BasicNavigationController alloc] initWithRootViewController:login] autorelease];
+        self.window.rootViewController =nav;
+    }
     [self.window makeKeyAndVisible];
-    
-   
-
-    //[AppHelper runAnimation:nil];
-   
+    [AppHelper runAnimation:nil];//启动动画
     return YES;
 }
 
@@ -62,5 +68,4 @@
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
-
 @end

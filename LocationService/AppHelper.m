@@ -18,6 +18,8 @@
 @implementation AppHelper
 
 + (void)runAnimation:(void(^)())completed{
+    Account *acc=[Account unarchiverAccount];
+    if (!acc.isFirstRun) {return;}
     AppHelper *app=[[[AppHelper alloc] init] autorelease];
     [app runningAnimation:completed];
 }
@@ -26,12 +28,12 @@
     UIWindow *window=[[UIApplication sharedApplication] keyWindow];
 
     UIImageView *tovalue=[[[UIImageView alloc] initWithFrame:DeviceRect] autorelease];
-    tovalue.tag=100;
+    tovalue.tag=800;
     [tovalue setImage:[UIImage imageNamed:@"load02.jpg"]];
     [window addSubview:tovalue];
     
     UIImageView *imageView2=[[[UIImageView alloc] initWithFrame:DeviceRect] autorelease];
-    imageView2.tag=101;
+    imageView2.tag=801;
     [imageView2 setImage:[UIImage imageNamed:@"load01.jpg"]];
     [window addSubview:imageView2];
     
@@ -40,8 +42,8 @@
 - (void)changeViewIndex:(void(^)())completed{
     UIWindow *window=[[UIApplication sharedApplication] keyWindow];
     
-    UIImageView *fromvalue=(UIImageView*)[window viewWithTag:101];
-    UIImageView *tovalue=(UIImageView*)[window viewWithTag:100];
+    UIImageView *fromvalue=(UIImageView*)[window viewWithTag:801];
+    UIImageView *tovalue=(UIImageView*)[window viewWithTag:800];
     
     [UIView transitionFromView:fromvalue toView:tovalue duration:1.0f options:UIViewAnimationOptionTransitionCrossDissolve completion:^(BOOL finished) {
         if (finished) {
@@ -52,7 +54,7 @@
 }
 - (void)removeView{
     UIWindow *window=[[UIApplication sharedApplication] keyWindow];
-    UIImageView *imageView=(UIImageView*)[window viewWithTag:100];
+    UIImageView *imageView=(UIImageView*)[window viewWithTag:800];
     [imageView removeFromSuperview];
     
     Account *acc=[Account unarchiverAccount];
@@ -62,7 +64,7 @@
 - (void)removeRunningAnimation:(void(^)())completed{
    
     UIWindow *window=[[UIApplication sharedApplication] keyWindow];
-    UIImageView *imageView=(UIImageView*)[window viewWithTag:100];
+    UIImageView *imageView=(UIImageView*)[window viewWithTag:800];
     
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
