@@ -364,8 +364,6 @@
 }
 -(void)textFieldDidBeginEditing:(UITextField *)textField {
     
-   
-    
     CGRect frame = [self fieldToRect:textField];
     int offset = frame.origin.y + 36 - (self.view.frame.size.height - 216.0);//键盘高度216
     

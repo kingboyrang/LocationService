@@ -36,12 +36,27 @@
     [_labPhone release];
     [super dealloc];
 }
+- (IBAction)buttonEditHead:(id)sender {
+    if (self.controler&&[self.controler respondsToSelector:@selector(supervisionEditHeadWithEntity:)]) {
+        [self.controler performSelector:@selector(supervisionEditHeadWithEntity:) withObject:self.Entity];
+    }
+}
+
 - (IBAction)buttonMessageClick:(id)sender {
+    if (self.controler&&[self.controler respondsToSelector:@selector(supervisionMessageWithEntity:)]) {
+        [self.controler performSelector:@selector(supervisionMessageWithEntity:) withObject:self.Entity];
+    }
 }
 
 - (IBAction)buttonTrajectoryClick:(id)sender {
+    if (self.controler&&[self.controler respondsToSelector:@selector(supervisionTrajectoryWithEntity:)]) {
+        [self.controler performSelector:@selector(supervisionTrajectoryWithEntity:) withObject:self.Entity];
+    }
 }
 
 - (IBAction)buttonCallClick:(id)sender {
+    if (self.controler&&[self.controler respondsToSelector:@selector(supervisionCallWithEntity:)]) {
+        [self.controler performSelector:@selector(supervisionCallWithEntity:) withObject:self.Entity];
+    }
 }
 @end

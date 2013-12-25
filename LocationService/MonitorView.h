@@ -13,7 +13,8 @@
 @property (retain, nonatomic) IBOutlet UILabel *labName;
 @property (retain, nonatomic) IBOutlet UILabel *labPhone;
 @property (strong,nonatomic) SupervisionPerson *Entity;
-
+@property (nonatomic,assign) id controler;
+- (IBAction)buttonEditHead:(id)sender;
 - (IBAction)buttonMessageClick:(id)sender;
 - (IBAction)buttonTrajectoryClick:(id)sender;
 - (IBAction)buttonCallClick:(id)sender;

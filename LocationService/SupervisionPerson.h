@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface SupervisionPerson : NSObject
+@interface SupervisionPerson : NSObject<NSCopying>
 @property(nonatomic,copy) NSString *ID;//被监控者唯一ID
 @property(nonatomic,copy) NSString *Name;//被监控者名称
 @property(nonatomic,copy) NSString *isOnline;//"0"表示终端不在线，"1"表示终端在线
