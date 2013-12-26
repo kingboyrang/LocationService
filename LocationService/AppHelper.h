@@ -10,4 +10,5 @@
 
 @interface AppHelper : NSObject
 + (void)runAnimation:(void(^)())completed;
++ (NSArray*)arrayWithSource:(NSArray*)source className:(NSString*)name;
 @end

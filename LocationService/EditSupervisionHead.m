@@ -10,6 +10,8 @@
 #import "UIImageView+WebCache.h"
 #import "LoginButtons.h"
 #import "CaseCameraImage.h"
+#import "UIImage+TPCategory.h"
+#import "AlertHelper.h"
 @interface EditSupervisionHead (){
 }
 @property (nonatomic, strong) CaseCameraImage *cameraImage;
@@ -17,6 +19,7 @@
 - (void)buttonCameraClick;
 - (void)buttonCancelClick;
 - (void)buttonSubmitClick;
+- (void)uploadImageWithId:(NSString*)personId completed:(void(^)(NSString *fileName))completed;
 @end
 
 @implementation EditSupervisionHead
@@ -63,9 +66,7 @@
     [_button addTarget:self action:@selector(buttonViewerClick) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_button];
     
-    UIImage *leftImage1=[UIImage imageNamed:@"bgbutton01.png"];
-    UIEdgeInsets leftInsets1 = UIEdgeInsetsMake(5,10, 5, 10);
-    leftImage1=[leftImage1 resizableImageWithCapInsets:leftInsets1 resizingMode:UIImageResizingModeStretch];
+   
     
     UIButton *btn=[UIButton buttonWithType:UIButtonTypeCustom];
     btn.frame=CGRectMake(170, 320+topY, 114, 40);
@@ -86,26 +87,73 @@
     
 }
 - (void)finishedImage:(UIImage*)image{
-    UIImageView *imageView=[[UIImageView alloc] initWithFrame:CGRectMake(10, 44+10, self.view.bounds.size.width-10*2, 300)];
-    [imageView setImage:image];
-    [self.view addSubview:imageView];
-    [imageView release];
-    return;
     
-    if (!self.imageCropper) {
-        self.imageCropper = [[BJImageCropper alloc] initWithFrame:CGRectMake(10, 44+10, self.view.bounds.size.width-10*2, 300)];
-        [self.imageCropper setImage:image];
-        NSLog(@"frame=%@",NSStringFromCGRect(self.imageCropper.frame));
-        [self.view addSubview:self.imageCropper];
-        self.imageCropper.center = self.view.center;
-        self.imageCropper.imageView.layer.shadowColor = [[UIColor blackColor] CGColor];
-        self.imageCropper.imageView.layer.shadowRadius = 3.0f;
-        self.imageCropper.imageView.layer.shadowOpacity = 0.8f;
-        self.imageCropper.imageView.layer.shadowOffset = CGSizeMake(1, 1);
-    }else{
-        [self.imageCropper.imageView setImage:image];
+    if (image.size.width<90||image.size.height<104) {
+        [AlertHelper initWithTitle:@"提示" message:@"头像大小必须大于或等于90*104像素!"];
+        return;
+    }
+    if (_imageCropper) {
+        [_imageCropper removeFromSuperview];
+        [_imageCropper release];
     }
     
+    UIImage *realImage=[image scaleToSize:CGSizeMake(300, 300)];
+    
+    CGRect r=CGRectMake((self.view.bounds.size.width-realImage.size.width)/2,44+(320-realImage.size.height)/2, realImage.size.width, realImage.size.height);
+    _imageCropper = [[NLImageCropperView alloc] initWithFrame:r];
+    [self.view addSubview:_imageCropper];
+    [_imageCropper setImage:realImage];
+    [_imageCropper setCropRegionRect:CGRectMake((realImage.size.width-90)*_imageCropper.scaleReal/2, (realImage.size.width-104)*_imageCropper.scaleReal/2, 90*_imageCropper.scaleReal, 104*_imageCropper.scaleReal)];
+    
+}
+- (void)uploadImageWithId:(NSString*)personId completed:(void(^)(NSString *fileName))completed{
+    if (_imageCropper) {
+        if (!self.hasNetWork) {
+            [self showErrorNetWorkNotice:nil];
+            return;
+        }
+        [self showLoadingAnimatedWithTitle:@"正在修改头像,请稍后..."];
+        NSString *base64=[[_imageCropper getCroppedImage] imageBase64String];
+        NSMutableArray *params=[NSMutableArray arrayWithCapacity:2];
+        [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:base64,@"imgbase64", nil]];
+        [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:personId,@"personID", nil]];
+        
+        ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
+        args.serviceURL=DataWebservice1;
+        args.serviceNameSpace=DataNameSpace1;
+        args.methodName=@"UpImage";
+        args.soapParams=params;
+        [self.serviceHelper asynService:args success:^(ServiceResult *result) {
+            NSString *name=@"";
+            if (result.hasSuccess) {
+                XmlNode *node=[result methodNode];
+                NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:[node.InnerText dataUsingEncoding:NSUTF8StringEncoding] options:1 error:nil];
+                if (![[dic objectForKey:@"Result"] isEqualToString:@"false"]) {
+                    name=[dic objectForKey:@"Result"];
+                }
+            }
+            if ([name length]>0) {
+                [self hideLoadingFailedWithTitle:@"修改头像失败!" completed:nil];
+            }else{
+                [self hideLoadingViewAnimated:^(AnimateLoadView *hideView) {
+                    if (completed) {
+                        completed(name);
+                    }
+                    [self.navigationController popViewControllerAnimated:YES];
+                }];
+            }
+            
+        } failed:^(NSError *error, NSDictionary *userInfo) {
+            [self hideLoadingFailedWithTitle:@"修改头像失败!" completed:nil];
+            if (completed) {
+                completed(@"");
+            }
+        }];
+    }else{
+        if (completed) {
+            completed(@"");
+        }
+    }
 }
 //上一步
 - (void)buttonCancelClick{
@@ -113,7 +161,11 @@
 }
 //完成
 - (void)buttonSubmitClick{
-    
+    if (_imageCropper) {
+        [self uploadImageWithId:self.Entity.ID completed:nil];
+    }else{
+        [AlertHelper initWithTitle:@"提示" message:@"未选择头像!"];
+    }
 }
 //浏览
 - (void)buttonViewerClick{

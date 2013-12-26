@@ -130,13 +130,13 @@
 }
 - (BOOL) isUIDString{
     TKTextFieldCell *cell1=self.cells[1];
-    NSString *emailRegEx =@"^[a-zA-Z0-9_]+$";
+    NSString *emailRegEx =@"^[a-zA-Z0-9_\\.]+$";
     NSPredicate *regExPredicate = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", emailRegEx];
     return [regExPredicate evaluateWithObject:cell1.textField.text];
 }
 - (void)replaceUIDstring{
     NSRegularExpression *regular;
-    regular = [[NSRegularExpression alloc] initWithPattern:@"[^a-zA-Z0-9_]+"
+    regular = [[NSRegularExpression alloc] initWithPattern:@"[^a-zA-Z0-9_\\.]+"
                                                    options:NSRegularExpressionCaseInsensitive
                                                      error:nil];
     TKTextFieldCell *cell1=self.cells[1];

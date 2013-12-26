@@ -58,7 +58,7 @@
 + (UIImage*)imageWithResourcesPathCompontent:(NSString*)pathCompontent;
 
 /*
- * Scales the image to the given size, NOT aspect
+ * Scales the image to the given size, NOT aspect 等比缩放图片
  */
 - (UIImage*)scaleToSize:(CGSize)size;
 

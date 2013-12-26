@@ -17,6 +17,24 @@
 
 @implementation AppHelper
 
++ (NSArray*)arrayWithSource:(NSArray*)source className:(NSString*)name{
+    if (source&&[source count]>0) {
+        NSMutableArray *result=[NSMutableArray arrayWithCapacity:source.count];
+        for (NSDictionary *item in source) {
+            id entity=[[NSClassFromString(name) alloc] init];
+            for (NSString *k in item.allKeys) {
+                SEL sel=NSSelectorFromString(k);
+                if ([entity respondsToSelector:sel]) {
+                    [entity setValue:[item objectForKey:k] forKey:k];
+                }
+            }
+            [result addObject:entity];
+            [entity release];
+        }
+        return result;
+    }
+    return [NSArray array];
+}
 + (void)runAnimation:(void(^)())completed{
     Account *acc=[Account unarchiverAccount];
     if (!acc.isFirstRun) {return;}

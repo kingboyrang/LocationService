@@ -10,6 +10,7 @@
 #import "TKLabelCell.h"
 #import "TKTextFieldCell.h"
 #import "LoginButtons.h"
+#import "Account.h"
 @interface SupervisionExtend ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>{
     UITableView *_tableView;
 }
@@ -94,6 +95,33 @@
 }
 //完成
 - (void)buttonSubmit{
+    /***
+    Account *acc=[Account unarchiverAccount];
+    
+    TKTextFieldCell *cell1=self.cells[1];
+    TKTextFieldCell *cell2=self.cells[3];
+    TKTextFieldCell *cell3=self.cells[5];
+    TKTextFieldCell *cell4=self.cells[7];
+    TKTextFieldCell *cell5=self.cells[8];
+    TKTextFieldCell *cell6=self.cells[9];
+    
+    NSMutableArray *params=[NSMutableArray arrayWithCapacity:6];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[cell1.textField.text Trim],@"OperateValue", nil]];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"",@"SysID", nil]];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[cell3.textField.text Trim],@"SOS_Order", nil]];//sos号码+顺序
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[cell4.textField.text Trim],@"KinShip_Order", nil]];//亲情号码+顺序
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"",@"Moniter_Order", nil]];//监听号码+顺序
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"",@"CurDateTime", nil]];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:acc.WorkNo,@"CurWorkNo", nil]];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"",@"DeviceCode", nil]];//终端唯一ID
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"1",@"operateType", nil]];//操作类型1：新增 2：修改
+    
+    ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
+    args.serviceURL=DataWebservice1;
+    args.serviceNameSpace=DataNameSpace1;
+    args.methodName=@"SaveTeleAndFreqIn";
+    args.soapParams=params;
+     ***/
     
 }
 //上一步

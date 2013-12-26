@@ -13,6 +13,8 @@
 #import "AlertHelper.h"
 #import "AddSupervision.h"
 #import "EditSupervisionHead.h"
+#import "TrajectoryViewController.h"
+#import "TrajectoryMessageController.h"
 @interface SupervisionViewController ()<UITableViewDataSource,UITableViewDelegate>{
     UITableView *_tableView;
     LoginButtons *_toolBar;
@@ -91,13 +93,17 @@
     [self loadSupervision];
 }
 - (void)loadSupervision{
-    //Account *acc=[Account unarchiverAccount];
     
+    if (!self.hasNetWork) {
+        [self showErrorNetWorkNotice:nil];
+        return;
+    }
+    Account *acc=[Account unarchiverAccount];
     ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
     args.serviceURL=DataWebservice1;
     args.serviceNameSpace=DataNameSpace1;
     args.methodName=@"GetSuperviseInfo";
-    args.soapParams=[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:@"fd7bd3c8-5671-4049-9dd9-c65cc4bfdae8",@"WorkNo", nil], nil];
+    args.soapParams=[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:acc.WorkNo,@"WorkNo", nil], nil];
     
     [self.serviceHelper asynService:args success:^(ServiceResult *result) {
         if (result.hasSuccess) {
@@ -138,10 +144,19 @@
     [edit release];
 }
 -(void)supervisionMessageWithEntity:(SupervisionPerson*)entity{
+    TrajectoryMessageController *message=[[TrajectoryMessageController alloc] init];
+    message.Entity=entity;
+    [self.navigationController pushViewController:message animated:YES];
+    [message release];
 }
 -(void)supervisionTrajectoryWithEntity:(SupervisionPerson*)entity{
+    TrajectoryViewController *trajectory=[[TrajectoryViewController alloc] init];
+    trajectory.Entity=entity;
+    [self.navigationController pushViewController:trajectory animated:YES];
+    [trajectory release];
 }
 -(void)supervisionCallWithEntity:(SupervisionPerson*)entity{
+    
 }
 //取消删除
 - (void)buttonCancelRemoveClick{

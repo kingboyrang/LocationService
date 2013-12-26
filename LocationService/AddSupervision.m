@@ -115,6 +115,11 @@
 //完成
 - (void)buttonSubmit{
     
+    
+    if (!self.hasNetWork) {
+        [self showErrorNetWorkNotice:nil];
+        return;
+    }
     Account *acc=[Account unarchiverAccount];
     TKTextFieldCell *cell1=self.cells[1];
     TKTextFieldCell *cell2=self.cells[3];

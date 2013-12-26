@@ -8,10 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import "SupervisionPerson.h"
-#import "BJImageCropper.h"
-@interface EditSupervisionHead : BasicViewController
+#import "NLImageCropperView.h"
+@interface EditSupervisionHead : BasicViewController{
+     NLImageCropperView* _imageCropper;
+}
 @property(nonatomic,strong) SupervisionPerson *Entity;
-@property (nonatomic, strong) BJImageCropper *imageCropper;
 @property (nonatomic, strong) UIImageView *preview;
 
 - (void)finishedImage:(UIImage*)image;

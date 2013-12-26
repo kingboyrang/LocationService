@@ -97,6 +97,13 @@
     }
     return nil;
 }
+- (id)json{
+    XmlNode *node=[self methodNode];
+    if (node!=nil&&[node.InnerText length]>0) {
+        return [NSJSONSerialization JSONObjectWithData:[node.InnerText dataUsingEncoding:NSUTF8StringEncoding] options:1 error:nil];
+    }
+    return nil;
+}
 -(BOOL)hasSuccess{
     if (xmlString&&[xmlString length]>0)return YES;
     return NO;
