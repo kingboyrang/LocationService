@@ -10,4 +10,6 @@
 
 @interface SupervisionExtend : BasicViewController
 @property(nonatomic,strong) NSMutableArray *cells;
+@property (nonatomic,copy) NSString *PersonId;
+@property (nonatomic,assign) int operateType;//1:新增 2:修改
 @end

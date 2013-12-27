@@ -12,4 +12,8 @@
 @property(nonatomic,strong) NSMutableArray *cells;
 //动态密码超时
 -(void)dynamicCodeTimeOut;
+
+-(void) showLoadingAnimated:(void (^)(AnimateLoadView *errorView))process;
+-(void) showErrorViewAnimated:(void (^)(AnimateErrorView *errorView))process;
+-(void) showSuccessViewAnimated:(void (^)(AnimateErrorView *errorView))process;
 @end

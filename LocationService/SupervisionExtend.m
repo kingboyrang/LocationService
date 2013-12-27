@@ -11,11 +11,16 @@
 #import "TKTextFieldCell.h"
 #import "LoginButtons.h"
 #import "Account.h"
+#import "NSDate+TPCategory.h"
+#import "AlertHelper.h"
+#import "EditSupervisionViewController.h"
 @interface SupervisionExtend ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>{
     UITableView *_tableView;
 }
 - (void)buttonSubmit;
 - (void)buttonCancel;
+- (CGRect)fieldToRect:(UITextField*)field;
+- (void)replacePhonestring:(UITextField*)field;
 @end
 
 @implementation SupervisionExtend
@@ -28,7 +33,10 @@
     }
     return self;
 }
-
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    [self.navBarView setNavBarTitle:@"监管目标"];
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -95,37 +103,149 @@
 }
 //完成
 - (void)buttonSubmit{
-    /***
+ 
     Account *acc=[Account unarchiverAccount];
     
     TKTextFieldCell *cell1=self.cells[1];
     TKTextFieldCell *cell2=self.cells[3];
+    if (!cell2.hasValue) {
+        [AlertHelper initWithTitle:@"提示" message:@"请输入SOS号!"];
+        [cell2.textField becomeFirstResponder];
+        return;
+    }
     TKTextFieldCell *cell3=self.cells[5];
+    if (!cell3.hasValue) {
+        [AlertHelper initWithTitle:@"提示" message:@"请输入监听号!"];
+        [cell3.textField becomeFirstResponder];
+        return;
+    }
     TKTextFieldCell *cell4=self.cells[7];
     TKTextFieldCell *cell5=self.cells[8];
     TKTextFieldCell *cell6=self.cells[9];
     
+    if (!cell4.hasValue&&!cell5.hasValue&&!cell6.hasValue) {
+        [AlertHelper initWithTitle:@"提示" message:@"请至少填写一个亲情号码!"];
+        [cell4.textField becomeFirstResponder];
+        return;
+    }
+    
+    
+    NSString *affection=@"";
+    if ([cell4.textField.text length]>0) {
+        affection=[NSString stringWithFormat:@"%@,1",cell4.textField.text];
+    }
+    if ([cell5.textField.text length]>0) {
+        affection=[NSString stringWithFormat:@"%@|%@,2",affection,cell5.textField.text];
+    }
+    if ([cell6.textField.text length]>0) {
+        affection=[NSString stringWithFormat:@"%@|%@,3",affection,cell6.textField.text];
+    }
     NSMutableArray *params=[NSMutableArray arrayWithCapacity:6];
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[cell1.textField.text Trim],@"OperateValue", nil]];
-    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"",@"SysID", nil]];
-    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[cell3.textField.text Trim],@"SOS_Order", nil]];//sos号码+顺序
-    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[cell4.textField.text Trim],@"KinShip_Order", nil]];//亲情号码+顺序
-    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"",@"Moniter_Order", nil]];//监听号码+顺序
-    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"",@"CurDateTime", nil]];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:self.PersonId,@"SysID", nil]];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%@,1",[cell2.textField.text Trim]],@"SOS_Order", nil]];//sos号码+顺序
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:affection,@"KinShip_Order", nil]];//亲情号码+顺序
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%@,1",[cell3.textField.text Trim]],@"Moniter_Order", nil]];//监听号码+顺序
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[[NSDate date] stringWithFormat:@"yyyy-MM-dd HH:mm:ss"],@"CurDateTime", nil]];
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:acc.WorkNo,@"CurWorkNo", nil]];
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"",@"DeviceCode", nil]];//终端唯一ID
-    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"1",@"operateType", nil]];//操作类型1：新增 2：修改
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%d",self.operateType],@"operateType", nil]];//操作类型1：新增 2：修改
     
     ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
     args.serviceURL=DataWebservice1;
     args.serviceNameSpace=DataNameSpace1;
     args.methodName=@"SaveTeleAndFreqIn";
     args.soapParams=params;
-     ***/
+    NSString *memo=self.operateType==1?@"新增":@"修改";
+    [self showLoadingAnimatedWithTitle:[NSString stringWithFormat:@"正在%@,请稍后...",memo]];
+    [self.serviceHelper asynService:args success:^(ServiceResult *result) {
+        BOOL boo=NO;
+        if (result.hasSuccess) {
+            NSDictionary *dic=(NSDictionary*)[result json];
+            if (dic!=nil&&[[dic objectForKey:@"Result"] isEqualToString:@"1"]) {
+                boo=YES;
+                [self hideLoadingViewAnimated:^(AnimateLoadView *hideView) {
+                    [self.navigationController popToViewController:[[self.navigationController viewControllers] objectAtIndex:2] animated:YES];
+                }];
+            }
+        }
+        if (!boo) {
+            [self hideLoadingFailedWithTitle:[NSString stringWithFormat:@"%@失败!",memo] completed:nil];
+        }
+        
+    } failed:^(NSError *error, NSDictionary *userInfo) {
+        [self hideLoadingFailedWithTitle:[NSString stringWithFormat:@"%@失败!",memo] completed:nil];
+    }];
+    
     
 }
 //上一步
 - (void)buttonCancel{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+- (void)replacePhonestring:(UITextField*)field{
+    NSRegularExpression *regular;
+    regular = [[NSRegularExpression alloc] initWithPattern:@"[^0-9]+"
+                                                   options:NSRegularExpressionCaseInsensitive
+                                                     error:nil];
+    NSString *str=[field.text Trim];
+    field.text = [regular stringByReplacingMatchesInString:str options:NSRegularExpressionCaseInsensitive  range:NSMakeRange(0, [str length]) withTemplate:@""];
+}
+- (CGRect)fieldToRect:(UITextField*)field{
+    id v=[field superview];
+    while (![v isKindOfClass:[UITableViewCell class]]) {
+        v=[v superview];
+    }
+    UITableViewCell *cell=(UITableViewCell*)v;
+    CGRect r=[_tableView convertRect:cell.frame fromView:_tableView];
+    CGRect r1=[cell convertRect:field.frame fromView:cell];
+    r.origin.y+=44+r1.origin.y;
+    r.origin.x=r1.origin.x;
+    
+    return r;
+}
+#pragma mark UITextFieldDelegate Methods
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    // return NO to not change text
+    BOOL boo=YES;
+    TKTextFieldCell *cell1=self.cells[3];
+    TKTextFieldCell *cell2=self.cells[5];
+    TKTextFieldCell *cell3=self.cells[7];
+    TKTextFieldCell *cell4=self.cells[8];
+    TKTextFieldCell *cell5=self.cells[9];
+    if (cell1.textField==textField||cell2.textField==textField||cell3.textField==textField||cell4.textField==textField||cell5.textField==textField) {
+        [self replacePhonestring:textField];
+        if (cell3.textField==textField||cell4.textField==textField||cell5.textField==textField) {
+            if(strlen([textField.text UTF8String]) >= 11 && range.length != 1)
+                boo=NO;
+        }
+        
+    }
+    return boo;
+}
+-(void)textFieldDidBeginEditing:(UITextField *)textField {
+    
+    CGRect frame = [self fieldToRect:textField];
+    int offset = frame.origin.y + 36 - (self.view.frame.size.height - 216.0);//键盘高度216
+    
+    NSTimeInterval animationDuration = 0.30f;
+    [UIView beginAnimations:@"ResizeForKeyboard" context:nil];
+    [UIView setAnimationDuration:animationDuration];
+    
+    //将视图的Y坐标向上移动offset个单位，以使下面腾出地方用于软键盘的显示
+    if(offset > 0)
+        self.view.frame = CGRectMake(0.0f, -offset, self.view.frame.size.width, self.view.frame.size.height);
+    [UIView commitAnimations];
+}
+- (void)textFieldDidEndEditing:(UITextField *)textField;
+{
+    self.view.frame =CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField{
+    [textField resignFirstResponder];
+    return YES;
 }
 - (void)didReceiveMemoryWarning
 {

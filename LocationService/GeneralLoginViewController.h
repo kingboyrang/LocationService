@@ -9,4 +9,7 @@
 #import <UIKit/UIKit.h>
 @interface GeneralLoginViewController : BasicViewController
 @property(nonatomic,strong) NSMutableArray *cells;
+-(void) showLoadingAnimated:(void (^)(AnimateLoadView *errorView))process;
+-(void) showErrorViewAnimated:(void (^)(AnimateErrorView *errorView))process;
+-(void) showSuccessViewAnimated:(void (^)(AnimateErrorView *errorView))process;
 @end

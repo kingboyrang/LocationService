@@ -15,6 +15,7 @@
 #import "EditSupervisionHead.h"
 #import "TrajectoryViewController.h"
 #import "TrajectoryMessageController.h"
+#import "EditSupervisionViewController.h"
 @interface SupervisionViewController ()<UITableViewDataSource,UITableViewDelegate>{
     UITableView *_tableView;
     LoginButtons *_toolBar;
@@ -25,6 +26,7 @@
 - (NSArray*)arrayToSupervisions:(NSArray*)source;
 - (void)buttonSubmitRemoveClick;
 - (void)buttonCancelRemoveClick;
+- (SupervisionPerson*)FindById:(NSString*)guid;
 @end
 
 @implementation SupervisionViewController
@@ -104,8 +106,9 @@
     args.serviceNameSpace=DataNameSpace1;
     args.methodName=@"GetSuperviseInfo";
     args.soapParams=[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:acc.WorkNo,@"WorkNo", nil], nil];
-    
+    [self showLoadingAnimatedWithTitle:@"正在加载,请稍后..."];
     [self.serviceHelper asynService:args success:^(ServiceResult *result) {
+        [self hideLoadingViewAnimated:nil];
         if (result.hasSuccess) {
             XmlNode *node=[result methodNode];
             NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:[node.InnerText dataUsingEncoding:NSUTF8StringEncoding] options:1 error:nil];
@@ -113,9 +116,8 @@
             self.cells=[NSMutableArray arrayWithArray:[self arrayToSupervisions:source]];
             [_tableView reloadData];
         }
-        
     } failed:^(NSError *error, NSDictionary *userInfo) {
-        
+        [self hideLoadingFailedWithTitle:@"加载失败!" completed:nil];
     }];
 }
 - (NSArray*)arrayToSupervisions:(NSArray*)source{
@@ -140,6 +142,7 @@
 -(void)supervisionEditHeadWithEntity:(SupervisionPerson*)entity{
     EditSupervisionHead *edit=[[EditSupervisionHead alloc] init];
     edit.Entity=entity;
+    edit.operateType=2;//修改
     [self.navigationController pushViewController:edit animated:YES];
     [edit release];
 }
@@ -162,9 +165,10 @@
 - (void)buttonCancelRemoveClick{
     if (self.removeList&&self.removeList.count>0) {
         NSArray *indexPaths=[[self.removeList allValues] retain];
-        for (NSIndexPath *item in indexPaths) {
-            [_tableView deselectRowAtIndexPath:item animated:YES]; 
-            [self tableView:_tableView didDeselectRowAtIndexPath:item];
+        for (NSString *item in indexPaths) {
+            NSIndexPath *indexPath=[NSIndexPath indexPathForRow:[item intValue] inSection:0];
+            [_tableView deselectRowAtIndexPath:indexPath animated:YES]; 
+            [self tableView:_tableView didDeselectRowAtIndexPath:indexPath];
         }
         [indexPaths release];
     }else{
@@ -172,21 +176,36 @@
     }
    
 }
+- (SupervisionPerson*)FindById:(NSString*)guid{
+    if (self.cells&&[self.cells count]>0) {
+        NSString *match=[NSString stringWithFormat:@"SELF.ID =='%@'",guid];
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:match];
+        NSArray *results = [self.cells filteredArrayUsingPredicate:predicate];
+        if (results&&[results count]>0) {
+            SupervisionPerson *item=[results objectAtIndex:0];
+            return item;
+        }
+    }
+    return nil;
+
+}
 //确认删除
 - (void)buttonSubmitRemoveClick{
     if (self.removeList&&[self.removeList count]>0) {
         [self showLoadingAnimatedWithTitle:@"正在删除,请稍后..."];
-        
         NSMutableArray *delSource=[NSMutableArray array];
-        for (NSIndexPath *item in self.removeList.allKeys) {
-            [delSource addObject:item];
+        NSMutableArray *indexPaths=[NSMutableArray array];
+        for (NSString *item in self.removeList.allKeys) {
+            NSString *row=[self.removeList objectForKey:item];
+            [indexPaths addObject:[NSIndexPath indexPathForRow:[row intValue] inSection:0]];
+            [delSource addObject:self.cells[[row intValue]]];
         }
+        NSString *ids=[NSString stringWithFormat:@"'%@'",[self.removeList.allKeys componentsJoinedByString:@"','"]];
         ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
         args.serviceURL=DataWebservice1;
         args.serviceNameSpace=DataNameSpace1;
         args.methodName=@"DeletePerson";
-        args.soapParams=[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:[self.removeList.allKeys componentsJoinedByString:@","],@"personID", nil], nil];
-        
+        args.soapParams=[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:ids,@"personID", nil], nil];
         [self.serviceHelper asynService:args success:^(ServiceResult *result) {
             BOOL boo=NO;
             if (result.hasSuccess) {
@@ -194,9 +213,11 @@
                 NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:[node.InnerText dataUsingEncoding:NSUTF8StringEncoding] options:1 error:nil];
                 if ([[dic objectForKey:@"Result"] isEqualToString:@"1"]) {
                     boo=YES;
-                    [self hideLoadingViewAnimated:^(AnimateLoadView *hideView) {
+                    [self hideLoadingSuccessWithTitle:@"删除成功!" completed:^(AnimateErrorView *successView) {
                         [self.cells removeObjectsInArray:delSource];
-                        [_tableView deleteRowsAtIndexPaths:[NSArray arrayWithArray:[self.removeList allValues]] withRowAnimation:UITableViewRowAnimationFade];
+                        [_tableView beginUpdates];
+                        [_tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationFade];
+                        [_tableView endUpdates];
                         [self.removeList removeAllObjects];
                     }];
                 }
@@ -235,6 +256,7 @@
         }];
     }
 	else {
+        [self buttonCancelRemoveClick];
         [btn setTitle:@"编辑" forState:UIControlStateNormal];
         CGRect r=_toolBar.frame;
         r.origin.y=self.view.bounds.size.height+44;
@@ -276,12 +298,16 @@
     UIButton *btn=(UIButton*)[self.navBarView viewWithTag:301];
     if ([btn.currentTitle isEqualToString:@"编辑"]) {
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
+        EditSupervisionViewController *edit=[[EditSupervisionViewController alloc] init];
+        edit.Entity=self.cells[indexPath.row];
+        [self.navigationController pushViewController:edit animated:YES];//修改监管目标
+        [edit release];
     }else{
         if (!self.removeList) {
             self.removeList=[NSMutableDictionary dictionary];
         }
         SupervisionPerson *entity=self.cells[indexPath.row];
-        [self.removeList setValue:indexPath forKey:entity.ID];
+        [self.removeList setValue:[NSString stringWithFormat:@"%d",indexPath.row] forKey:entity.ID];
         [_toolBar.submit setTitle:[NSString stringWithFormat:@"删除(%d)",self.removeList.count] forState:UIControlStateNormal];
     }
 }
@@ -290,7 +316,6 @@
    
     UIButton *btn=(UIButton*)[self.navBarView viewWithTag:301];
     if ([btn.currentTitle isEqualToString:@"取消"]) {
-        //NSLog(@"取消选中===");
          SupervisionPerson *entity=self.cells[indexPath.row];
         [self.removeList removeObjectForKey:entity.ID];
         [_toolBar.submit setTitle:[NSString stringWithFormat:@"删除(%d)",self.removeList.count] forState:UIControlStateNormal];

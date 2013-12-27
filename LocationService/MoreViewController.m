@@ -15,6 +15,8 @@
 #import "Account.h"
 #import "BasicNavigationController.h"
 #import "SupervisionViewController.h"
+#import "AreaViewController.h"
+#import "OnlineMapViewController.h"
 @interface MoreViewController ()
 
 @end
@@ -92,6 +94,16 @@
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     if (indexPath.row==0) {
         SupervisionViewController *edit=[[SupervisionViewController alloc] init];
+        [self.navigationController pushViewController:edit animated:YES];
+        [edit release];
+    }
+    if (indexPath.row==1) {
+        AreaViewController *edit=[[AreaViewController alloc] init];
+        [self.navigationController pushViewController:edit animated:YES];
+        [edit release];
+    }
+    if (indexPath.row==2) {
+        OnlineMapViewController *edit=[[OnlineMapViewController alloc] init];
         [self.navigationController pushViewController:edit animated:YES];
         [edit release];
     }

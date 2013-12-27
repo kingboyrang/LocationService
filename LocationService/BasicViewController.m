@@ -16,6 +16,7 @@
     AnimateErrorView *_errorView;
     AnimateErrorView *_successView;
 }
+@property (nonatomic,readonly) BOOL containNavigator;
 -(void)buttonBackClick;
 @end
 
@@ -108,11 +109,19 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+- (BOOL)containNavigator{
+    if (self.navigationController&&[self.navigationController.viewControllers count]>1)return YES;
+    return NO;
+}
 #pragma mark 动画提示
 -(AnimateErrorView*) errorView {
     
     if (!_errorView) {
-        _errorView=[[AnimateErrorView alloc] initWithFrame:CGRectMake(0, -40, self.view.bounds.size.width, 40)];
+        if ([self containNavigator]) {
+            _errorView=[[AnimateErrorView alloc] initWithFrame:CGRectMake(0,4, self.view.bounds.size.width, 40)];
+        }else{
+           _errorView=[[AnimateErrorView alloc] initWithFrame:CGRectMake(0, -40, self.view.bounds.size.width, 40)];
+        }
         _errorView.backgroundColor=[UIColor redColor];
         [_errorView setErrorImage:[UIImage imageNamed:@"notice_error_icon.png"]];
     }
@@ -121,13 +130,22 @@
 
 -(AnimateLoadView*) loadingView {
     if (!_loadView) {
-        _loadView=[[AnimateLoadView alloc] initWithFrame:CGRectMake(0, -40, self.view.bounds.size.width, 40)];
+        if ([self containNavigator]) {
+           _loadView=[[AnimateLoadView alloc] initWithFrame:CGRectMake(0,4, self.view.bounds.size.width, 40)];
+        }else{
+           _loadView=[[AnimateLoadView alloc] initWithFrame:CGRectMake(0, -40, self.view.bounds.size.width, 40)];
+        }
+        
     }
     return _loadView;
 }
 -(AnimateErrorView*) successView {
     if (!_successView) {
-        _successView=[[AnimateErrorView alloc] initWithFrame:CGRectMake(0, -40, self.view.bounds.size.width, 40)];
+        if ([self containNavigator]) {
+           _successView=[[AnimateErrorView alloc] initWithFrame:CGRectMake(0, 4, self.view.bounds.size.width, 40)];
+        }else{
+           _successView=[[AnimateErrorView alloc] initWithFrame:CGRectMake(0, -40, self.view.bounds.size.width, 40)];
+        }
         _successView.backgroundColor=[UIColor colorFromHexRGB:@"51c345"];
         [_successView setErrorImage:[UIImage imageNamed:@"notice_success_icon.png"]];
     }
@@ -143,11 +161,20 @@
     if (process) {
         process(loadingView);
     }
+    BOOL boo=[self containNavigator];
     [self.view addSubview:loadingView];
-    [self.view bringSubviewToFront:loadingView];
-    [loadingView.activityIndicatorView startAnimating];
+    [self.view sendSubviewToBack:loadingView];
     CGRect r=loadingView.frame;
-    r.origin.y=2;
+    r.origin.y=boo?46:2;
+    if (boo) {
+        for (UIView *v in self.view.subviews) {
+            if ([v isKindOfClass:[NavBarView class]]||[v isKindOfClass:[AnimateLoadView class]]) {
+                continue;
+            }
+            [self.view sendSubviewToBack:v];
+        }
+    }
+    [loadingView.activityIndicatorView startAnimating];
     [UIView animateWithDuration:0.5f animations:^{
         loadingView.frame=r;
     }];
@@ -175,10 +202,19 @@
     if (process) {
         process(errorView);
     }
+    BOOL boo=[self containNavigator];
     [self.view addSubview:errorView];
-    [self.view bringSubviewToFront:errorView];
+    [self.view sendSubviewToBack:errorView];
     CGRect r=errorView.frame;
-    r.origin.y=2;
+    r.origin.y=boo?46:2;
+    if (boo) {
+        for (UIView *v in self.view.subviews) {
+            if ([v isKindOfClass:[NavBarView class]]||[v isKindOfClass:[AnimateErrorView class]]) {
+                continue;
+            }
+            [self.view sendSubviewToBack:v];
+        }
+    }
     [UIView animateWithDuration:0.5f animations:^{
         errorView.frame=r;
     }];
@@ -215,10 +251,19 @@
     if (process) {
         process(errorView);
     }
+    BOOL boo=[self containNavigator];
     [self.view addSubview:errorView];
-    [self.view bringSubviewToFront:errorView];
+    [self.view sendSubviewToBack:errorView];
     CGRect r=errorView.frame;
-    r.origin.y=2;
+    r.origin.y=boo?46:2;
+    if (boo) {
+        for (UIView *v in self.view.subviews) {
+            if ([v isKindOfClass:[NavBarView class]]||[v isKindOfClass:[AnimateErrorView class]]) {
+                continue;
+            }
+            [self.view sendSubviewToBack:v];
+        }
+    }
     [UIView animateWithDuration:0.5f animations:^{
         errorView.frame=r;
     }];

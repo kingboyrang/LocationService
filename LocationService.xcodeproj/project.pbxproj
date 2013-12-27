@@ -145,6 +145,12 @@
 		01BE401D185EB0B8005C25D9 /* UIColor+TPCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 01BE400F185EB0B8005C25D9 /* UIColor+TPCategory.m */; };
 		01BE4021185EB0B8005C25D9 /* UITextField+TPCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 01BE4017185EB0B8005C25D9 /* UITextField+TPCategory.m */; };
 		01BE4023185EB0C5005C25D9 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01BE4022185EB0C5005C25D9 /* QuartzCore.framework */; };
+		01C0AA0B186D24E700F8A250 /* UIDevice+TPCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 01C0AA0A186D24E700F8A250 /* UIDevice+TPCategory.m */; };
+		01C0AA0E186D284C00F8A250 /* EditSupervisionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01C0AA0D186D284B00F8A250 /* EditSupervisionViewController.m */; };
+		01C0AA11186D538F00F8A250 /* AreaCrawl.m in Sources */ = {isa = PBXBuildFile; fileRef = 01C0AA10186D538F00F8A250 /* AreaCrawl.m */; };
+		01C0AA15186D547800F8A250 /* AreaViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01C0AA14186D547800F8A250 /* AreaViewController.m */; };
+		01C0AA18186D6C5200F8A250 /* InnerBasicViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01C0AA17186D6C5200F8A250 /* InnerBasicViewController.m */; };
+		01C0AA1C186D708400F8A250 /* OnlineMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01C0AA1B186D708400F8A250 /* OnlineMapViewController.m */; };
 		01C5FB83186C1101009986BF /* TrajectoryMessageController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01C5FB82186C1101009986BF /* TrajectoryMessageController.m */; };
 		01C5FB86186C1173009986BF /* TrajectoryMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 01C5FB85186C1173009986BF /* TrajectoryMessage.m */; };
 		01C5FB8E186C134B009986BF /* blueArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 01C5FB88186C134B009986BF /* blueArrow.png */; };
@@ -418,6 +424,18 @@
 		01BE4016185EB0B8005C25D9 /* UITextField+TPCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITextField+TPCategory.h"; sourceTree = "<group>"; };
 		01BE4017185EB0B8005C25D9 /* UITextField+TPCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITextField+TPCategory.m"; sourceTree = "<group>"; };
 		01BE4022185EB0C5005C25D9 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		01C0AA09186D24E700F8A250 /* UIDevice+TPCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIDevice+TPCategory.h"; sourceTree = "<group>"; };
+		01C0AA0A186D24E700F8A250 /* UIDevice+TPCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIDevice+TPCategory.m"; sourceTree = "<group>"; };
+		01C0AA0C186D284B00F8A250 /* EditSupervisionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditSupervisionViewController.h; sourceTree = "<group>"; };
+		01C0AA0D186D284B00F8A250 /* EditSupervisionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditSupervisionViewController.m; sourceTree = "<group>"; };
+		01C0AA0F186D538F00F8A250 /* AreaCrawl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AreaCrawl.h; sourceTree = "<group>"; };
+		01C0AA10186D538F00F8A250 /* AreaCrawl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AreaCrawl.m; sourceTree = "<group>"; };
+		01C0AA13186D547800F8A250 /* AreaViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AreaViewController.h; sourceTree = "<group>"; };
+		01C0AA14186D547800F8A250 /* AreaViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AreaViewController.m; sourceTree = "<group>"; };
+		01C0AA16186D6C5200F8A250 /* InnerBasicViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InnerBasicViewController.h; sourceTree = "<group>"; };
+		01C0AA17186D6C5200F8A250 /* InnerBasicViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InnerBasicViewController.m; sourceTree = "<group>"; };
+		01C0AA1A186D708400F8A250 /* OnlineMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OnlineMapViewController.h; sourceTree = "<group>"; };
+		01C0AA1B186D708400F8A250 /* OnlineMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OnlineMapViewController.m; sourceTree = "<group>"; };
 		01C5FB81186C1101009986BF /* TrajectoryMessageController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrajectoryMessageController.h; sourceTree = "<group>"; };
 		01C5FB82186C1101009986BF /* TrajectoryMessageController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrajectoryMessageController.m; sourceTree = "<group>"; };
 		01C5FB84186C1173009986BF /* TrajectoryMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrajectoryMessage.h; sourceTree = "<group>"; };
@@ -525,6 +543,8 @@
 				018E9DF1186BD1EE008646CF /* TrajectoryHistory.m */,
 				01C5FB84186C1173009986BF /* TrajectoryMessage.h */,
 				01C5FB85186C1173009986BF /* TrajectoryMessage.m */,
+				01C0AA0F186D538F00F8A250 /* AreaCrawl.h */,
+				01C0AA10186D538F00F8A250 /* AreaCrawl.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -591,6 +611,8 @@
 				018E9DEE186BCFB1008646CF /* TrajectoryViewController.m */,
 				01C5FB81186C1101009986BF /* TrajectoryMessageController.h */,
 				01C5FB82186C1101009986BF /* TrajectoryMessageController.m */,
+				01C0AA0C186D284B00F8A250 /* EditSupervisionViewController.h */,
+				01C0AA0D186D284B00F8A250 /* EditSupervisionViewController.m */,
 			);
 			name = Target;
 			sourceTree = "<group>";
@@ -682,6 +704,8 @@
 				0189889D185FE0990073B253 /* BasicViewController.m */,
 				0189891318612A280073B253 /* BasicNavigationController.h */,
 				0189891418612A280073B253 /* BasicNavigationController.m */,
+				01C0AA16186D6C5200F8A250 /* InnerBasicViewController.h */,
+				01C0AA17186D6C5200F8A250 /* InnerBasicViewController.m */,
 			);
 			name = Common;
 			sourceTree = "<group>";
@@ -963,6 +987,8 @@
 		01BE4001185EAFC0005C25D9 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				01C0AA19186D706900F8A250 /* OnlineMap */,
+				01C0AA12186D543000F8A250 /* Area */,
 				015B62781869254B00E488F2 /* Target */,
 				0189889B185FE0830073B253 /* Common */,
 				01F994BD1867E73700FEC0F2 /* More */,
@@ -1019,6 +1045,8 @@
 		01BE4003185EB0AB005C25D9 /* Category */ = {
 			isa = PBXGroup;
 			children = (
+				01C0AA09186D24E700F8A250 /* UIDevice+TPCategory.h */,
+				01C0AA0A186D24E700F8A250 /* UIDevice+TPCategory.m */,
 				01BE4004185EB0B8005C25D9 /* NSDate+TPCategory.h */,
 				01BE4005185EB0B8005C25D9 /* NSDate+TPCategory.m */,
 				01BE4006185EB0B8005C25D9 /* NSString+TPCategory.h */,
@@ -1037,6 +1065,24 @@
 				0189891918612F3A0073B253 /* UIButton+TPCategory.m */,
 			);
 			name = Category;
+			sourceTree = "<group>";
+		};
+		01C0AA12186D543000F8A250 /* Area */ = {
+			isa = PBXGroup;
+			children = (
+				01C0AA13186D547800F8A250 /* AreaViewController.h */,
+				01C0AA14186D547800F8A250 /* AreaViewController.m */,
+			);
+			name = Area;
+			sourceTree = "<group>";
+		};
+		01C0AA19186D706900F8A250 /* OnlineMap */ = {
+			isa = PBXGroup;
+			children = (
+				01C0AA1A186D708400F8A250 /* OnlineMapViewController.h */,
+				01C0AA1B186D708400F8A250 /* OnlineMapViewController.m */,
+			);
+			name = OnlineMap;
 			sourceTree = "<group>";
 		};
 		01C5FB87186C1340009986BF /* Refresh */ = {
@@ -1330,6 +1376,12 @@
 				01C5FB95186C1D26009986BF /* TKTrajectoryCell.m in Sources */,
 				01C5FB9A186C217E009986BF /* MessageView.m in Sources */,
 				01C5FB9D186C27C2009986BF /* MessageCell.m in Sources */,
+				01C0AA0B186D24E700F8A250 /* UIDevice+TPCategory.m in Sources */,
+				01C0AA0E186D284C00F8A250 /* EditSupervisionViewController.m in Sources */,
+				01C0AA11186D538F00F8A250 /* AreaCrawl.m in Sources */,
+				01C0AA15186D547800F8A250 /* AreaViewController.m in Sources */,
+				01C0AA18186D6C5200F8A250 /* InnerBasicViewController.m in Sources */,
+				01C0AA1C186D708400F8A250 /* OnlineMapViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

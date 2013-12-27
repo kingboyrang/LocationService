@@ -10,4 +10,5 @@
 
 @interface AddSupervision : BasicViewController
 @property(nonatomic,strong) NSMutableArray *cells;
+- (void)finishSelectedImage:(UIImage*)image;
 @end

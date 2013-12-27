@@ -1,35 +1,31 @@
 //
-//  AddSupervision.m
+//  EditSupervisionViewController.m
 //  LocationService
 //
-//  Created by aJia on 2013/12/25.
+//  Created by aJia on 2013/12/27.
 //  Copyright (c) 2013年 lz. All rights reserved.
 //
 
-#import "AddSupervision.h"
+#import "EditSupervisionViewController.h"
+#import "LoginButtons.h"
 #import "TKLabelCell.h"
 #import "TKTextFieldCell.h"
-#import "LoginButtons.h"
-#import "Account.h"
-#import "UIImage+TPCategory.h"
+#import "UIImageView+WebCache.h"
 #import "EditSupervisionHead.h"
-#import "SupervisionPerson.h"
-#import "SupervisionExtend.h"
+#import "Account.h"
 #import "AlertHelper.h"
-@interface AddSupervision ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>{
+#import "SupervisionExtend.h"
+@interface EditSupervisionViewController ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>{
     UITableView *_tableView;
     UIImageView *_imageHead;
 }
 - (void)buttonSubmit;
 - (void)buttonCancel;
 - (void)buttonChooseImage;
-- (CGRect)fieldToRect:(UITextField*)field;
-- (void)replacePhonestring:(UITextField*)field;
-- (void)uploadImageWithId:(NSString*)personId completed:(void(^)(NSString *fileName))completed;
-- (void)finishAddTrajectory:(void(^)(NSString *personId))completed;
+- (void)finishEditTrajectory:(void(^)(NSString *personId))completed;
 @end
 
-@implementation AddSupervision
+@implementation EditSupervisionViewController
 - (void)dealloc{
     //[UITableView release];
     [super dealloc];
@@ -40,7 +36,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        
+       
     }
     return self;
 }
@@ -48,9 +44,13 @@
     [super viewWillAppear:animated];
     [self.navBarView setNavBarTitle:@"监管目标"];
 }
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    NSLog(@"id=%@",self.Entity.ID);
+    
 	CGRect r=self.view.bounds;
     r.origin.y=44;
     r.size.height-=44*2;
@@ -67,7 +67,7 @@
     [self.view addSubview:_tableView];
     
     LoginButtons *buttons=[[LoginButtons alloc] initWithFrame:CGRectMake(0,self.view.bounds.size.height-44, self.view.bounds.size.width, 44)];
-   
+    
     [buttons.cancel setTitle:@"下一步" forState:UIControlStateNormal];
     [buttons.submit setTitle:@"完成" forState:UIControlStateNormal];
     [buttons.submit addTarget:self action:@selector(buttonSubmit) forControlEvents:UIControlEventTouchUpInside];
@@ -83,12 +83,14 @@
     TKTextFieldCell *cell2=[[[TKTextFieldCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
     cell2.textField.placeholder=@"请输入名称";
     cell2.textField.delegate=self;
+    cell2.textField.text=self.Entity.Name;
     
     TKLabelCell *cell3=[[[TKLabelCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
     cell3.label.text=@"IMEI号码";
     
     TKTextFieldCell *cell4=[[[TKTextFieldCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
     cell4.textField.placeholder=@"请输入IMEI号码";
+    cell4.textField.text=self.Entity.IMEI;
     
     TKLabelCell *cell5=[[[TKLabelCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
     cell5.label.text=@"SIM卡号";
@@ -96,6 +98,7 @@
     TKTextFieldCell *cell6=[[[TKTextFieldCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
     cell6.textField.placeholder=@"请输入SIM卡号";
     cell6.textField.delegate=self;
+    cell6.textField.text=self.Entity.SimNo;
     
     TKLabelCell *cell7=[[[TKLabelCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
     cell7.label.text=@"密码";
@@ -104,10 +107,19 @@
     cell8.textField.placeholder=@"请输入密码";
     cell8.textField.secureTextEntry=YES;
     cell8.textField.delegate=self;
+    cell8.textField.text=self.Entity.Password;
     
     self.cells=[NSMutableArray arrayWithObjects:cell1,cell2,cell3,cell4,cell5,cell6,cell7,cell8, nil];
+
 }
-- (void)finishAddTrajectory:(void(^)(NSString *personId))completed{
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+//修改
+- (void)finishEditTrajectory:(void(^)(NSString *personId))completed{
     if (!self.hasNetWork) {
         [self showErrorNetWorkNotice:nil];
         return;
@@ -140,124 +152,73 @@
         return;
     }
     
-    [self showLoadingAnimatedWithTitle:@"新增监管目标,请稍后..."];
-    [self uploadImageWithId:@"" completed:^(NSString *fileName) {
+    [self showLoadingAnimatedWithTitle:@"修改监管目标,请稍后..."];
+    
         NSMutableArray *params=[NSMutableArray arrayWithCapacity:6];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:self.Entity.ID,@"personID", nil]];
         [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[cell1.textField.text Trim],@"Name", nil]];
-        [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[cell3.textField.text Trim],@"phoneNum", nil]];
-        [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[cell2.textField.text Trim],@"strIMEI", nil]];
+        [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[cell2.textField.text Trim],@"phoneNum", nil]];
+        [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[cell3.textField.text Trim],@"strIMEI", nil]];
         [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[cell4.textField.text Trim],@"Password", nil]];
-        [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:fileName,@"photo", nil]];
+        [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:self.Entity.Photo,@"photo", nil]];
         [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:acc.WorkNo,@"CurWorkNo", nil]];
         
         ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
         args.serviceURL=DataWebservice1;
         args.serviceNameSpace=DataNameSpace1;
-        args.methodName=@"InsertPerson";
+        args.methodName=@"UpdatePerson";
         args.soapParams=params;
         
         [self.serviceHelper asynService:args success:^(ServiceResult *result) {
             BOOL boo=NO;
-            NSString *status=@"0";
             if (result.hasSuccess) {
                 XmlNode *node=[result methodNode];
                 NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:[node.InnerText dataUsingEncoding:NSUTF8StringEncoding] options:1 error:nil];
-                status=[dic objectForKey:@"Result"];
-                if ([status length]>2) {
+                if ([[dic objectForKey:@"Result"] isEqualToString:@"1"]) {
                     boo=YES;
                     [self hideLoadingViewAnimated:^(AnimateLoadView *hideView) {
                         if (completed) {
-                            completed([dic objectForKey:@"Result"]);
+                            completed(self.Entity.ID);
                         }
                     }];
                     return;
                 }
             }
             if (!boo) {
-                NSString *errorMsg=@"新增监管目标失败!";
-                if ([status isEqualToString:@"5"]) {
-                    errorMsg=@"密码与IMEI的密码不匹配,无法新增!";
-                }
-                if ([status isEqualToString:@"6"]) {
-                    errorMsg=@"SIM卡号与IMEI的SIM卡不匹配,无法新增!";
-                }
-                [self hideLoadingFailedWithTitle:errorMsg completed:nil];
+                [self hideLoadingFailedWithTitle:@"修改监管目标失败!" completed:nil];
             }
         } failed:^(NSError *error, NSDictionary *userInfo) {
-            [self hideLoadingFailedWithTitle:@"新增监管目标失败!" completed:nil];
+            [self hideLoadingFailedWithTitle:@"修改监管目标失败!" completed:nil];
         }];
-    }];
+    
 }
 //完成
 - (void)buttonSubmit{
-    [self finishAddTrajectory:^(NSString *personId) {
+    [self finishEditTrajectory:^(NSString *personId) {
         [self.navigationController popViewControllerAnimated:YES];
     }];
 }
 //下一步
 - (void)buttonCancel{
-    [self finishAddTrajectory:^(NSString *personId) {
+    [self finishEditTrajectory:^(NSString *personId) {
         SupervisionExtend *extend=[[SupervisionExtend alloc] init];
+        extend.operateType=2;//修改
         extend.PersonId=personId;
-        extend.operateType=1;//新增
         [self.navigationController pushViewController:extend animated:YES];
         [extend release];
     }];
 }
 //选照片
 - (void)buttonChooseImage{
-    SupervisionPerson *entity=[[[SupervisionPerson alloc] init] autorelease];
-    entity.ID=@"";
-    entity.Name=@"监管目标头像";
     EditSupervisionHead *head=[[EditSupervisionHead alloc] init];
-    head.Entity=entity;
-    head.operateType=1;//新增
+    head.Entity=self.Entity;
+    head.operateType=2;//新增
     head.delegate=self;
     [self.navigationController pushViewController:head animated:YES];
     [head release];
 }
 - (void)finishSelectedImage:(UIImage*)image{
     [_imageHead setImage:image];
-}
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    
-}
-- (void)uploadImageWithId:(NSString*)personId completed:(void(^)(NSString *fileName))completed{
-    if (_imageHead.image!=nil) {
-        NSString *base64=[_imageHead.image imageBase64String];
-        NSMutableArray *params=[NSMutableArray arrayWithCapacity:2];
-        [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:base64,@"imgbase64", nil]];
-        [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:personId,@"personID", nil]];
-        
-        ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
-        args.serviceURL=DataWebservice1;
-        args.serviceNameSpace=DataNameSpace1;
-        args.methodName=@"UpImage";
-        args.soapParams=params;
-        [self.serviceHelper asynService:args success:^(ServiceResult *result) {
-            NSString *name=@"";
-            if (result.hasSuccess) {
-                XmlNode *node=[result methodNode];
-                NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:[node.InnerText dataUsingEncoding:NSUTF8StringEncoding] options:1 error:nil];
-                if (![[dic objectForKey:@"Result"] isEqualToString:@"false"]) {
-                    name=[dic objectForKey:@"Result"];
-                }
-            }
-            if (completed) {
-                completed(name);
-            }
-        } failed:^(NSError *error, NSDictionary *userInfo) {
-            if (completed) {
-                completed(@"");
-            }
-        }];
-    }else{
-        if (completed) {
-            completed(@"");
-        }
-    }
 }
 - (void)replacePhonestring:(UITextField*)field{
     NSRegularExpression *regular;
@@ -284,7 +245,7 @@
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
     // return NO to not change text
-   BOOL boo=YES;
+    BOOL boo=YES;
     TKTextFieldCell *cell1=self.cells[7];
     if (cell1.textField==textField) {
         if(strlen([textField.text UTF8String]) >= 12 && range.length != 1)
@@ -297,11 +258,10 @@
         if(strlen([textField.text UTF8String]) >= 11 && range.length != 1)
             boo=NO;
     }
-    
     return boo;
 }
 -(void)textFieldDidBeginEditing:(UITextField *)textField {
-
+    
     CGRect frame = [self fieldToRect:textField];
     int offset = frame.origin.y + 36 - (self.view.frame.size.height - 216.0);//键盘高度216
     
@@ -350,7 +310,7 @@
     bgView.backgroundColor=[UIColor clearColor];
     UIImage *image=[UIImage imageNamed:@"bg03.png"];
     _imageHead=[[UIImageView alloc] initWithFrame:CGRectMake((self.view.bounds.size.width-image.size.width)/2,bgView.frame.size.height-image.size.height, image.size.width, image.size.height)];
-    [_imageHead setImage:image];
+    [_imageHead setImageWithURL:[NSURL URLWithString:self.Entity.Photo] placeholderImage:image];
     [bgView addSubview:_imageHead];
     
     UIButton *btn=[UIButton buttonWithType:UIButtonTypeCustom];

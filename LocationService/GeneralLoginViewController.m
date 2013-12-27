@@ -102,6 +102,43 @@
     [self.view addSubview:_buttons];
     
 }
+-(void) showLoadingAnimated:(void (^)(AnimateLoadView *errorView))process{
+    AnimateLoadView *loadingView = [self loadingView];
+    if (process) {
+        process(loadingView);
+    }
+    [self.view addSubview:loadingView];
+    CGRect r=loadingView.frame;
+    r.origin.y=2;
+    [loadingView.activityIndicatorView startAnimating];
+    [UIView animateWithDuration:0.5f animations:^{
+        loadingView.frame=r;
+    }];
+}
+-(void) showErrorViewAnimated:(void (^)(AnimateErrorView *errorView))process{
+    AnimateErrorView *errorView = [self errorView];
+    if (process) {
+        process(errorView);
+    }
+    [self.view addSubview:errorView];
+    CGRect r=errorView.frame;
+    r.origin.y=2;
+    [UIView animateWithDuration:0.5f animations:^{
+        errorView.frame=r;
+    }];
+}
+-(void) showSuccessViewAnimated:(void (^)(AnimateErrorView *errorView))process{
+    AnimateErrorView *errorView = [self successView];
+    if (process) {
+        process(errorView);
+    }
+    [self.view addSubview:errorView];
+    CGRect r=errorView.frame;
+    r.origin.y=2;
+    [UIView animateWithDuration:0.5f animations:^{
+        errorView.frame=r;
+    }];
+}
 - (void)pwdDesEncrypWithCompleted:(void(^)(NSString *pwd))completed{
     TKTextFieldCell *cell=self.cells[3];
     NSMutableArray *params=[NSMutableArray arrayWithCapacity:2];

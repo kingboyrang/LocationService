@@ -23,7 +23,12 @@
 @end
 
 @implementation EditSupervisionHead
-
+- (void)dealloc{
+    [super dealloc];
+    if (_imageCropper) {
+        [_imageCropper release];
+    }
+}
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -51,6 +56,7 @@
         [_preview setImage:[UIImage imageNamed:@"bg02.png"]];
     }
     [self.view addSubview:_preview];
+    [self.view sendSubviewToBack:_preview];
     
     
     UIImage *leftImage=[UIImage imageNamed:@"bgbutton01.png"];
@@ -78,10 +84,23 @@
     [self.view addSubview:btn];
     
     LoginButtons *buttons=[[LoginButtons alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height-40, self.view.bounds.size.width, 44)];
-    [buttons.cancel setTitle:@"上一步" forState:UIControlStateNormal];
+    buttons.cancel.hidden=YES;
+    buttons.submit.frame=CGRectMake(0, 0, buttons.frame.size.width, buttons.frame.size.height);
     [buttons.submit setTitle:@"完成" forState:UIControlStateNormal];
-    [buttons.cancel addTarget:self action:@selector(buttonCancelClick) forControlEvents:UIControlEventTouchUpInside];
     [buttons.submit addTarget:self action:@selector(buttonSubmitClick) forControlEvents:UIControlEventTouchUpInside];
+    /***
+    if (self.operateType==2) {
+        buttons.cancel.hidden=YES;
+        buttons.submit.frame=CGRectMake(0, 0, buttons.frame.size.width, buttons.frame.size.height);
+        [buttons.submit setTitle:@"完成" forState:UIControlStateNormal];
+        [buttons.submit addTarget:self action:@selector(buttonSubmitClick) forControlEvents:UIControlEventTouchUpInside];
+    }else{
+        [buttons.cancel setTitle:@"取消" forState:UIControlStateNormal];
+        [buttons.submit setTitle:@"完成" forState:UIControlStateNormal];
+        [buttons.cancel addTarget:self action:@selector(buttonCancelClick) forControlEvents:UIControlEventTouchUpInside];
+        [buttons.submit addTarget:self action:@selector(buttonSubmitClick) forControlEvents:UIControlEventTouchUpInside];
+    }
+     ***/
     [self.view addSubview:buttons];
     [buttons release];
     
@@ -112,7 +131,7 @@
             [self showErrorNetWorkNotice:nil];
             return;
         }
-        [self showLoadingAnimatedWithTitle:@"正在修改头像,请稍后..."];
+        [self showLoadingAnimatedWithTitle:@"正在上传头像,请稍后..."];
         NSString *base64=[[_imageCropper getCroppedImage] imageBase64String];
         NSMutableArray *params=[NSMutableArray arrayWithCapacity:2];
         [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:base64,@"imgbase64", nil]];
@@ -124,16 +143,18 @@
         args.methodName=@"UpImage";
         args.soapParams=params;
         [self.serviceHelper asynService:args success:^(ServiceResult *result) {
+            BOOL boo=NO;
             NSString *name=@"";
             if (result.hasSuccess) {
                 XmlNode *node=[result methodNode];
                 NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:[node.InnerText dataUsingEncoding:NSUTF8StringEncoding] options:1 error:nil];
                 if (![[dic objectForKey:@"Result"] isEqualToString:@"false"]) {
                     name=[dic objectForKey:@"Result"];
+                    boo=YES;
                 }
             }
-            if ([name length]>0) {
-                [self hideLoadingFailedWithTitle:@"修改头像失败!" completed:nil];
+            if (!boo) {
+                [self hideLoadingFailedWithTitle:@"上传头像失败!" completed:nil];
             }else{
                 [self hideLoadingViewAnimated:^(AnimateLoadView *hideView) {
                     if (completed) {
@@ -144,7 +165,7 @@
             }
             
         } failed:^(NSError *error, NSDictionary *userInfo) {
-            [self hideLoadingFailedWithTitle:@"修改头像失败!" completed:nil];
+            [self hideLoadingFailedWithTitle:@"上传头像失败!" completed:nil];
             if (completed) {
                 completed(@"");
             }
@@ -161,10 +182,22 @@
 }
 //完成
 - (void)buttonSubmitClick{
-    if (_imageCropper) {
-        [self uploadImageWithId:self.Entity.ID completed:nil];
+    if (self.operateType==2) {//修改
+        if (_imageCropper) {
+            [self uploadImageWithId:self.Entity.ID completed:nil];
+        }else{
+            //[AlertHelper initWithTitle:@"提示" message:@"未选择头像!"];
+        }
     }else{
-        [AlertHelper initWithTitle:@"提示" message:@"未选择头像!"];
+        if (_imageCropper) {
+            //[self uploadImageWithId:self.Entity.ID completed:nil];
+            if (self.delegate&&[self.delegate respondsToSelector:@selector(finishSelectedImage:)]) {
+                [self.delegate performSelector:@selector(finishSelectedImage:) withObject:[_imageCropper getCroppedImage]];
+            }
+            [self.navigationController popViewControllerAnimated:YES];
+        }else{
+            //[AlertHelper initWithTitle:@"提示" message:@"未选择头像!"];
+        }
     }
 }
 //浏览

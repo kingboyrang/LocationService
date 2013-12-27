@@ -14,6 +14,7 @@
 }
 @property(nonatomic,strong) SupervisionPerson *Entity;
 @property (nonatomic, strong) UIImageView *preview;
-
+@property (nonatomic,assign) int operateType;//1:新增 2:修改
+@property (nonatomic,assign) id delegate;
 - (void)finishedImage:(UIImage*)image;
 @end

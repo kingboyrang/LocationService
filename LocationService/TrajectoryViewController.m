@@ -166,6 +166,7 @@
              [self.view sendSubviewToBack:self.trajectorySearch];
         }];
     }else{//显示
+        [self.view sendSubviewToBack:_tableView];
         
         CGRect r=self.trajectorySearch.frame;
         r.origin.y=44;
@@ -178,7 +179,7 @@
             self.trajectorySearch.frame=r;
             _tableView.frame=r1;
             btn.selected=YES;
-            [self.view bringSubviewToFront:self.trajectorySearch];
+            
         }];
     }
 }
