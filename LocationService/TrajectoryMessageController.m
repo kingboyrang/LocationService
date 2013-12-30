@@ -69,7 +69,46 @@
 }
 //删除
 - (void)buttonRemoveClick:(id)sender{
+    if (self.removeList&&[self.removeList count]>0) {
+        
+        NSMutableArray *delSource=[NSMutableArray array];
+        for (NSIndexPath *item in [self.removeList allValues]) {
+            [delSource addObject:self.cells[item.row]];
+        }
+        NSMutableArray *params=[NSMutableArray array];
+        [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[self.removeList.allKeys componentsJoinedByString:@","],@"id", nil]];
+        [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"1",@"type", nil]];
+        [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"",@"time", nil]];
+        
+        ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
+        args.serviceURL=DataWebservice1;
+        args.serviceNameSpace=DataNameSpace1;
+        args.methodName=@"DelPersonMsg";
+        args.soapParams=params;
+        [self showLoadingAnimatedWithTitle:@"正在删除,请稍后..."];
+        [self.serviceHelper asynService:args success:^(ServiceResult *result) {
+            BOOL boo=NO;
+            if (result.hasSuccess) {
+                NSDictionary *dic=[result json];
+                if (dic!=nil&&[[dic objectForKey:@"Result"] isEqualToString:@"true"]) {
+                    boo=YES;
+                    [self hideLoadingSuccessWithTitle:@"删除成功!" completed:^(AnimateErrorView *successView) {
+                        [self.cells removeObjectsInArray:delSource];
+                        [_tableView beginUpdates];
+                        [_tableView deleteRowsAtIndexPaths:[self.removeList allValues] withRowAnimation:UITableViewRowAnimationFade];
+                        [_tableView endUpdates];
+                        [self.removeList removeAllObjects];
+                    }];
+                }
+            }
+            if (!boo) {
+                [self hideLoadingFailedWithTitle:@"删除失败!" completed:nil];
+            }
+        } failed:^(NSError *error, NSDictionary *userInfo) {
+             [self hideLoadingFailedWithTitle:@"删除失败!" completed:nil];
+        }];
 
+    }
 }
 //标记已读
 - (void)buttonReadClick:(id)sender{
@@ -176,6 +215,33 @@
         }
     }
     return 65;
+}
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    UIButton *btn=(UIButton*)[self.navBarView viewWithTag:301];
+    if ([btn.currentTitle isEqualToString:@"编辑"]) {
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    }else{
+        if (!self.removeList) {
+            self.removeList=[NSMutableDictionary dictionary];
+        }
+        TrajectoryMessage *entity=self.cells[indexPath.row];
+        [self.removeList setValue:indexPath forKey:entity.ID];
+        [_toolBar.cancel setTitle:[NSString stringWithFormat:@"删除(%d)",self.removeList.count] forState:UIControlStateNormal];
+    }
+}
+- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    UIButton *btn=(UIButton*)[self.navBarView viewWithTag:301];
+    if ([btn.currentTitle isEqualToString:@"取消"]) {
+        TrajectoryMessage *entity=self.cells[indexPath.row];
+        [self.removeList removeObjectForKey:entity.ID];
+        [_toolBar.cancel setTitle:[NSString stringWithFormat:@"删除(%d)",self.removeList.count] forState:UIControlStateNormal];
+    }
+}
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return UITableViewCellEditingStyleDelete|UITableViewCellEditingStyleInsert;
 }
 #pragma mark - PullingRefreshTableViewDelegate
 //下拉加载

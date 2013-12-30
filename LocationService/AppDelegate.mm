@@ -18,11 +18,21 @@
 - (void)dealloc
 {
     [_window release];
+   
     [super dealloc];
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    //百度地图注册
+    _mapManager = [[BMKMapManager alloc] init];
+    BOOL ret = [_mapManager start:@"0E0006d6779b856330e93e877acbd7d1"  generalDelegate:self];
+    if (!ret) {
+        NSLog(@"manager start failed!");
+    }
+    [_mapManager release];
+    
+    
     self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
     // Override point for customization after application launch.
     Account *acc=[Account unarchiverAccount];
@@ -41,7 +51,15 @@
     [AppHelper runAnimation:nil];//启动动画
     return YES;
 }
-
+//回首页
+- (void)onGetNetworkState:(int)iError
+{
+    NSLog(@"onGetNetworkState %d",iError);
+}
+- (void)onGetPermissionState:(int)iError
+{
+    NSLog(@"onGetPermissionState %d",iError);
+}
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.

@@ -51,35 +51,41 @@
     [self addSubview:btn];
 }
 - (void)setMonitorButtonWithTarget:(id)target action:(SEL)action{
-    UIImage *image=[UIImage imageNamed:@"ico14.png"];
-    UIButton *btn=[UIButton buttonWithType:UIButtonTypeCustom];
-    btn.tag=204;
-    btn.frame=CGRectMake(self.bounds.size.width-5-image.size.width, (self.bounds.size.height-image.size.height)/2.0, image.size.width, image.size.height);
-    [btn setBackgroundImage:image forState:UIControlStateNormal];
-    [btn addTarget:target action:action forControlEvents:UIControlEventTouchUpInside];
-    [self addSubview:btn];
+    if (![self viewWithTag:204]) {
+        UIImage *image=[UIImage imageNamed:@"ico14.png"];
+        UIButton *btn=[UIButton buttonWithType:UIButtonTypeCustom];
+        btn.tag=204;
+        btn.frame=CGRectMake(self.bounds.size.width-5-image.size.width, (self.bounds.size.height-image.size.height)/2.0, image.size.width, image.size.height);
+        [btn setBackgroundImage:image forState:UIControlStateNormal];
+        [btn addTarget:target action:action forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:btn];
+    }
+   
     
 }
 - (void)setTargetButtonWithTarget:(id)target action:(SEL)action{
-    UIImage *image=[UIImage imageNamed:@"ico13.png"];
-    CGFloat leftX=self.bounds.size.width-(40+5+image.size.width);
-    UIButton *btn=[UIButton buttonWithType:UIButtonTypeCustom];
-    btn.tag=203;
-    btn.frame=CGRectMake(leftX, (self.bounds.size.height-image.size.height)/2.0, image.size.width, image.size.height);
-    [btn setBackgroundImage:image forState:UIControlStateNormal];
-    [btn addTarget:target action:action forControlEvents:UIControlEventTouchUpInside];
-    [self addSubview:btn];
+    if (![self viewWithTag:203]) {
+        UIImage *image=[UIImage imageNamed:@"ico13.png"];
+        CGFloat leftX=self.bounds.size.width-(40+5+image.size.width);
+        UIButton *btn=[UIButton buttonWithType:UIButtonTypeCustom];
+        btn.tag=203;
+        btn.frame=CGRectMake(leftX, (self.bounds.size.height-image.size.height)/2.0, image.size.width, image.size.height);
+        [btn setBackgroundImage:image forState:UIControlStateNormal];
+        [btn addTarget:target action:action forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:btn];
+    }
 }
 - (void)setCompassButtonWithTarget:(id)target action:(SEL)action{
-    
-    UIImage *image=[UIImage imageNamed:@"ico12.png"];
-    CGFloat leftX=self.bounds.size.width-(40+5+35+5+image.size.width);
-    UIButton *btn=[UIButton buttonWithType:UIButtonTypeCustom];
-    btn.tag=202;
-    btn.frame=CGRectMake(leftX, (self.bounds.size.height-image.size.height)/2.0, image.size.width, image.size.height);
-    [btn setBackgroundImage:image forState:UIControlStateNormal];
-    [btn addTarget:target action:action forControlEvents:UIControlEventTouchUpInside];
-    [self addSubview:btn];
+    if (![self viewWithTag:202]) {
+        UIImage *image=[UIImage imageNamed:@"ico12.png"];
+        CGFloat leftX=self.bounds.size.width-(40+5+35+5+image.size.width);
+        UIButton *btn=[UIButton buttonWithType:UIButtonTypeCustom];
+        btn.tag=202;
+        btn.frame=CGRectMake(leftX, (self.bounds.size.height-image.size.height)/2.0, image.size.width, image.size.height);
+        [btn setBackgroundImage:image forState:UIControlStateNormal];
+        [btn addTarget:target action:action forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:btn];
+    }
 }
 - (void)removeSubviews{
     for (UIView *v in self.subviews) {

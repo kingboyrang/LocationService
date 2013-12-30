@@ -18,10 +18,10 @@
 @property(nonatomic,readonly) NSString *xmlnsAttr;//xmlns="命名空间"
 @property(nonatomic,readonly) NSString *filterXml;//替换悼命名空名的xml
 @property(nonatomic,readonly) NSString *searchName;//方法名+Result
-@property(nonatomic,readonly) NSString *xpath;//==>//+searchName
+@property(nonatomic,readonly) NSString *xpath;//==>//方法名+Result
 @property(nonatomic,readonly) XmlNode *methodNode;//取得方法节点的内容
-@property(nonatomic,readonly) BOOL hasSuccess;//取得方法节点的内容
-@property(nonatomic,readonly) id json;//将返回结果转换成json对象
+@property(nonatomic,readonly) BOOL hasSuccess;//是否成功
+@property(nonatomic,readonly) id json;//将返回结果转换成json对象[如返回的是json字符串就使用这个对象]
 //xml转换类
 @property(nonatomic,retain) XmlParseHelper *xmlParse;
 //原始返回的soap字符串

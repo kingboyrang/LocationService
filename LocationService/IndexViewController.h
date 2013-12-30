@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-
-@interface IndexViewController : BasicViewController
-
+#import "BMapKit.h"
+@interface IndexViewController : BasicViewController<BMKMapViewDelegate>{
+    BMKMapView* _mapView;
+}
 @end

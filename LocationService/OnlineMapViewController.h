@@ -7,7 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "BMKOfflineMap.h"
 @interface OnlineMapViewController : BasicViewController
-
+@property(nonatomic,strong) NSMutableArray *list;
+//新增一笔下载项
+- (void)downloadMapWithEntity:(BMKOLSearchRecord*)entity;
+//下载完成
+- (void)finishedDownloadWithRow:(UITableViewCell*)cell;
 @end
