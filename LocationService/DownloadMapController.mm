@@ -348,9 +348,10 @@
             BMKOLSearchRecord* item = [_arrayHotCityData objectAtIndex:indexPath.row];
             cell.textLabel.text = [NSString stringWithFormat:@"%@(%d)", item.cityName, item.cityID];
             //转换包大小
-            UILabel *sizelabel =[[[UILabel alloc] initWithFrame:CGRectMake(250, 0, 60, 40)]autorelease];
+            UILabel *sizelabel =[[[UILabel alloc] initWithFrame:CGRectMake(210, 0, 100, 40)]autorelease];
             sizelabel.autoresizingMask =UIViewAutoresizingFlexibleLeftMargin;
             sizelabel.text = [self cellTitleWithEntity:item];
+            sizelabel.textAlignment=NSTextAlignmentRight;
             sizelabel.backgroundColor = [UIColor clearColor];
             cell.accessoryView = sizelabel;
             
@@ -360,7 +361,7 @@
             BMKOLSearchRecord* item = [_arrayOfflineCityData objectAtIndex:indexPath.row];
             cell.textLabel.text = [NSString stringWithFormat:@"%@(%d)", item.cityName, item.cityID];
             //转换包大小
-            UILabel *sizelabel =[[[UILabel alloc] initWithFrame:CGRectMake(250, 0, 60, 40)]autorelease];
+            UILabel *sizelabel =[[[UILabel alloc] initWithFrame:CGRectMake(210, 0, 100, 40)]autorelease];
             sizelabel.autoresizingMask =UIViewAutoresizingFlexibleLeftMargin;
             sizelabel.text = [self cellTitleWithEntity:item];
             sizelabel.backgroundColor = [UIColor clearColor];
@@ -371,7 +372,7 @@
         BMKOLSearchRecord* item = [_arraySearchCityData objectAtIndex:indexPath.row];
         cell.textLabel.text = [NSString stringWithFormat:@"%@(%d)", item.cityName, item.cityID];
         //转换包大小
-        UILabel *sizelabel =[[[UILabel alloc] initWithFrame:CGRectMake(250, 0, 60, 40)]autorelease];
+        UILabel *sizelabel =[[[UILabel alloc] initWithFrame:CGRectMake(210, 0, 100, 40)]autorelease];
         sizelabel.autoresizingMask =UIViewAutoresizingFlexibleLeftMargin;
         sizelabel.text = [self cellTitleWithEntity:item];
         sizelabel.backgroundColor = [UIColor clearColor];

@@ -7,7 +7,7 @@
 //
 
 #import "TKMapCell.h"
-
+#import "UIDevice+TPCategory.h"
 @interface TKMapCell (){
     BOOL isFinished;
 }
@@ -15,10 +15,6 @@
 @end
 
 @implementation TKMapCell
-- (void)dealloc{
-    [super dealloc];
-    [_offlineMap release],_offlineMap=nil;
-}
 - (id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
 	if(!(self=[super initWithStyle:style reuseIdentifier:reuseIdentifier])) return nil;
     _labTitle=[[UILabel alloc] initWithFrame:CGRectZero];
@@ -38,9 +34,8 @@
     _progressView.progressViewStyle=UIProgressViewStyleDefault;
     [self.contentView addSubview:_progressView];
     
-    //初始化离线地图服务
-    _offlineMap = [[BMKOfflineMap alloc] init];
-    _offlineMap.delegate=self;
+
+    
     
     isFinished=NO;
     
@@ -50,29 +45,26 @@
 - (id) initWithFrame:(CGRect)frame reuseIdentifier:(NSString *)reuseIdentifier {
 	return [self initWithStyle:UITableViewCellStyleDefault  reuseIdentifier:reuseIdentifier];
 }
-- (void)start{  
-  [_offlineMap start:self.Entity.cityID];
-}
-- (void)stop{
-  [_offlineMap pause:self.Entity.cityID];
-  NSString *memo=_labprocess.text;
-  memo=[memo stringByReplacingOccurrencesOfString:@"正在下载" withString:@"已暂停"];
-  _labprocess.textColor=[UIColor redColor];
-  _labprocess.text=memo;
-}
-- (void)remove{
-   [_offlineMap remove:self.Entity.cityID];
-}
+
 - (void)setDataSource:(BMKOLSearchRecord*)entity{
     self.Entity=entity;
-    
     NSString *title=entity.cityName;
     //转换包大小
     NSString*packSize = [self getDataSizeString:entity.size];
     _labTitle.text=[NSString stringWithFormat:@"%@(%@)",title,packSize];
     
-    if (!isFinished) {
-        [self start];
+    if ([_labprocess.text length]==0) {
+        _labprocess.text=@"等待下载 0%";
+    }
+}
+- (void)updateProgressInfo:(BMKOLUpdateElement*)updateInfo{
+    _labprocess.text=[NSString stringWithFormat:@"正在下载 %d%%",updateInfo.ratio];
+    [_progressView setProgress:updateInfo.ratio animated:YES];
+    if (updateInfo.status==4) {//表示下载完成
+        isFinished=YES;
+        if (self.controlers&&[self.controlers respondsToSelector:@selector(finishedDownloadWithRow:element:)]) {
+            [self.controlers performSelector:@selector(finishedDownloadWithRow:element:) withObject:self withObject:updateInfo];
+        }
     }
 }
 #pragma mark 包大小转换工具类（将包大小转换成合适单位）
@@ -154,30 +146,6 @@
 	
 	return string;
 }
-//离线地图delegate，用于获取通知
-- (void)onGetOfflineMapState:(int)type withState:(int)state
-{
-    if (type == TYPE_OFFLINE_UPDATE) {
-        //id为state的城市正在下载或更新，start后会毁掉此类型
-        BMKOLUpdateElement* updateInfo;
-        updateInfo = [_offlineMap getUpdateInfo:state];
-        _labprocess.text=[NSString stringWithFormat:@"正在下载 %d",updateInfo.ratio];
-        [self.progressView setProgress:updateInfo.ratio];
-        if (updateInfo.ratio==100) {
-            isFinished=YES;
-            if (self.controlers&&[self.controlers respondsToSelector:@selector(finishedDownloadWithRow:)]) {
-                [self.controlers performSelector:@selector(finishedDownloadWithRow:) withObject:self];
-            }
-        }
-    }
-    if (type == TYPE_OFFLINE_NEWVER) {
-        //id为state的state城市有新版本,可调用update接口进行更新
-        BMKOLUpdateElement* updateInfo;
-        updateInfo = [_offlineMap getUpdateInfo:state];
-        NSLog(@"是否有更新%d",updateInfo.update);
-    }
-    
-}
 - (void)layoutSubviews{
     [super layoutSubviews];
     CGRect r = CGRectInset(self.contentView.bounds, 10, 5);
@@ -185,9 +153,10 @@
     r.size.height=20;
     _labTitle.frame=r;
     
-    r.size.width=50;
-    r.origin.x-=50;
+    r.size.width=100;
+    r.origin.x=self.frame.size.width-10-100;
     _labprocess.frame=r;
+    
     
     r=CGRectInset(self.contentView.bounds, 10, 5);
     r.origin.y=_labTitle.frame.origin.y+_labTitle.frame.size.height+2;

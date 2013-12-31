@@ -118,6 +118,12 @@
 	
 	return ((vm_page_size * vmStats.free_count) / 1024.0) / 1024.0;
 }
+- (BOOL)availableDiskSpace{
+    if ([self availableMemory]>0) {
+        return YES;
+    }
+    return NO;
+}
 - (BOOL)isSimulator {
 	static NSString *simulatorModel = @"iPhone Simulator";
 	return [[self model] isEqualToString:simulatorModel];

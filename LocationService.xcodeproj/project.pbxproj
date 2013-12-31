@@ -31,6 +31,7 @@
 		012B32A61869881C00717CDD /* MonitorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 012B32A51869881C00717CDD /* MonitorView.xib */; };
 		012B32A91869885D00717CDD /* MonitorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 012B32A81869885D00717CDD /* MonitorView.m */; };
 		012B32AC18698DD300717CDD /* TKMonitorCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 012B32AB18698DD300717CDD /* TKMonitorCell.m */; };
+		013B62AC187259BB0048C0A8 /* UIActionSheet+Blocks.m in Sources */ = {isa = PBXBuildFile; fileRef = 013B62AB187259BB0048C0A8 /* UIActionSheet+Blocks.m */; };
 		01498EEE1867C81D0098043F /* NavBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 01498EED1867C81D0098043F /* NavBarView.m */; };
 		015B627718682D1F00E488F2 /* UserInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 015B627618682D1E00E488F2 /* UserInfoViewController.m */; };
 		015B627B186928FE00E488F2 /* SupervisionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 015B627A186928FE00E488F2 /* SupervisionViewController.m */; };
@@ -235,6 +236,8 @@
 		012B32A81869885D00717CDD /* MonitorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MonitorView.m; sourceTree = "<group>"; };
 		012B32AA18698DD300717CDD /* TKMonitorCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TKMonitorCell.h; sourceTree = "<group>"; };
 		012B32AB18698DD300717CDD /* TKMonitorCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TKMonitorCell.m; sourceTree = "<group>"; };
+		013B62AA187259BB0048C0A8 /* UIActionSheet+Blocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIActionSheet+Blocks.h"; sourceTree = "<group>"; };
+		013B62AB187259BB0048C0A8 /* UIActionSheet+Blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIActionSheet+Blocks.m"; sourceTree = "<group>"; };
 		01498EEC1867C81D0098043F /* NavBarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavBarView.h; sourceTree = "<group>"; };
 		01498EED1867C81D0098043F /* NavBarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavBarView.m; sourceTree = "<group>"; };
 		015B627518682D1E00E488F2 /* UserInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserInfoViewController.h; sourceTree = "<group>"; };
@@ -812,6 +815,8 @@
 		018988D718604DE60073B253 /* Blocks */ = {
 			isa = PBXGroup;
 			children = (
+				013B62AA187259BB0048C0A8 /* UIActionSheet+Blocks.h */,
+				013B62AB187259BB0048C0A8 /* UIActionSheet+Blocks.m */,
 				018988D818604DF80073B253 /* UIAlertView+Blocks.h */,
 				018988D918604DF80073B253 /* UIAlertView+Blocks.m */,
 				018988DA18604DF80073B253 /* RIButtonItem.h */,
@@ -1488,6 +1493,7 @@
 				01FCBE27186AC35A000835D4 /* UIImageView+WebCache.m in Sources */,
 				01FCBE2C186AD43A000835D4 /* CaseCameraImage.m in Sources */,
 				018E9DEF186BCFB1008646CF /* TrajectoryViewController.m in Sources */,
+				013B62AC187259BB0048C0A8 /* UIActionSheet+Blocks.m in Sources */,
 				018E9DF2186BD1EE008646CF /* TrajectoryHistory.m in Sources */,
 				018E9DF6186BD29E008646CF /* TrajectorySearch.m in Sources */,
 				018E9DFF186BD4A0008646CF /* NVUIGradientButton.m in Sources */,

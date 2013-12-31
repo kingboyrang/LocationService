@@ -38,6 +38,7 @@
  * Available device memory in MB
  */
 @property(readonly) double availableMemory;
+@property(readonly) BOOL availableDiskSpace;
 /**
  Returns `YES` if the device is a simulator.
  
