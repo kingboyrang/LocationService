@@ -201,7 +201,6 @@
     if ([self existslocalSourceByCityId:cityId]) {
         [_offlineMap update:cityId];
     }else{
-        NSLog(@"开始下载 start");
         [_offlineMap start:cityId];
     }
 }
@@ -330,13 +329,11 @@
 }
 //下载地图
 - (void)downloadMapWithEntity:(BMKOLSearchRecord*)entity{
-    NSLog(@"新增下载===");
     if (!self.arraylDownLoadSource) {
         self.arraylDownLoadSource=[[NSMutableArray alloc] init];
     }
     [self.arraylDownLoadSource addObject:entity];
     if (self.arraylDownLoadSource.count==1) {
-         NSLog(@"删除一项再下载===");
         //新增下载行
         NSIndexPath *indexPath=[NSIndexPath indexPathForRow:0 inSection:0];
         [_tableView beginUpdates];
@@ -347,7 +344,6 @@
        
         return;
     }
-    NSLog(@"还存在下载项===");
     NSIndexPath *indexPath=[NSIndexPath indexPathForRow:self.arraylDownLoadSource.count-1 inSection:0];
     [_tableView beginUpdates];
     [_tableView insertRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationFade];
