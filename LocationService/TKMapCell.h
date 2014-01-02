@@ -14,6 +14,7 @@
 @property(nonatomic,strong) UILabel *labprocess;
 @property(nonatomic,strong) UIProgressView *progressView;
 @property(nonatomic,retain) BMKOLSearchRecord *Entity;
+@property(nonatomic,assign) BOOL isPause;//是否是暂停
 @property(nonatomic,assign) id controlers;
 //设置数据源
 - (void)setDataSource:(BMKOLSearchRecord*)entity;

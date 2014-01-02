@@ -8,14 +8,15 @@
 
 #import <UIKit/UIKit.h>
 #import "BMapKit.h"
-@interface OnlineMapViewController : BasicViewController<BMKMapViewDelegate,BMKOfflineMapDelegate>{
-   BMKMapView* _mapView;//.xib里要有BMKMapView类用于初始化数据驱动
+@interface OnlineMapViewController : BasicViewController<BMKOfflineMapDelegate>{
+  // BMKMapView* _mapView;//.xib里要有BMKMapView类用于初始化数据驱动BMKMapViewDelegate,
    BMKOfflineMap* _offlineMap;
    NSMutableArray * _arraylocalDownLoadMapInfo;//本地下载的离线地图
     
     int currentDownloadCityId;//当前正在下载的城市id
 }
 @property(nonatomic,strong) NSMutableArray *arraylDownLoadSource;//下载地图
+
 //新增一笔下载项
 - (void)downloadMapWithEntity:(BMKOLSearchRecord*)entity;
 //下载完成

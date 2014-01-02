@@ -57,6 +57,8 @@
 		016924CA18618ECE0040E0C9 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 016924C918618ECE0040E0C9 /* CoreLocation.framework */; };
 		016924CD1862984C0040E0C9 /* LoginButtons.m in Sources */ = {isa = PBXBuildFile; fileRef = 016924CC1862984C0040E0C9 /* LoginButtons.m */; };
 		016924CF1862A33C0040E0C9 /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 016924CE1862A33C0040E0C9 /* Entitlements.plist */; };
+		017C2292187511DF00FBF95D /* KYPointAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 017C228F187511DF00FBF95D /* KYPointAnnotation.m */; };
+		017C2293187511DF00FBF95D /* KYBubbleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 017C2291187511DF00FBF95D /* KYBubbleView.m */; };
 		0189889A185FD8E10073B253 /* LoginWay.m in Sources */ = {isa = PBXBuildFile; fileRef = 01898899185FD8E10073B253 /* LoginWay.m */; };
 		0189889E185FE0990073B253 /* BasicViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0189889D185FE0990073B253 /* BasicViewController.m */; };
 		018988A0185FE1710073B253 /* logintop.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 0189889F185FE1710073B253 /* logintop.jpg */; };
@@ -125,6 +127,10 @@
 		01B40B4818614EFB004A0133 /* ServiceHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 01B40B4318614EFB004A0133 /* ServiceHelper.m */; };
 		01B40B4918614EFB004A0133 /* ServiceResult.m in Sources */ = {isa = PBXBuildFile; fileRef = 01B40B4518614EFB004A0133 /* ServiceResult.m */; };
 		01B40B4A18614EFB004A0133 /* ServiceArgs.m in Sources */ = {isa = PBXBuildFile; fileRef = 01B40B4718614EFB004A0133 /* ServiceArgs.m */; };
+		01B483CA1875165D005D4DD9 /* ModifyAreaViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01B483C91875165D005D4DD9 /* ModifyAreaViewController.m */; };
+		01B483CF18755AE5005D4DD9 /* AreaRangeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01B483CE18755AE5005D4DD9 /* AreaRangeViewController.m */; };
+		01B483D218755E2E005D4DD9 /* RangHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 01B483D118755E2E005D4DD9 /* RangHeader.m */; };
+		01B483DD1875645C005D4DD9 /* AreaRuleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01B483DC1875645A005D4DD9 /* AreaRuleViewController.m */; };
 		01B65CF21867D9AC001F11BA /* ico12.png in Resources */ = {isa = PBXBuildFile; fileRef = 01B65CEF1867D9AC001F11BA /* ico12.png */; };
 		01B65CF31867D9AC001F11BA /* ico13.png in Resources */ = {isa = PBXBuildFile; fileRef = 01B65CF01867D9AC001F11BA /* ico13.png */; };
 		01B65CF41867D9AC001F11BA /* ico14.png in Resources */ = {isa = PBXBuildFile; fileRef = 01B65CF11867D9AC001F11BA /* ico14.png */; };
@@ -169,6 +175,8 @@
 		01C913BA187111A200D9A926 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01C913B9187111A100D9A926 /* OpenGLES.framework */; };
 		01C913BC187111BB00D9A926 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01C913BB187111BB00D9A926 /* Security.framework */; };
 		01C913C018715DD000D9A926 /* TKMapCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 01C913BF18715DD000D9A926 /* TKMapCell.m */; };
+		01E9CBA5187566A3005F330A /* CVUISelect.m in Sources */ = {isa = PBXBuildFile; fileRef = 01E9CBA4187566A3005F330A /* CVUISelect.m */; };
+		01E9CBA818756B44005F330A /* AreaCar.m in Sources */ = {isa = PBXBuildFile; fileRef = 01E9CBA718756B44005F330A /* AreaCar.m */; };
 		01F994C21867E76400FEC0F2 /* MoreCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 01F994C01867E76400FEC0F2 /* MoreCell.m */; };
 		01F994C31867E76400FEC0F2 /* MoreCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 01F994C11867E76400FEC0F2 /* MoreCell.xib */; };
 		01F994C61867E89300FEC0F2 /* MoreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01F994C51867E89300FEC0F2 /* MoreViewController.m */; };
@@ -280,6 +288,10 @@
 		016924CB1862984C0040E0C9 /* LoginButtons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginButtons.h; sourceTree = "<group>"; };
 		016924CC1862984C0040E0C9 /* LoginButtons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginButtons.m; sourceTree = "<group>"; };
 		016924CE1862A33C0040E0C9 /* Entitlements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Entitlements.plist; sourceTree = "<group>"; };
+		017C228E187511DF00FBF95D /* KYPointAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KYPointAnnotation.h; sourceTree = "<group>"; };
+		017C228F187511DF00FBF95D /* KYPointAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KYPointAnnotation.m; sourceTree = "<group>"; };
+		017C2290187511DF00FBF95D /* KYBubbleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KYBubbleView.h; sourceTree = "<group>"; };
+		017C2291187511DF00FBF95D /* KYBubbleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KYBubbleView.m; sourceTree = "<group>"; };
 		01898898185FD8E10073B253 /* LoginWay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginWay.h; sourceTree = "<group>"; };
 		01898899185FD8E10073B253 /* LoginWay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginWay.m; sourceTree = "<group>"; };
 		0189889C185FE0990073B253 /* BasicViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BasicViewController.h; sourceTree = "<group>"; };
@@ -400,6 +412,14 @@
 		01B40B4518614EFB004A0133 /* ServiceResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServiceResult.m; sourceTree = "<group>"; };
 		01B40B4618614EFB004A0133 /* ServiceArgs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServiceArgs.h; sourceTree = "<group>"; };
 		01B40B4718614EFB004A0133 /* ServiceArgs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServiceArgs.m; sourceTree = "<group>"; };
+		01B483C81875165D005D4DD9 /* ModifyAreaViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModifyAreaViewController.h; sourceTree = "<group>"; };
+		01B483C91875165D005D4DD9 /* ModifyAreaViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModifyAreaViewController.m; sourceTree = "<group>"; };
+		01B483CD18755AE4005D4DD9 /* AreaRangeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AreaRangeViewController.h; sourceTree = "<group>"; };
+		01B483CE18755AE5005D4DD9 /* AreaRangeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AreaRangeViewController.m; sourceTree = "<group>"; };
+		01B483D018755E2D005D4DD9 /* RangHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RangHeader.h; sourceTree = "<group>"; };
+		01B483D118755E2E005D4DD9 /* RangHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RangHeader.m; sourceTree = "<group>"; };
+		01B483DB18756459005D4DD9 /* AreaRuleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AreaRuleViewController.h; sourceTree = "<group>"; };
+		01B483DC1875645A005D4DD9 /* AreaRuleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AreaRuleViewController.m; sourceTree = "<group>"; };
 		01B65CEF1867D9AC001F11BA /* ico12.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ico12.png; sourceTree = "<group>"; };
 		01B65CF01867D9AC001F11BA /* ico13.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ico13.png; sourceTree = "<group>"; };
 		01B65CF11867D9AC001F11BA /* ico14.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ico14.png; sourceTree = "<group>"; };
@@ -507,6 +527,10 @@
 		01C913BB187111BB00D9A926 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		01C913BE18715DD000D9A926 /* TKMapCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TKMapCell.h; sourceTree = "<group>"; };
 		01C913BF18715DD000D9A926 /* TKMapCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TKMapCell.m; sourceTree = "<group>"; };
+		01E9CBA3187566A3005F330A /* CVUISelect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVUISelect.h; sourceTree = "<group>"; };
+		01E9CBA4187566A3005F330A /* CVUISelect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CVUISelect.m; sourceTree = "<group>"; };
+		01E9CBA618756B44005F330A /* AreaCar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AreaCar.h; sourceTree = "<group>"; };
+		01E9CBA718756B44005F330A /* AreaCar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AreaCar.m; sourceTree = "<group>"; };
 		01F994BF1867E76400FEC0F2 /* MoreCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MoreCell.h; sourceTree = "<group>"; };
 		01F994C01867E76400FEC0F2 /* MoreCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MoreCell.m; sourceTree = "<group>"; };
 		01F994C11867E76400FEC0F2 /* MoreCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MoreCell.xib; sourceTree = "<group>"; };
@@ -602,6 +626,8 @@
 				01C5FB85186C1173009986BF /* TrajectoryMessage.m */,
 				01C0AA0F186D538F00F8A250 /* AreaCrawl.h */,
 				01C0AA10186D538F00F8A250 /* AreaCrawl.m */,
+				01E9CBA618756B44005F330A /* AreaCar.h */,
+				01E9CBA718756B44005F330A /* AreaCar.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -732,6 +758,19 @@
 			path = WBNoticeView;
 			sourceTree = "<group>";
 		};
+		017C228D187511D200FBF95D /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				017C228E187511DF00FBF95D /* KYPointAnnotation.h */,
+				017C228F187511DF00FBF95D /* KYPointAnnotation.m */,
+				017C2290187511DF00FBF95D /* KYBubbleView.h */,
+				017C2291187511DF00FBF95D /* KYBubbleView.m */,
+				01B483D018755E2D005D4DD9 /* RangHeader.h */,
+				01B483D118755E2E005D4DD9 /* RangHeader.m */,
+			);
+			name = UI;
+			sourceTree = "<group>";
+		};
 		01898897185FD8770073B253 /* UI */ = {
 			isa = PBXGroup;
 			children = (
@@ -770,6 +809,7 @@
 		018988A9185FE8A30073B253 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				01B483DE18756622005D4DD9 /* Select */,
 				018E9DF7186BD488008646CF /* Calendar */,
 				0189892518613E440073B253 /* AppUI.h */,
 				0189892618613E440073B253 /* AppUI.m */,
@@ -966,6 +1006,15 @@
 			name = WebService;
 			sourceTree = "<group>";
 		};
+		01B483DE18756622005D4DD9 /* Select */ = {
+			isa = PBXGroup;
+			children = (
+				01E9CBA3187566A3005F330A /* CVUISelect.h */,
+				01E9CBA4187566A3005F330A /* CVUISelect.m */,
+			);
+			name = Select;
+			sourceTree = "<group>";
+		};
 		01BE3FCE185EACB6005C25D9 = {
 			isa = PBXGroup;
 			children = (
@@ -1132,8 +1181,15 @@
 		01C0AA12186D543000F8A250 /* Area */ = {
 			isa = PBXGroup;
 			children = (
+				017C228D187511D200FBF95D /* UI */,
 				01C0AA13186D547800F8A250 /* AreaViewController.h */,
 				01C0AA14186D547800F8A250 /* AreaViewController.m */,
+				01B483C81875165D005D4DD9 /* ModifyAreaViewController.h */,
+				01B483C91875165D005D4DD9 /* ModifyAreaViewController.m */,
+				01B483CD18755AE4005D4DD9 /* AreaRangeViewController.h */,
+				01B483CE18755AE5005D4DD9 /* AreaRangeViewController.m */,
+				01B483DB18756459005D4DD9 /* AreaRuleViewController.h */,
+				01B483DC1875645A005D4DD9 /* AreaRuleViewController.m */,
 			);
 			name = Area;
 			sourceTree = "<group>";
@@ -1400,6 +1456,7 @@
 				0189889E185FE0990073B253 /* BasicViewController.m in Sources */,
 				01BE3FEB185EACB6005C25D9 /* AppDelegate.mm in Sources */,
 				01B40B2318614CBA004A0133 /* ASIFormDataRequest.m in Sources */,
+				017C2292187511DF00FBF95D /* KYPointAnnotation.m in Sources */,
 				012097E0185ED07E00437EA3 /* LoginViewController.m in Sources */,
 				01B40B2418614CBA004A0133 /* ASIHTTPRequest.m in Sources */,
 				01B40B4918614EFB004A0133 /* ServiceResult.m in Sources */,
@@ -1424,7 +1481,9 @@
 				01B40B3618614D4C004A0133 /* XmlParseHelper.m in Sources */,
 				018988D0186030E50073B253 /* TKLabelSwitchCell.m in Sources */,
 				018988A4185FE3960073B253 /* GeneralLoginViewController.m in Sources */,
+				01E9CBA818756B44005F330A /* AreaCar.m in Sources */,
 				018988E418604EF60073B253 /* RegisterViewController.m in Sources */,
+				01E9CBA5187566A3005F330A /* CVUISelect.m in Sources */,
 				01BE4019185EB0B8005C25D9 /* NSString+TPCategory.m in Sources */,
 				0189892D1861405B0073B253 /* AnimateLoadView.m in Sources */,
 				018988A8185FE88B0073B253 /* DynamicLoginViewController.m in Sources */,
@@ -1447,6 +1506,7 @@
 				01BE401B185EB0B8005C25D9 /* NSData+TPCategory.m in Sources */,
 				016924C018618DE60040E0C9 /* WBBlueGradientView.m in Sources */,
 				016924C118618DE60040E0C9 /* WBErrorNoticeView.m in Sources */,
+				017C2293187511DF00FBF95D /* KYBubbleView.m in Sources */,
 				018988C91860241E0073B253 /* TKRegisterCheckCell.m in Sources */,
 				01BE401C185EB0B8005C25D9 /* UIImage+TPCategory.m in Sources */,
 				01BE401D185EB0B8005C25D9 /* UIColor+TPCategory.m in Sources */,
@@ -1514,6 +1574,10 @@
 				01C0AA1C186D708400F8A250 /* OnlineMapViewController.m in Sources */,
 				01C9138D1871093500D9A926 /* DownloadMapController.mm in Sources */,
 				01C913C018715DD000D9A926 /* TKMapCell.m in Sources */,
+				01B483CA1875165D005D4DD9 /* ModifyAreaViewController.m in Sources */,
+				01B483CF18755AE5005D4DD9 /* AreaRangeViewController.m in Sources */,
+				01B483D218755E2E005D4DD9 /* RangHeader.m in Sources */,
+				01B483DD1875645C005D4DD9 /* AreaRuleViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1584,7 +1648,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
 				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: 澜洲 吴 (M3F85US4G2)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Maxense Corp. (B9R2MVL97F)";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -1598,7 +1662,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				OTHER_LDFLAGS = "-lxml2";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "9210E612-CAA4-49BF-9407-5ECFD0668FBB";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "AC379660-0578-41CA-A12F-B44DDC2FD760";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -1627,7 +1691,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: 澜洲 吴 (M3F85US4G2)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Maxense Corp. (B9R2MVL97F)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LocationService/LocationService-Prefix.pch";
 				INFOPLIST_FILE = "LocationService/LocationService-Info.plist";
@@ -1636,7 +1700,7 @@
 					"\"$(SRCROOT)/LocationService\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "9210E612-CAA4-49BF-9407-5ECFD0668FBB";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "AC379660-0578-41CA-A12F-B44DDC2FD760";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

@@ -95,7 +95,7 @@
     
     self.cells=[NSMutableArray arrayWithObjects:cell1,cell2,cell3,cell4,cell5, nil];
     
-    _buttons=[[LoginButtons alloc] initWithFrame:CGRectMake(0,self.view.bounds.size.height-44*4, self.view.bounds.size.width, 44)];
+    _buttons=[[LoginButtons alloc] initWithFrame:CGRectMake(0,self.view.bounds.size.height-44*2, self.view.bounds.size.width, 44)];
     [_buttons.submit addTarget:self action:@selector(buttonSubmit) forControlEvents:UIControlEventTouchUpInside];
     [_buttons.cancel addTarget:self action:@selector(buttonCancel) forControlEvents:UIControlEventTouchUpInside];
     _buttons.submit.enabled=NO;
@@ -241,7 +241,6 @@
         args.methodName=@"UIDLogin";
         args.soapParams=params;
         [self.serviceHelper asynService:args success:^(ServiceResult *result) {
-            
             if ([result.xmlString length]>0) {
                 NSString *xml=[result.xmlString stringByReplacingOccurrencesOfString:result.xmlnsAttr withString:@""];
                 [result.xmlParse setDataSource:xml];

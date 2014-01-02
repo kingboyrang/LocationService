@@ -16,7 +16,7 @@
 -(void)SearchData:(NSString*)searchText;
 - (BOOL)findByIdUpdate:(int)cityId;
 - (BMKOLUpdateElement*)findByCityId:(int)cityId;
-- (NSString*)cellTitleWithEntity:(BMKOLSearchRecord*)entity;
+- (NSString*)cellTitleWithEntity:(BMKOLSearchRecord*)entity color:(UIColor**)fontColor;
 - (BOOL)downloadingWithCityId:(int)cityId;//判断是否正在下载
 @end
 
@@ -25,7 +25,6 @@
     [super dealloc];
     [_arrayHotCityData release];
     [_arrayOfflineCityData release];
-    [_arraylocalDownLoadMapInfo release];
     if (_offlineMap != nil) {
         [_offlineMap release];
         _offlineMap = nil;
@@ -104,8 +103,7 @@
     //获取支持离线下载城市列表
     _arrayOfflineCityData = [[_offlineMap getOfflineCityList] retain];
     
-    //获取各城市离线地图更新信息
-    _arraylocalDownLoadMapInfo = [[NSMutableArray arrayWithArray:[_offlineMap getAllUpdateInfo]] retain];
+    
 }
 - (void)didReceiveMemoryWarning
 {
@@ -193,10 +191,10 @@
     }
 }
 - (BMKOLUpdateElement*)findByCityId:(int)cityId{
-    if (_arraylocalDownLoadMapInfo&&[_arraylocalDownLoadMapInfo count]>0) {
+    if (self.arraylocalDownLoadMapInfo&&[self.arraylocalDownLoadMapInfo count]>0) {
         NSString *match=[NSString stringWithFormat:@"SELF.cityID ==%d",cityId];
         NSPredicate *predicate = [NSPredicate predicateWithFormat:match];
-        NSArray *results = [_arraylocalDownLoadMapInfo filteredArrayUsingPredicate:predicate];
+        NSArray *results = [self.arraylocalDownLoadMapInfo filteredArrayUsingPredicate:predicate];
         if (results&&[results count]>0) {
             BMKOLUpdateElement *item=[results objectAtIndex:0];
             return item;
@@ -226,16 +224,23 @@
     }
     return NO;
 }
-- (NSString*)cellTitleWithEntity:(BMKOLSearchRecord*)entity{
+- (NSString*)cellTitleWithEntity:(BMKOLSearchRecord*)entity color:(UIColor**)fontColor{
     BMKOLUpdateElement *item=[self findByCityId:entity.cityID];
     NSString *datasize=[self getDataSizeString:entity.size];
     if (item==nil) {//未下载
+         *fontColor=[UIColor blackColor];
          return  datasize;
     }
     //已下载
     NSString *memo=item.update?@"可更新":@"已下载";
+    if (item.update) {
+         *fontColor=[UIColor blueColor];
+    }else{
+         *fontColor=[UIColor grayColor];
+    }
     //正在下载
     if ([self downloadingWithCityId:entity.cityID]) {
+        *fontColor=[UIColor redColor];
         memo=@"正在下载";
     }
     return [NSString stringWithFormat:@"%@%@",memo,datasize];
@@ -347,10 +352,16 @@
         {
             BMKOLSearchRecord* item = [_arrayHotCityData objectAtIndex:indexPath.row];
             cell.textLabel.text = [NSString stringWithFormat:@"%@(%d)", item.cityName, item.cityID];
+            cell.textLabel.font=[UIFont fontWithName:DeviceFontName size:DeviceFontSize];
             //转换包大小
-            UILabel *sizelabel =[[[UILabel alloc] initWithFrame:CGRectMake(210, 0, 100, 40)]autorelease];
+            UIColor *fontColor;
+            NSString *labName=[self cellTitleWithEntity:item color:&fontColor];
+            CGSize size=[labName textSize:[UIFont fontWithName:DeviceFontName size:DeviceFontSize] withWidth:self.view.bounds.size.width];
+            UILabel *sizelabel =[[[UILabel alloc] initWithFrame:CGRectMake(self.view.bounds.size.width-10-size.width, 0, size.width, size.height)]autorelease];
             sizelabel.autoresizingMask =UIViewAutoresizingFlexibleLeftMargin;
-            sizelabel.text = [self cellTitleWithEntity:item];
+            sizelabel.text = labName;
+            sizelabel.textColor=fontColor;
+            sizelabel.font=[UIFont fontWithName:DeviceFontName size:DeviceFontSize];
             sizelabel.textAlignment=NSTextAlignmentRight;
             sizelabel.backgroundColor = [UIColor clearColor];
             cell.accessoryView = sizelabel;
@@ -360,10 +371,17 @@
         {
             BMKOLSearchRecord* item = [_arrayOfflineCityData objectAtIndex:indexPath.row];
             cell.textLabel.text = [NSString stringWithFormat:@"%@(%d)", item.cityName, item.cityID];
+            cell.textLabel.font=[UIFont fontWithName:DeviceFontName size:DeviceFontSize];
             //转换包大小
-            UILabel *sizelabel =[[[UILabel alloc] initWithFrame:CGRectMake(210, 0, 100, 40)]autorelease];
+            UIColor *fontColor;
+            NSString *labName=[self cellTitleWithEntity:item color:&fontColor];
+            CGSize size=[labName textSize:[UIFont fontWithName:DeviceFontName size:DeviceFontSize] withWidth:self.view.bounds.size.width];
+            
+            UILabel *sizelabel =[[[UILabel alloc] initWithFrame:CGRectMake(self.view.bounds.size.width-10-size.width, 0, size.width, size.height)]autorelease];
             sizelabel.autoresizingMask =UIViewAutoresizingFlexibleLeftMargin;
-            sizelabel.text = [self cellTitleWithEntity:item];
+            sizelabel.text = labName;
+            sizelabel.font=[UIFont fontWithName:DeviceFontName size:DeviceFontSize];
+            sizelabel.textColor=fontColor;
             sizelabel.backgroundColor = [UIColor clearColor];
             cell.accessoryView = sizelabel;
             
@@ -371,10 +389,16 @@
     }else{//搜索结果
         BMKOLSearchRecord* item = [_arraySearchCityData objectAtIndex:indexPath.row];
         cell.textLabel.text = [NSString stringWithFormat:@"%@(%d)", item.cityName, item.cityID];
+        cell.textLabel.font=[UIFont fontWithName:DeviceFontName size:DeviceFontSize];
         //转换包大小
-        UILabel *sizelabel =[[[UILabel alloc] initWithFrame:CGRectMake(210, 0, 100, 40)]autorelease];
+        UIColor *fontColor;
+        NSString *labName=[self cellTitleWithEntity:item color:&fontColor];
+        CGSize size=[labName textSize:[UIFont fontWithName:DeviceFontName size:DeviceFontSize] withWidth:self.view.bounds.size.width];
+        UILabel *sizelabel =[[[UILabel alloc] initWithFrame:CGRectMake(self.view.bounds.size.width-10-size.width, 0, size.width, size.height)]autorelease];
         sizelabel.autoresizingMask =UIViewAutoresizingFlexibleLeftMargin;
-        sizelabel.text = [self cellTitleWithEntity:item];
+        sizelabel.text = labName;
+        sizelabel.font=[UIFont fontWithName:DeviceFontName size:DeviceFontSize];
+        sizelabel.textColor=fontColor;
         sizelabel.backgroundColor = [UIColor clearColor];
         cell.accessoryView = sizelabel;
     }
@@ -413,8 +437,8 @@
     BOOL boo=[self findByIdUpdate:entity.cityID];
     if (!boo) {//可下载
         if (self.controler&&[self.controler respondsToSelector:@selector(downloadMapWithEntity:)]) {
-            [self.controler performSelector:@selector(downloadMapWithEntity:) withObject:entity];
             [self.navigationController popViewControllerAnimated:YES];
+            [self.controler performSelector:@selector(downloadMapWithEntity:) withObject:entity];
         }
     }
 }

@@ -37,10 +37,6 @@
         [_offlineMap release];
         _offlineMap = nil;
     }
-    if (_mapView) {
-        [_mapView release];
-        _mapView = nil;
-    }
 }
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -65,12 +61,10 @@
         [btn setTitleColor:[UIColor colorFromHexRGB:@"4a7ebb"] forState:UIControlStateHighlighted];
         [self.navBarView addSubview:btn];
     }
-      _mapView.delegate = self;
-     _offlineMap.delegate = self; // 不用时，置nil
+    _offlineMap.delegate = self;
 }
 -(void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    _mapView.delegate = nil; // 不用时，置nil
     _offlineMap.delegate = nil; // 不用时，置nil
 }
 - (void)viewDidLoad
@@ -80,8 +74,7 @@
     r.size.height-=44*2;
     r.origin.y=44;
         
-    _mapView=[[BMKMapView alloc] initWithFrame:r];
-    [self.view addSubview:_mapView];
+   
     
     _tableView=[[UITableView alloc] initWithFrame:r style:UITableViewStylePlain];
     _tableView.delegate=self;
@@ -208,6 +201,13 @@
 - (void)pauseDownloadWithCityId:(int)cityId{
     currentDownloadCityId=cityId;
     [_offlineMap pause:cityId];
+    
+    int row=[self getDownloadMapRowWithCityId:cityId];
+    if (row!=-1) {
+        TKMapCell *cell=self.arraylDownLoadSource[row];
+        cell.isPause=YES;
+    }
+    
 }
 //删除下载地图
 - (void)removeDownloadWithCityId:(int)cityId{
@@ -341,7 +341,6 @@
         [_tableView insertRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationFade];
         [_tableView endUpdates];
         [self startDownloadWithCityId:entity.cityID];//开始下载地图
-       
         return;
     }
     NSIndexPath *indexPath=[NSIndexPath indexPathForRow:self.arraylDownLoadSource.count-1 inSection:0];
@@ -400,6 +399,7 @@
     DownloadMapController *map=[[DownloadMapController alloc] init];
     map.controler=self;
     map.downloadSource=self.arraylDownLoadSource;
+    map.arraylocalDownLoadMapInfo=_arraylocalDownLoadMapInfo;
     [self.navigationController pushViewController:map animated:YES];
     [map release];
 }
@@ -482,6 +482,7 @@
 #pragma mark BMKOfflineMapDelegate methods
 - (void)onGetOfflineMapState:(int)type withState:(int)state{
    
+    NSLog(@"type=%d state=%d",type,state);
     if (type == TYPE_OFFLINE_UPDATE) {
         //id为state的城市正在下载或更新，start后会毁掉此类型
         BMKOLUpdateElement* updateInfo;
@@ -544,13 +545,15 @@
     BMKOLUpdateElement* item = [_arraylocalDownLoadMapInfo objectAtIndex:indexPath.row];
     
     NSString *memo=item.update?[NSString stringWithFormat:@"有更新包 %@",[self getDataSizeString:item.serversize]]:@"完成";
+    CGSize size=[memo textSize:[UIFont fontWithName:DeviceFontName size:DeviceFontSize] withWidth:self.view.bounds.size.width];
     
     cell.textLabel.text = [NSString stringWithFormat:@"%@(%d)", item.cityName, item.cityID];
     cell.textLabel.font=[UIFont fontWithName:DeviceFontName size:DeviceFontSize];
-    UILabel *sizelabel =[[[UILabel alloc] initWithFrame:CGRectMake(250, 0, 50, 40)]autorelease];
+    UILabel *sizelabel =[[[UILabel alloc] initWithFrame:CGRectMake(self.view.bounds.size.width-10-size.width, 0, size.width, size.height)]autorelease];
     sizelabel.autoresizingMask =UIViewAutoresizingFlexibleLeftMargin;
+    sizelabel.font=[UIFont fontWithName:DeviceFontName size:DeviceFontSize];
     sizelabel.text = memo;
-    //sizelabel.textAlignment=NSTextAlignmentRight;
+    sizelabel.textColor=item.update?[UIColor blueColor]:[UIColor blackColor];
     sizelabel.backgroundColor = [UIColor clearColor];
     cell.accessoryView = sizelabel;
     return cell;

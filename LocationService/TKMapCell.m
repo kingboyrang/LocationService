@@ -58,6 +58,10 @@
     }
 }
 - (void)updateProgressInfo:(BMKOLUpdateElement*)updateInfo{
+    if (self.isPause) {
+        self.isPause=NO;
+    }
+    
     _labprocess.text=[NSString stringWithFormat:@"正在下载 %d%%",updateInfo.ratio];
     [_progressView setProgress:updateInfo.ratio animated:YES];
     if (updateInfo.status==4) {//表示下载完成

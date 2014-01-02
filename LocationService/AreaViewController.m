@@ -11,6 +11,7 @@
 #import "AreaCrawl.h"
 #import "AppHelper.h"
 #import "LoginButtons.h"
+#import "ModifyAreaViewController.h"
 @interface AreaViewController ()<UITableViewDataSource,UITableViewDelegate>{
     UITableView *_tableView;
     LoginButtons *_toolBar;
@@ -170,7 +171,9 @@
 }
 //新增
 - (void)buttonAddClick{
-
+    ModifyAreaViewController *modify=[[ModifyAreaViewController alloc] init];
+    [self.navigationController pushViewController:modify animated:YES];
+    [modify release];
 }
 //编辑
 - (void)buttonEditClick:(id)sender{
