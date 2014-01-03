@@ -10,4 +10,7 @@
 
 @interface AreaRuleViewController : BasicViewController
 @property(nonatomic,retain) NSArray *sourceData;
+@property (nonatomic,retain) NSMutableDictionary *shipUsers;//关联对象
+@property(nonatomic,copy) NSString *AreaId;
+@property (nonatomic,assign) int operateType;//1 新增 2:修改
 @end

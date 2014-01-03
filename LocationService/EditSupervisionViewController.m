@@ -49,8 +49,6 @@
 {
     [super viewDidLoad];
     
-    NSLog(@"id=%@",self.Entity.ID);
-    
 	CGRect r=self.view.bounds;
     r.origin.y=44;
     r.size.height-=44*2;
@@ -204,6 +202,7 @@
         SupervisionExtend *extend=[[SupervisionExtend alloc] init];
         extend.operateType=2;//修改
         extend.PersonId=personId;
+        extend.DeviceCode=self.Entity.DeviceCode;
         [self.navigationController pushViewController:extend animated:YES];
         [extend release];
     }];

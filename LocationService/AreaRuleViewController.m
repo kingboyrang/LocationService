@@ -12,6 +12,9 @@
 #import "LoginButtons.h"
 #import "AreaCar.h"
 #import "AppHelper.h"
+#import "UIImageView+WebCache.h"
+#import "Account.h"
+#import "AreaRangeViewController.h"
 @interface AreaRuleViewController ()<UITableViewDataSource,UITableViewDelegate>{
     CVUISelect *_ruleSelect;
     UITableView *_tableView;
@@ -20,6 +23,7 @@
 - (void)buttonFinishedClick:(id)sender;
 - (void)loadingAreaCars;
 - (void)loadingRules;
+- (void)addRuleCompleted:(void(^)(NSString *ruleId))completed;
 @end
 
 @implementation AreaRuleViewController
@@ -116,15 +120,15 @@
                     NSMutableArray *saveArr=[NSMutableArray array];
                     NSDictionary *item=[saveArr objectAtIndex:0];
                     if ([[item objectForKey:@"InLimit"] isEqualToString:@"True"]) {
-                        [saveArr addObject:@"限入"];
+                        [saveArr addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"限入",@"key",@"1",@"value", nil]];
                     }
                     if ([[item objectForKey:@"OutLimit"] isEqualToString:@"True"]) {
-                        [saveArr addObject:@"限出"];
+                        [saveArr addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"限出",@"key",@"2",@"value", nil]];
                     }
                     if ([[item objectForKey:@"StopLimit"] isEqualToString:@"True"]) {
-                        [saveArr addObject:@"限停"];
+                        [saveArr addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"限停",@"key",@"3",@"value", nil]];
                     }
-                    [_ruleSelect setDataSourceForArray:saveArr];
+                    [_ruleSelect setDataSourceForArray:saveArr dataTextName:@"key" dataValueName:@"value"];
                 }
             }
         }
@@ -150,15 +154,64 @@
                 NSArray *source=[dic objectForKey:@"CarList"];
                 self.sourceData=[AppHelper arrayWithSource:source className:@"AreaCar"];
                 [_tableView reloadData];
-                [_tableView setEditing:YES animated:YES];
+                [_tableView setEditing:YES animated:YES];//设置可以编辑
             }
         }
     } failed:^(NSError *error, NSDictionary *userInfo) {
         
     }];
 }
+//新增规则
+- (void)addRuleCompleted:(void(^)(NSString *ruleId))completed{
+    NSString *prefx=self.operateType==1?@"新增":@"修改";
+    
+    Account *acc=[Account unarchiverAccount];
+    NSMutableArray *params=[NSMutableArray array];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:self.AreaId,@"AreaID", nil]];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"",@"RuleID", nil]];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[_ruleSelect value],@"ruleType", nil]];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[self.shipUsers.allKeys componentsJoinedByString:@","],@"CarPersonID", nil]];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:acc.WorkNo,@"Workno", nil]];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"",@"CompanyID", nil]];
+    
+    ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
+    args.serviceURL=DataWebservice1;
+    args.serviceNameSpace=DataNameSpace1;
+    args.methodName=@"SaveAreaRuleAndCar";
+    args.soapParams=params;
+    [self showLoadingAnimatedWithTitle:[NSString stringWithFormat:@"正在%@规则,请稍后...",prefx]];
+    [self.serviceHelper asynService:args success:^(ServiceResult *result) {
+        BOOL boo=NO;
+        if(result.hasSuccess)
+        {
+            NSDictionary *dic=[result json];
+            if(dic&&[[dic objectForKey:@"Result"] isEqualToString:@"Success"])
+            {
+                boo=YES;
+                [self hideLoadingViewAnimated:^(AnimateLoadView *hideView) {
+                    if (completed) {
+                        completed(self.AreaId);
+                    }
+                }];
+            }
+        }
+        if (!boo) {
+           [self hideLoadingFailedWithTitle:[NSString stringWithFormat:@"%@规则失败!",prefx] completed:nil];
+        }
+    } failed:^(NSError *error, NSDictionary *userInfo) {
+        [self hideLoadingFailedWithTitle:[NSString stringWithFormat:@"%@规则失败!",prefx] completed:nil];
+    }];
+}
 //下一步
 - (void)buttonNextClick:(id)sender{
+    if(self.operateType==1)//新增
+    {
+        [self addRuleCompleted:^(NSString *ruleId) {
+            AreaRangeViewController *areaRange=[[AreaRangeViewController alloc] init];
+            [self.navigationController pushViewController:areaRange animated:YES];
+            [areaRange release];
+        }];
+    }
 }
 //完成
 - (void)buttonFinishedClick:(id)sender{
@@ -181,8 +234,26 @@
         
     }
     AreaCar *entity=self.sourceData[indexPath.row];
+    [cell.imageView setImageWithURL:[NSURL URLWithString:entity.Phot] placeholderImage:[UIImage imageNamed:@"bg02.png"]];
     cell.textLabel.font=[UIFont fontWithName:DeviceFontName size:DeviceFontSize];
     cell.textLabel.text=entity.Name;
     return cell;
+}
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (!self.shipUsers) {
+        self.shipUsers=[NSMutableDictionary dictionary];
+    }
+    AreaCar *entity=self.sourceData[indexPath.row];
+    [self.shipUsers setValue:[NSString stringWithFormat:@"%d",indexPath.row] forKey:entity.ID];
+   
+}
+- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    AreaCar *entity=self.sourceData[indexPath.row];
+    [self.shipUsers removeObjectForKey:entity.ID];
+}
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return UITableViewCellEditingStyleDelete|UITableViewCellEditingStyleInsert;
 }
 @end

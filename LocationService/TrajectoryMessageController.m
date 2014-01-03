@@ -10,6 +10,8 @@
 #import "MessageCell.h"
 #import "TrajectoryMessage.h"
 #import "LoginButtons.h"
+#import "Account.h"
+#import "AppHelper.h"
 @interface TrajectoryMessageController (){
     LoginButtons *_toolBar;
 }
@@ -17,6 +19,7 @@
 - (void)buttonEditClick:(id)sender;
 - (void)buttonRemoveClick:(id)sender;
 - (void)buttonReadClick:(id)sender;
+- (BOOL)existsFindyById:(NSString*)msgId;
 @end
 
 @implementation TrajectoryMessageController
@@ -66,6 +69,20 @@
     
     curPage=0;
     pageSize=10;
+    if (curPage==0) {
+        [_tableView launchRefreshing];
+    }
+}
+- (BOOL)existsFindyById:(NSString*)msgId{
+    if (self.cells&&[self.cells count]>0) {
+        NSString *match=[NSString stringWithFormat:@"SELF.ID =='%@'",msgId];
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:match];
+        NSArray *results = [self.cells filteredArrayUsingPredicate:predicate];
+        if (results&&[results count]>0) {
+            return YES;
+        }
+    }
+    return NO;
 }
 //删除
 - (void)buttonRemoveClick:(id)sender{
@@ -78,7 +95,7 @@
         NSMutableArray *params=[NSMutableArray array];
         [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[self.removeList.allKeys componentsJoinedByString:@","],@"id", nil]];
         [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"1",@"type", nil]];
-        [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"",@"time", nil]];
+        //[params addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"",@"time", nil]];
         
         ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
         args.serviceURL=DataWebservice1;
@@ -97,7 +114,11 @@
                         [_tableView beginUpdates];
                         [_tableView deleteRowsAtIndexPaths:[self.removeList allValues] withRowAnimation:UITableViewRowAnimationFade];
                         [_tableView endUpdates];
+                        //更新操作
+                        [self.readList removeAllObjects];
                         [self.removeList removeAllObjects];
+                        [_toolBar.submit setTitle:@"标记已读(0)" forState:UIControlStateNormal];//更新操作
+                        [_toolBar.cancel setTitle:@"删除(0)" forState:UIControlStateNormal];//更新操作
                     }];
                 }
             }
@@ -113,6 +134,12 @@
 //标记已读
 - (void)buttonReadClick:(id)sender{
     if (self.readList&&[self.readList count]>0) {
+        NSMutableArray *delSource=[NSMutableArray array];
+        for (NSIndexPath *item in [self.removeList allValues]) {
+            [delSource addObject:self.cells[item.row]];
+        }
+        
+        
         UIButton *btn=(UIButton*)sender;
         btn.enabled=NO;
         ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
@@ -132,13 +159,16 @@
             }
             if (boo) {
                 [self hideLoadingSuccessWithTitle:@"标记已读操作成功!" completed:^(AnimateErrorView *successView) {
-                    NSArray *indexPaths=[self.readList allValues];
-                    for (NSIndexPath *item in indexPaths) {
-                        MessageCell *cell=(MessageCell*)[_tableView cellForRowAtIndexPath:item];
-                        [cell.messageView setReading:YES];
-                    }
-                    [self.readList removeAllObjects];
+                   
+                    [self.cells removeObjectsInArray:delSource];
+                    [_tableView beginUpdates];
+                    [_tableView deleteRowsAtIndexPaths:[self.readList allValues] withRowAnimation:UITableViewRowAnimationFade];
+                    [_tableView endUpdates];
+                    
+                     [self.readList removeAllObjects];
+                     [self.removeList removeAllObjects];
                      [_toolBar.submit setTitle:@"标记已读(0)" forState:UIControlStateNormal];//更新操作
+                     [_toolBar.cancel setTitle:@"删除(0)" forState:UIControlStateNormal];//更新操作
                     
                 }];
             }else{
@@ -155,7 +185,7 @@
 - (void)buttonEditClick:(id)sender{
     UIButton *btn=(UIButton*)sender;
     [_tableView setEditing:!_tableView.editing animated:YES];
-    if(_tableView.editing){
+    if(_tableView.editing){//编辑
         [btn setTitle:@"取消" forState:UIControlStateNormal];
         CGRect r=_toolBar.frame;
         r.origin.y=self.view.bounds.size.height-44;
@@ -168,7 +198,16 @@
             _tableView.frame=r1;
         }];
     }
-	else {
+	else {//取消
+        if (self.readList&&[self.readList count]>0) {
+            [self.readList removeAllObjects];
+            [_toolBar.submit setTitle:@"标记已读(0)" forState:UIControlStateNormal];
+        }
+        if (self.removeList&&[self.removeList count]>0) {
+            [self.removeList removeAllObjects];
+            [_toolBar.cancel setTitle:@"删除(0)" forState:UIControlStateNormal];
+        }
+        
         [btn setTitle:@"编辑" forState:UIControlStateNormal];
         CGRect r=_toolBar.frame;
         r.origin.y=self.view.bounds.size.height+44;
@@ -184,7 +223,79 @@
 }
 //加载数据
 - (void)loadData{
-
+    curPage++;
+    
+    Account *acc=[Account unarchiverAccount];
+    NSMutableArray *params=[NSMutableArray array];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:acc.WorkNo,@"workno", nil]];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:self.Entity.ID,@"personid", nil]];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%d",curPage],@"curPage", nil]];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%d",pageSize],@"pageSize", nil]];
+    
+    ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
+    args.serviceURL=DataWebservice1;
+    args.serviceNameSpace=DataNameSpace1;
+    args.methodName=@"GetPersonAlarmDataPage";
+    args.soapParams=params;
+    [self.serviceHelper asynService:args success:^(ServiceResult *result) {
+        [_tableView tableViewDidFinishedLoading];
+        _tableView.reachedTheEnd  = NO;
+        if (self.refreshing) {
+            self.refreshing = NO;
+        }
+        BOOL boo=NO;
+        if (result.hasSuccess) {
+            NSDictionary *dic=[result json];
+            if (dic!=nil) {
+                NSArray *source=[dic objectForKey:@"Person"];
+                NSArray *list=[AppHelper arrayWithSource:source className:@"TrajectoryMessage"];
+                if (list&&[list count]>0) {
+                    boo=YES;
+                    if (curPage==1) {
+                        self.cells=[NSMutableArray arrayWithArray:list];
+                        [_tableView reloadData];
+                        [self showSuccessViewWithHide:^(AnimateErrorView *successView) {
+                            successView.labelTitle.text=[NSString stringWithFormat:@"更新%d笔信息!",list.count];
+                        } completed:nil];
+                    }else{
+                        NSMutableArray *insertIndexPaths = [NSMutableArray array];
+                        int total=0;
+                        for (int i=0; i<[list count]; i++) {
+                            TrajectoryMessage *entity=list[i];
+                            if ([self existsFindyById:entity.ID]) {continue;}
+                            [self.cells addObject:[list objectAtIndex:i]];
+                            NSIndexPath *newPath=[NSIndexPath indexPathForRow:(curPage-1)*pageSize+total inSection:0];
+                            [insertIndexPaths addObject:newPath];
+                            total++;
+                        }
+                        //重新呼叫UITableView的方法, 來生成行.
+                        [_tableView beginUpdates];
+                        [_tableView insertRowsAtIndexPaths:insertIndexPaths withRowAnimation:UITableViewRowAnimationFade];
+                        [_tableView endUpdates];
+                        [self showSuccessViewWithHide:^(AnimateErrorView *successView) {
+                            successView.labelTitle.text=[NSString stringWithFormat:@"更新%d笔信息!",insertIndexPaths.count];
+                        } completed:nil];
+                    }
+                }
+               
+            }
+        }
+        if (!boo) {
+            curPage--;
+            [self showErrorViewWithHide:^(AnimateErrorView *errorView) {
+                errorView.labelTitle.text=@"没有更新信息哦!";
+                errorView.backgroundColor=[UIColor colorFromHexRGB:@"0e4880"];
+            } completed:nil];
+        }
+        
+    } failed:^(NSError *error, NSDictionary *userInfo) {
+        curPage--;
+        [self showErrorViewWithHide:^(AnimateErrorView *errorView) {
+            errorView.labelTitle.text=@"没有更新信息哦!";
+            errorView.backgroundColor=[UIColor colorFromHexRGB:@"0e4880"];
+        } completed:nil];
+    }];
+    
 }
 - (void)didReceiveMemoryWarning
 {
@@ -224,9 +335,14 @@
         if (!self.removeList) {
             self.removeList=[NSMutableDictionary dictionary];
         }
+        if (!self.readList) {
+            self.readList=[NSMutableDictionary dictionary];
+        }
         TrajectoryMessage *entity=self.cells[indexPath.row];
         [self.removeList setValue:indexPath forKey:entity.ID];
+        [self.readList setValue:indexPath forKey:entity.ID];
         [_toolBar.cancel setTitle:[NSString stringWithFormat:@"删除(%d)",self.removeList.count] forState:UIControlStateNormal];
+        [_toolBar.submit setTitle:[NSString stringWithFormat:@"标记已读(%d)",self.readList.count] forState:UIControlStateNormal];
     }
 }
 - (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -236,7 +352,9 @@
     if ([btn.currentTitle isEqualToString:@"取消"]) {
         TrajectoryMessage *entity=self.cells[indexPath.row];
         [self.removeList removeObjectForKey:entity.ID];
+        [self.readList removeObjectForKey:entity.ID];
         [_toolBar.cancel setTitle:[NSString stringWithFormat:@"删除(%d)",self.removeList.count] forState:UIControlStateNormal];
+        [_toolBar.submit setTitle:[NSString stringWithFormat:@"标记已读(%d)",self.readList.count] forState:UIControlStateNormal];
     }
 }
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath

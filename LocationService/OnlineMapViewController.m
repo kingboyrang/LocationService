@@ -61,11 +61,11 @@
         [btn setTitleColor:[UIColor colorFromHexRGB:@"4a7ebb"] forState:UIControlStateHighlighted];
         [self.navBarView addSubview:btn];
     }
-    _offlineMap.delegate = self;
+    
 }
 -(void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    _offlineMap.delegate = nil; // 不用时，置nil
+    //_offlineMap.delegate = nil; // 不用时，置nil
 }
 - (void)viewDidLoad
 {
@@ -103,6 +103,7 @@
     
     //初始化离线地图服务
     _offlineMap = [[BMKOfflineMap alloc] init];
+    _offlineMap.delegate = self;
     //获取各城市离线地图更新信息
     _arraylocalDownLoadMapInfo = [[NSMutableArray arrayWithArray:[_offlineMap getAllUpdateInfo]] retain];
     

@@ -232,7 +232,8 @@
     }
     [self showLoadingAnimatedWithTitle:@"正在登录,请稍后..."];
     [self pwdDesEncrypWithCompleted:^(NSString *pwd) {
-        
+        //登录
+        NSLog(@"pwd=%@",pwd);
         TKRegisterCheckCell *cell3=self.cells[4];
         NSMutableArray *params=[NSMutableArray arrayWithCapacity:2];
         [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[cell1.textField.text Trim],@"userName", nil]];

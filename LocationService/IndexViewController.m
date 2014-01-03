@@ -7,12 +7,17 @@
 //
 
 #import "IndexViewController.h"
-
+#import "SupervisionViewController.h"
+#import "AddSupervision.h"
+#import "Account.h"
+#import "AppHelper.h"
+#import "SupervisionPerson.h"
 @interface IndexViewController ()
 - (void)buttonCompassClick;
 - (void)buttonTargetClick;
 - (void)buttonMonitorClick;
--(void)cleanMap;
+- (void)cleanMap;
+- (void)startUserLocation;
 @end
 
 @implementation IndexViewController
@@ -55,16 +60,49 @@
     _mapView.delegate = self; // 此处记得不用的时候需要置nil，否则影响内存的释放
     
     
-    [self cleanMap];
-    _mapView.showsUserLocation = NO;//先关闭显示的定位图层
-    _mapView.userTrackingMode = BMKUserTrackingModeNone;//设置定位的状态
-    _mapView.showsUserLocation = YES;//显示定位图层
+    
 }
+
 -(void)viewWillDisappear:(BOOL)animated {
     [_mapView viewWillDisappear];
     _mapView.delegate = nil; // 不用时，置nil
     
     
+}
+//当前定位
+- (void)startUserLocation{
+    [self cleanMap];
+    _mapView.showsUserLocation = NO;//先关闭显示的定位图层
+    _mapView.userTrackingMode = BMKUserTrackingModeNone;//设置定位的状态
+    _mapView.showsUserLocation = YES;//显示定位图层
+}
+- (void)loadSupervision{
+    Account *acc=[Account unarchiverAccount];
+    ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
+    args.serviceURL=DataWebservice1;
+    args.serviceNameSpace=DataNameSpace1;
+    args.methodName=@"GetSuperviseInfo";
+    args.soapParams=[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:acc.WorkNo,@"WorkNo", nil], nil];
+    
+    [self.serviceHelper asynService:args success:^(ServiceResult *result) {
+        BOOL boo=NO;
+        if (result.hasSuccess) {
+            XmlNode *node=[result methodNode];
+            NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:[node.InnerText dataUsingEncoding:NSUTF8StringEncoding] options:1 error:nil];
+            NSArray *source=[dic objectForKey:@"Person"];
+            self.cells=[NSMutableArray arrayWithArray:[AppHelper arrayWithSource:source className:@"SupervisionPerson"]];
+            if (self.cells&&[self.cells count]>0) {
+                boo=YES;
+                //加载监管目标
+                
+            }
+        }
+        if (!boo) {
+            [self startUserLocation];
+        }
+    } failed:^(NSError *error, NSDictionary *userInfo) {
+        [self startUserLocation];
+    }];
 }
 -(void)cleanMap
 {
@@ -73,21 +111,46 @@
     NSArray* array = [NSArray arrayWithArray:_mapView.annotations];
     [_mapView removeAnnotations:array];
 }
+//设置当前地图等级
 - (void)buttonCompassClick{
-
+    
 }
+//新增监管目标
 - (void)buttonTargetClick{
-    
+    AddSupervision *supervision=[[AddSupervision alloc] init];
+    [self.navigationController pushViewController:supervision animated:YES];
+    [supervision release];
 }
+//监管列表
 - (void)buttonMonitorClick{
-    
+    SupervisionViewController *supervision=[[SupervisionViewController alloc] init];
+    [self.navigationController pushViewController:supervision animated:YES];
+    [supervision release];
 }
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-#pragma mark mapViewDelegate 代理方法
+// 根据anntation生成对应的View
+- (BMKAnnotationView *)mapView:(BMKMapView *)mapView viewForAnnotation:(id <BMKAnnotation>)annotation
+{
+   
+   BMKPinAnnotationView *newAnnotation = (BMKPinAnnotationView*)[mapView viewForAnnotation:annotation];
+     NSString *AnnotationViewID = @"renameMark";
+     if (newAnnotation == nil) {
+         newAnnotation = [[BMKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:AnnotationViewID];
+         // 设置颜色
+         ((BMKPinAnnotationView*)newAnnotation).pinColor = BMKPinAnnotationColorPurple;
+         // 从天上掉下效果
+         ((BMKPinAnnotationView*)newAnnotation).animatesDrop = YES;
+         // 设置可拖拽
+         ((BMKPinAnnotationView*)newAnnotation).draggable = YES;
+     }
+     return newAnnotation;
+     
+    
+}
 - (void)mapView:(BMKMapView *)mapView1 didUpdateUserLocation:(BMKUserLocation *)userLocation
 {
     BMKCoordinateRegion region;
@@ -128,4 +191,5 @@
      */
     //poi检索  异步函数，返回结果在BMKSearchDelegate里的onGetPoiResult:searchType:errorCode:通知
 }
+
 @end

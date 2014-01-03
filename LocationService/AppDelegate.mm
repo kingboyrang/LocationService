@@ -34,7 +34,12 @@
     
     
     self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
+     
+    MainViewController *main=[[[MainViewController alloc] init] autorelease];
+    self.window.rootViewController=main;
+    [self.window makeKeyAndVisible];
     // Override point for customization after application launch.
+   /***
     Account *acc=[Account unarchiverAccount];
     if (acc.isRememberPwd) {//记住密码
         acc.isLogin=YES;
@@ -47,8 +52,9 @@
         BasicNavigationController *nav=[[[BasicNavigationController alloc] initWithRootViewController:login] autorelease];
         self.window.rootViewController =nav;
     }
-    [self.window makeKeyAndVisible];
+     [self.window makeKeyAndVisible];
     [AppHelper runAnimation:nil];//启动动画
+     ***/
     return YES;
 }
 //回首页

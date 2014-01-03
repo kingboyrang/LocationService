@@ -10,6 +10,9 @@
 #import "BMapKit.h"
 @interface ModifyAreaViewController : BasicViewController<BMKMapViewDelegate>{
     BMKMapView* _mapView;
+     CLLocationCoordinate2D _coordinate;
 }
-- (void)showBubble:(BOOL)show;
+@property (nonatomic,assign) int operateType;//1 新增 2:修改
+@property (nonatomic,copy) NSString *AreaId;//修改时赋值
+@property (nonatomic,retain) NSDictionary *AreaSource;//修改时赋值
 @end

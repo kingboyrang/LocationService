@@ -81,6 +81,15 @@
     return [NetWorkConnection IsEnableConnection];
 }
 - (void) showErrorNetWorkNotice:(void (^)(void))dismissError{
+    
+    [self showErrorViewWithHide:^(AnimateErrorView *errorView) {
+        errorView.labelTitle.text=@"网络未连接,请检查!";
+    } completed:^(AnimateErrorView *errorView) {
+        if (dismissError) {
+            dismissError();
+        }
+    }];
+    /***
     WBErrorNoticeView *notice = [WBErrorNoticeView errorNoticeInView:self.view title:@"网络未连接" message:@"请检查您的网络连接."];
     [notice setDismissalBlock:^(BOOL dismissedInteractively) {
         if (dismissError) {
@@ -88,6 +97,7 @@
         }
     }];
     [notice show];
+     ***/
 }
 - (void) showMessageWithTitle:(NSString*)title{
     [self showMessageWithTitle:title innerView:self.view dismissed:nil];

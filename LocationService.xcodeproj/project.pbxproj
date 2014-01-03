@@ -32,6 +32,7 @@
 		012B32A91869885D00717CDD /* MonitorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 012B32A81869885D00717CDD /* MonitorView.m */; };
 		012B32AC18698DD300717CDD /* TKMonitorCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 012B32AB18698DD300717CDD /* TKMonitorCell.m */; };
 		013B62AC187259BB0048C0A8 /* UIActionSheet+Blocks.m in Sources */ = {isa = PBXBuildFile; fileRef = 013B62AB187259BB0048C0A8 /* UIActionSheet+Blocks.m */; };
+		0146926D187669BE003664BE /* AreaPaoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0146926C187669BD003664BE /* AreaPaoView.m */; };
 		01498EEE1867C81D0098043F /* NavBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 01498EED1867C81D0098043F /* NavBarView.m */; };
 		015B627718682D1F00E488F2 /* UserInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 015B627618682D1E00E488F2 /* UserInfoViewController.m */; };
 		015B627B186928FE00E488F2 /* SupervisionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 015B627A186928FE00E488F2 /* SupervisionViewController.m */; };
@@ -246,6 +247,8 @@
 		012B32AB18698DD300717CDD /* TKMonitorCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TKMonitorCell.m; sourceTree = "<group>"; };
 		013B62AA187259BB0048C0A8 /* UIActionSheet+Blocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIActionSheet+Blocks.h"; sourceTree = "<group>"; };
 		013B62AB187259BB0048C0A8 /* UIActionSheet+Blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIActionSheet+Blocks.m"; sourceTree = "<group>"; };
+		0146926B187669BD003664BE /* AreaPaoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AreaPaoView.h; sourceTree = "<group>"; };
+		0146926C187669BD003664BE /* AreaPaoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AreaPaoView.m; sourceTree = "<group>"; };
 		01498EEC1867C81D0098043F /* NavBarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavBarView.h; sourceTree = "<group>"; };
 		01498EED1867C81D0098043F /* NavBarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavBarView.m; sourceTree = "<group>"; };
 		015B627518682D1E00E488F2 /* UserInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserInfoViewController.h; sourceTree = "<group>"; };
@@ -767,6 +770,8 @@
 				017C2291187511DF00FBF95D /* KYBubbleView.m */,
 				01B483D018755E2D005D4DD9 /* RangHeader.h */,
 				01B483D118755E2E005D4DD9 /* RangHeader.m */,
+				0146926B187669BD003664BE /* AreaPaoView.h */,
+				0146926C187669BD003664BE /* AreaPaoView.m */,
 			);
 			name = UI;
 			sourceTree = "<group>";
@@ -1578,6 +1583,7 @@
 				01B483CF18755AE5005D4DD9 /* AreaRangeViewController.m in Sources */,
 				01B483D218755E2E005D4DD9 /* RangHeader.m in Sources */,
 				01B483DD1875645C005D4DD9 /* AreaRuleViewController.m in Sources */,
+				0146926D187669BE003664BE /* AreaPaoView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -21,6 +21,7 @@
 - (void)buttonCancel;
 - (CGRect)fieldToRect:(UITextField*)field;
 - (void)replacePhonestring:(UITextField*)field;
+- (void)loadingEditInfo;
 @end
 
 @implementation SupervisionExtend
@@ -43,6 +44,8 @@
 	CGRect r=self.view.bounds;
     r.origin.y=44;
     r.size.height-=44*2;
+    
+    self.SysID=@"";
     
     
     _tableView=[[UITableView alloc] initWithFrame:r style:UITableViewStylePlain];
@@ -100,6 +103,97 @@
     cell10.textField.delegate=self;
     
     self.cells=[NSMutableArray arrayWithObjects:cell1,cell2,cell3,cell4,cell5,cell6,cell7,cell8,cell9,cell10, nil];
+    
+    if (self.operateType==2) {//修改
+        //加载修改信息
+        [self loadingEditInfo];
+    }
+   
+}
+//获取修改信息
+- (void)loadingEditInfo{
+    //取得频率
+    ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
+    args.methodName=@"getCardFrequence";
+    args.serviceURL=DataWebservice1;
+    args.serviceNameSpace=DataNameSpace1;
+    args.soapParams=[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:self.DeviceCode,@"DeviceCode", nil], nil];
+    
+    ASIHTTPRequest *request1=[ServiceHelper commonSharedRequest:args];
+    [request1 setUserInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"Frequence",@"name", nil]];
+    [self.serviceHelper addQueue:request1];
+    
+    for (int i=1; i<5; i++) {
+        ServiceArgs *item=[[[ServiceArgs alloc] init] autorelease];
+        item.methodName=@"GetAllTelephoneSet";
+        item.serviceURL=DataWebservice1;
+        item.serviceNameSpace=DataNameSpace1;
+        item.soapParams=[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:self.DeviceCode,@"DeviceCode", nil],[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%d",i],@"type", nil], nil];
+        ASIHTTPRequest *request=[ServiceHelper commonSharedRequest:item];
+        [request setUserInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"type%d",i],@"name", nil]];
+        [self.serviceHelper addQueue:request];
+    }
+
+    [self.serviceHelper startQueue:nil failed:nil complete:^(NSArray *results) {
+        for (ServiceResult *result in results) {
+            NSString *name=[[result.request userInfo] objectForKey:@"name"];
+            if ([name isEqualToString:@"Frequence"]) {
+                if (result.hasSuccess) {
+                    NSDictionary *dic=[result json];
+                    if (dic!=nil) {
+                        NSArray *source=[dic objectForKey:@"Person"];
+                        if (source&&[source count]>0) {
+                            TKTextFieldCell *cell=self.cells[1];
+                            cell.textField.text=[[source objectAtIndex:0] objectForKey:@"Frequence"];
+                            self.SysID=[[source objectAtIndex:0] objectForKey:@"SysID"];
+                        }
+                    }
+                }
+            }
+            
+            if ([name hasPrefix:@"type"]) {
+                if (result.hasSuccess) {
+                     NSDictionary *dic=[result json];
+                    if (dic!=nil) {
+                         NSArray *source=[dic objectForKey:@"Person"];
+                        if (source&&[source count]>0) {
+                            NSDictionary *souceDic=[source objectAtIndex:0];
+                            if ([[souceDic objectForKey:@"Type"] isEqualToString:@"1"]) {//1 : SOS 号码
+                                TKTextFieldCell *cell=self.cells[3];
+                                cell.textField.text=[souceDic objectForKey:@"Phone"];
+                            }
+                            if ([[souceDic objectForKey:@"Type"] isEqualToString:@"2"]) {//2 :亲情号码;  
+                                TKTextFieldCell *cell=self.cells[7];
+                                cell.textField.text=[souceDic objectForKey:@"Phone"];
+                            }
+                            if ([[souceDic objectForKey:@"Type"] isEqualToString:@"3"]) {//3: 监听号码;
+                                TKTextFieldCell *cell=self.cells[5];
+                                cell.textField.text=[souceDic objectForKey:@"Phone"];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }];
+    
+    /***
+    [self.serviceHelper asynService:args success:^(ServiceResult *result) {
+        if (result.hasSuccess) {
+            NSDictionary *dic=[result json];
+            if (dic!=nil) {
+                NSArray *source=[dic objectForKey:@"Person"];
+                if (source&&[source count]>0) {
+                    TKTextFieldCell *cell=self.cells[1];
+                    cell.textField.text=[[source objectAtIndex:0] objectForKey:@"Frequence"];
+                    self.SysID=[[source objectAtIndex:0] objectForKey:@"SysID"];
+                }
+            }
+        }
+    } failed:nil];
+     ***/
+    
+       
 }
 //完成
 - (void)buttonSubmit{
@@ -142,13 +236,13 @@
     }
     NSMutableArray *params=[NSMutableArray arrayWithCapacity:6];
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[cell1.textField.text Trim],@"OperateValue", nil]];
-    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:self.PersonId,@"SysID", nil]];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:self.SysID,@"SysID", nil]];
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%@,1",[cell2.textField.text Trim]],@"SOS_Order", nil]];//sos号码+顺序
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:affection,@"KinShip_Order", nil]];//亲情号码+顺序
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%@,1",[cell3.textField.text Trim]],@"Moniter_Order", nil]];//监听号码+顺序
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[[NSDate date] stringWithFormat:@"yyyy-MM-dd HH:mm:ss"],@"CurDateTime", nil]];
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:acc.WorkNo,@"CurWorkNo", nil]];
-    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"",@"DeviceCode", nil]];//终端唯一ID
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:self.DeviceCode,@"DeviceCode", nil]];//终端唯一ID
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%d",self.operateType],@"operateType", nil]];//操作类型1：新增 2：修改
     
     ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];

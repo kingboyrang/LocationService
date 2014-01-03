@@ -62,6 +62,8 @@
             [self.navBarView addSubview:btn];
         }
     }
+    
+    [self loadingArea];//重新加载资料
 
 }
 - (void)viewDidLoad
@@ -86,7 +88,7 @@
     [_toolBar.submit addTarget:self action:@selector(buttonSubmitRemoveClick) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_toolBar];
     
-    [self loadingArea];
+    
 }
 - (void)loadingArea{
     if (!self.hasNetWork) {
@@ -129,6 +131,17 @@
 }
 //清空
 - (void)buttonCancelRemoveClick{
+    if (self.removeList&&self.removeList.count>0) {
+        NSArray *indexPaths=[[self.removeList allValues] retain];
+        for (NSString *item in indexPaths) {
+            NSIndexPath *indexPath=[NSIndexPath indexPathForRow:[item intValue] inSection:0];
+            [_tableView deselectRowAtIndexPath:indexPath animated:YES];
+            [self tableView:_tableView didDeselectRowAtIndexPath:indexPath];
+        }
+        [indexPaths release];
+    }else{
+        [_toolBar.submit setTitle:@"删除(0)" forState:UIControlStateNormal];
+    }
 
 }//删除
 - (void)buttonSubmitRemoveClick{
@@ -156,7 +169,9 @@
                     boo=YES;
                     [self hideLoadingViewAnimated:^(AnimateLoadView *hideView) {
                         [self.list removeObjectsInArray:delSource];
+                        [_tableView beginUpdates];
                         [_tableView deleteRowsAtIndexPaths:[NSArray arrayWithArray:[self.removeList allValues]] withRowAnimation:UITableViewRowAnimationFade];
+                        [_tableView endUpdates];
                         [self.removeList removeAllObjects];
                     }];
                 }
@@ -172,6 +187,7 @@
 //新增
 - (void)buttonAddClick{
     ModifyAreaViewController *modify=[[ModifyAreaViewController alloc] init];
+    modify.operateType=1;//新增
     [self.navigationController pushViewController:modify animated:YES];
     [modify release];
 }
@@ -193,6 +209,12 @@
         }];
     }
 	else {
+        if(self.removeList&&[self.removeList count]>0)
+        {
+            [self.removeList removeAllObjects];
+        }
+        [_toolBar.submit setTitle:@"删除(0)" forState:UIControlStateNormal];
+        
         [btn setTitle:@"编辑" forState:UIControlStateNormal];
         CGRect r=_toolBar.frame;
         r.origin.y=self.view.bounds.size.height+44;
@@ -217,7 +239,7 @@
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     
-    static NSString *cellIdentifier=@"SupervisionCell";
+    static NSString *cellIdentifier=@"areaCell";
     UITableViewCell *cell=[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     if (cell==nil) {
         cell=[[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier] autorelease];
@@ -228,5 +250,38 @@
     AreaCrawl *area=self.list[indexPath.row];
     cell.textLabel.text=area.AreaPerson;
     return cell;
+}
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    UIButton *btn=(UIButton*)[self.navBarView viewWithTag:301];
+    if ([btn.currentTitle isEqualToString:@"编辑"]) {
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+        AreaCrawl *area=self.list[indexPath.row];
+        ModifyAreaViewController *edit=[[ModifyAreaViewController alloc] init];
+        edit.operateType=2;//修改
+        edit.AreaId=area.SysID;
+        [self.navigationController pushViewController:edit animated:YES];
+        [edit release];
+    }else{
+        if (!self.removeList) {
+            self.removeList=[NSMutableDictionary dictionary];
+        }
+        AreaCrawl *entity=self.list[indexPath.row];
+        [self.removeList setValue:[NSString stringWithFormat:@"%d",indexPath.row] forKey:entity.SysID];
+        [_toolBar.submit setTitle:[NSString stringWithFormat:@"删除(%d)",self.removeList.count] forState:UIControlStateNormal];
+    }
+}
+- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    UIButton *btn=(UIButton*)[self.navBarView viewWithTag:301];
+    if ([btn.currentTitle isEqualToString:@"取消"]) {
+        AreaCrawl *entity=self.list[indexPath.row];
+        [self.removeList removeObjectForKey:entity.SysID];
+        [_toolBar.submit setTitle:[NSString stringWithFormat:@"删除(%d)",self.removeList.count] forState:UIControlStateNormal];
+    }
+}
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return UITableViewCellEditingStyleDelete|UITableViewCellEditingStyleInsert;
 }
 @end

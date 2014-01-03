@@ -26,7 +26,7 @@
 - (CGRect)fieldToRect:(UITextField*)field;
 - (void)replacePhonestring:(UITextField*)field;
 - (void)uploadImageWithId:(NSString*)personId completed:(void(^)(NSString *fileName))completed;
-- (void)finishAddTrajectory:(void(^)(NSString *personId))completed;
+- (void)finishAddTrajectory:(void(^)(NSString *personId,NSString *code))completed;
 @end
 
 @implementation AddSupervision
@@ -107,7 +107,7 @@
     
     self.cells=[NSMutableArray arrayWithObjects:cell1,cell2,cell3,cell4,cell5,cell6,cell7,cell8, nil];
 }
-- (void)finishAddTrajectory:(void(^)(NSString *personId))completed{
+- (void)finishAddTrajectory:(void(^)(NSString *personId,NSString *code))completed{
     if (!self.hasNetWork) {
         [self showErrorNetWorkNotice:nil];
         return;
@@ -162,15 +162,16 @@
             if (result.hasSuccess) {
                 XmlNode *node=[result methodNode];
                 NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:[node.InnerText dataUsingEncoding:NSUTF8StringEncoding] options:1 error:nil];
-                status=[dic objectForKey:@"Result"];
-                if ([status length]>2) {
+                if ([dic.allKeys containsObject:@"ID"]) {
                     boo=YES;
                     [self hideLoadingViewAnimated:^(AnimateLoadView *hideView) {
                         if (completed) {
-                            completed([dic objectForKey:@"Result"]);
+                            completed([dic objectForKey:@"ID"],[dic objectForKey:@"DeviceCode"]);
                         }
                     }];
                     return;
+                }else{
+                   status=[dic objectForKey:@"Result"];
                 }
             }
             if (!boo) {
@@ -190,16 +191,17 @@
 }
 //完成
 - (void)buttonSubmit{
-    [self finishAddTrajectory:^(NSString *personId) {
+    [self finishAddTrajectory:^(NSString *personId,NSString *code) {
         [self.navigationController popViewControllerAnimated:YES];
     }];
 }
 //下一步
 - (void)buttonCancel{
-    [self finishAddTrajectory:^(NSString *personId) {
+    [self finishAddTrajectory:^(NSString *personId,NSString *code) {
         SupervisionExtend *extend=[[SupervisionExtend alloc] init];
         extend.PersonId=personId;
         extend.operateType=1;//新增
+        extend.DeviceCode=code;
         [self.navigationController pushViewController:extend animated:YES];
         [extend release];
     }];

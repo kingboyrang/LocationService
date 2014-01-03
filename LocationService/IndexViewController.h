@@ -11,4 +11,5 @@
 @interface IndexViewController : BasicViewController<BMKMapViewDelegate>{
     BMKMapView* _mapView;
 }
+@property(nonatomic,strong) NSMutableArray *cells;
 @end

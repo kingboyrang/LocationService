@@ -69,7 +69,7 @@
             [self.navBarView addSubview:btn];
         }
     }
-    
+    [self loadSupervision];//重新加载资料
 }
 - (void)viewDidLoad
 {
@@ -92,7 +92,7 @@
     [_toolBar.submit addTarget:self action:@selector(buttonSubmitRemoveClick) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_toolBar];
     
-    [self loadSupervision];
+    
 }
 - (void)loadSupervision{
     

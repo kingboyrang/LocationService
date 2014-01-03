@@ -8,28 +8,25 @@
 
 #import "ModifyAreaViewController.h"
 #import "LoginButtons.h"
-#import "KYPointAnnotation.h"
-#import "KYBubbleView.h"
 #import "Account.h"
-#import "AreaRangeViewController.h"
 #import "AreaRuleViewController.h"
+#import "AreaPaoView.h"
+#import "AlertHelper.h"
 @interface ModifyAreaViewController (){
     UISlider *_silder;
     UILabel* _labDistance;
-    KYPointAnnotation* pointAnnotation;
-    KYBubbleView *bubbleView;
-    BOOL isPinSelected;     //用于判断大头针是否被选中
-    BMKAnnotationView *selectedAV;
+    AreaPaoView *_areaPaoView;
 }
 - (void)buttonNextClick:(id)sender;
 - (void)buttonFinishedClick:(id)sender;
 - (void)changeSilderValue:(id)sender;
 -(void)cleanMap;
 - (void)addAreaCompleted:(void(^)(NSString* areaId))completed;
+- (void)editAreaCompleted:(void(^)(NSString* areaId))completed;
+- (void)loadingEditInfo;
 @end
 
 @implementation ModifyAreaViewController
-static CGFloat kTransitionDuration = 0.45f;
 - (void)dealloc {
     [super dealloc];
     if (_mapView) {
@@ -52,11 +49,12 @@ static CGFloat kTransitionDuration = 0.45f;
     [_mapView viewWillAppear];
     _mapView.delegate = self; // 此处记得不用的时候需要置nil，否则影响内存的释放
     
-    
     [self cleanMap];
-    _mapView.showsUserLocation = NO;//先关闭显示的定位图层
-    _mapView.userTrackingMode = BMKUserTrackingModeNone;//设置定位的状态
-    _mapView.showsUserLocation = YES;//显示定位图层
+    if (self.operateType==1) {
+        _mapView.showsUserLocation = NO;//先关闭显示的定位图层
+        _mapView.userTrackingMode = BMKUserTrackingModeNone;//设置定位的状态
+        _mapView.showsUserLocation = YES;//显示定位图层
+    }
 }
 -(void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
@@ -73,9 +71,7 @@ static CGFloat kTransitionDuration = 0.45f;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    isPinSelected=NO;
-    bubbleView = [[KYBubbleView alloc] initWithFrame:CGRectMake(0, 0, 180, 40)];
-    bubbleView.hidden = YES;
+    
     
     
     CGRect r=self.view.bounds;
@@ -110,6 +106,91 @@ static CGFloat kTransitionDuration = 0.45f;
     [self.view addSubview:buttons];
     [buttons release];
 }
+//修改时加载信息
+- (void)loadingEditInfo{
+    NSMutableArray *params=[NSMutableArray array];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:self.AreaId,@"AreaID", nil]];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"",@"maptype", nil]];
+    
+    ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
+    args.serviceURL=DataWebservice1;
+    args.serviceNameSpace=DataNameSpace1;
+    args.methodName=@"GetOneAreaLatLng";
+    args.soapParams=params;
+    [self.serviceHelper asynService:args success:^(ServiceResult *result) {
+        if (result.hasSuccess) {
+            NSDictionary *dic=[result json];
+            if (dic!=nil) {
+                NSArray *arr=[dic objectForKey:@"AreaLatLngList"];
+                if (arr&&[arr count]>0) {//加载信息
+                   self.AreaSource=[arr objectAtIndex:0];
+                    CLLocationCoordinate2D coor;
+                    coor.latitude = [[self.AreaSource objectForKey:@"Lat"] floatValue];
+                    coor.longitude = [[self.AreaSource objectForKey:@"Lng"] floatValue];
+                    
+                    _silder.value=[[self.AreaSource objectForKey:@"CircleRedius"] floatValue]/10;
+                    
+                    BMKPointAnnotation  *pointAnnotation = [[[BMKPointAnnotation alloc] init] autorelease];
+                    pointAnnotation.coordinate =coor;
+                    pointAnnotation.title = @"当前位置";
+                    [_mapView addAnnotation:pointAnnotation];
+                    //这样就可以在初始化的时候将 气泡信息弹出(默认将气泡弹出)
+                    [_mapView selectAnnotation:pointAnnotation animated:YES];
+                }
+            }
+        }
+        
+    } failed:nil];
+    
+}
+- (void)editAreaCompleted:(void(^)(NSString* areaId))completed{
+    
+    if ([_areaPaoView.field.text length]==0) {
+        [AlertHelper initWithTitle:@"提示" message:@"请输入名称!"];
+        [_areaPaoView.field becomeFirstResponder];
+        return;
+    }
+    
+    Account *acc=[Account unarchiverAccount];
+    NSMutableArray *params=[NSMutableArray array];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:_areaPaoView.field.text,@"AreaName", nil]];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:self.AreaId,@"theGUID", nil]];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%f",_silder.value],@"CircleRedius", nil]];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:acc.WorkNo,@"Workno", nil]];
+    
+    ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
+    args.serviceURL=DataWebservice1;
+    args.serviceNameSpace=DataNameSpace1;
+    args.methodName=@"UpdateArea";
+    args.soapParams=params;
+    [self showLoadingAnimatedWithTitle:@"正在修改,请稍后..."];
+    [self.serviceHelper asynService:args success:^(ServiceResult *result) {
+        BOOL boo=NO;
+        NSString *status=@"";
+        if (result.hasSuccess) {
+            NSDictionary *dic=[result json];
+            status=[dic objectForKey:@"Result"];
+            if(dic!=nil&&[status isEqualToString:@"Success"])
+            {
+                boo=YES;
+                [self hideLoadingViewAnimated:^(AnimateLoadView *hideView) {
+                    if (completed) {
+                        completed(self.AreaId);
+                    }
+                }];
+            }
+        }
+        NSString *errorMsg=@"修改失败!";
+        if ([status isEqualToString:@"Exits"]) {
+            errorMsg=@"名称已存在!";
+        }
+        if (!boo) {
+            [self hideLoadingFailedWithTitle:errorMsg completed:nil];
+        }
+    } failed:^(NSError *error, NSDictionary *userInfo) {
+        [self hideLoadingFailedWithTitle:@"修改失败!" completed:nil];
+    }];
+}
 //发生改变
 - (void)changeSilderValue:(id)sender{
     int meter=(int)_silder.value*10;
@@ -117,21 +198,38 @@ static CGFloat kTransitionDuration = 0.45f;
 }
 //下一步
 - (void)buttonNextClick:(id)sender{
-    [self addAreaCompleted:^(NSString *areaId) {
-        [self hideLoadingViewAnimated:^(AnimateLoadView *hideView) {
+    if (self.operateType==1) {//新增
+        [self addAreaCompleted:^(NSString *areaId) {
             AreaRuleViewController *areaRange=[[AreaRuleViewController alloc] init];
+            areaRange.operateType=1;
+            areaRange.AreaId=areaId;
             [self.navigationController pushViewController:areaRange animated:YES];
             [areaRange release];
         }];
-    }];
+    }else{//修改
+        [self editAreaCompleted:^(NSString *areaId) {
+            AreaRuleViewController *areaRange=[[AreaRuleViewController alloc] init];
+            areaRange.operateType=2;
+            areaRange.AreaId=areaId;
+            [self.navigationController pushViewController:areaRange animated:YES];
+            [areaRange release];
+        }];
+    }
+    
 }
 - (void)addAreaCompleted:(void(^)(NSString* areaId))completed{
-    Account *acc=[Account unarchiverAccount];
+    if ([_areaPaoView.field.text length]==0) {
+        [AlertHelper initWithTitle:@"提示" message:@"请输入名称!"];
+        [_areaPaoView.field becomeFirstResponder];
+        return;
+    }
     
+    NSString *latlng=[NSString stringWithFormat:@"%f,%f",_coordinate.latitude,_coordinate.longitude];
+    Account *acc=[Account unarchiverAccount];
     NSMutableArray *params=[NSMutableArray array];
-    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:bubbleView.field.text,@"AreaName", nil]];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:_areaPaoView.field.text,@"AreaName", nil]];
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"",@"remark", nil]];
-    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"",@"LinePointArystr", nil]];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:latlng,@"LinePointArystr", nil]];
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%f",_silder.value],@"CircleRedius", nil]];
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"Rotundity",@"AreaType", nil]];
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:acc.WorkNo,@"Workno", nil]];
@@ -148,9 +246,11 @@ static CGFloat kTransitionDuration = 0.45f;
             NSDictionary *dic=[result json];
             if (dic!=nil&&![[dic objectForKey:@"Result"] isEqualToString:@"Fail"]&&![[dic objectForKey:@"Result"] isEqualToString:@"Error"]) {
                 boo=YES;
-                if (completed) {
-                    completed([dic objectForKey:@"Result"]);
-                }
+                [self hideLoadingViewAnimated:^(AnimateLoadView *hideView) {
+                    if (completed) {
+                        completed([dic objectForKey:@"Result"]);
+                    }
+                }];
             }
         }
         if (!boo) {
@@ -163,11 +263,16 @@ static CGFloat kTransitionDuration = 0.45f;
 }
 //完成
 - (void)buttonFinishedClick:(id)sender{
-    [self addAreaCompleted:^(NSString *areaId) {
-        [self hideLoadingViewAnimated:^(AnimateLoadView *hideView) {
+    if (self.operateType==1) {//新增
+        [self addAreaCompleted:^(NSString *areaId) {
             [self.navigationController popViewControllerAnimated:YES];
         }];
-    }];
+    }else{//修改
+        [self editAreaCompleted:^(NSString *areaId) {
+            [self.navigationController popViewControllerAnimated:YES];
+        }];
+    }
+    
 }
 - (void)didReceiveMemoryWarning
 {
@@ -181,10 +286,6 @@ static CGFloat kTransitionDuration = 0.45f;
     BMKPinAnnotationView *annotationView = (BMKPinAnnotationView*)[mapView viewForAnnotation:annotation];
     if (annotationView == nil)
     {
-        KYPointAnnotation *ann;
-        if ([annotation isKindOfClass:[KYPointAnnotation class]]) {
-            ann = annotation;
-        }
         NSUInteger tag =123;
         //ann.tag;
         NSString *AnnotationViewID = [NSString stringWithFormat:@"AnnotationView-%i", tag];
@@ -193,14 +294,23 @@ static CGFloat kTransitionDuration = 0.45f;
          // 设置颜色
         ((BMKPinAnnotationView*) annotationView).pinColor = BMKPinAnnotationColorRed;
         // 设置该标注点动画显示
-		((BMKPinAnnotationView*)annotationView).animatesDrop = YES;
-        // 设置可拖拽
-		((BMKPinAnnotationView*)annotationView).draggable = YES;
-        
-        
+		//((BMKPinAnnotationView*)annotationView).animatesDrop = YES;
+        if (self.operateType==1) {
+            // 设置可拖拽
+            ((BMKPinAnnotationView*)annotationView).draggable = YES;
+        }
         annotationView.centerOffset = CGPointMake(0, -(annotationView.frame.size.height * 0.5));
         annotationView.annotation = annotation;
-        
+        //自定义气泡
+        _areaPaoView=[[AreaPaoView alloc] initWithFrame:CGRectMake(0, 0, 250, 35+13*2)];
+        _areaPaoView.tag=456;
+        //修改时设置值
+        if (self.AreaSource&&[self.AreaSource count]>0&&[self.AreaSource.allKeys containsObject:@"AreaNam"]) {
+            _areaPaoView.field.text=[self.AreaSource objectForKey:@"AreaNam"];
+        }
+        BMKActionPaopaoView *paopao=[[BMKActionPaopaoView alloc] initWithCustomView:_areaPaoView];
+        annotationView.paopaoView=paopao;
+        [paopao release];
 	}
 	return annotationView ;
     /***
@@ -239,109 +349,32 @@ static CGFloat kTransitionDuration = 0.45f;
 }
 //定位停止
 -(void)mapViewDidStopLocatingUser:(BMKMapView *)mapView{
-    pointAnnotation = [[KYPointAnnotation alloc] init];
-    pointAnnotation.tag=123;
+    
+    _coordinate=mapView.centerCoordinate;
+    
+    BMKPointAnnotation  *pointAnnotation = [[[BMKPointAnnotation alloc] init] autorelease];
     pointAnnotation.coordinate = mapView.centerCoordinate;
     pointAnnotation.title = @"当前位置";
     [_mapView addAnnotation:pointAnnotation];
-   // [pointAnnotation release];
-    
- 
-    
-    
+    //这样就可以在初始化的时候将 气泡信息弹出(默认将气泡弹出)
+    [_mapView selectAnnotation:pointAnnotation animated:YES];
 }
 - (void)mapView:(BMKMapView *)mapView didSelectAnnotationView:(BMKAnnotationView *)view
 {
-    isPinSelected = YES;
     //CGPoint point = [mapView convertCoordinate:view.annotation.coordinate toPointToView:mapView];
     if ([view isKindOfClass:[BMKPinAnnotationView class]]) {
-#ifdef Debug
-        CGPoint point = [mapView convertCoordinate:selectedAV.annotation.coordinate toPointToView:selectedAV.superview];
-        //CGRect rect = selectedAV.frame;
        
-#endif
-        selectedAV = view;
-        if (bubbleView.superview == nil) {
-			//bubbleView加在BMKAnnotationView的superview(UIScrollView)上,且令zPosition为1
-            [view.superview addSubview:bubbleView];  //为大头针添加自定义对气泡view
-            bubbleView.layer.zPosition = 1;
-        }
-        //bubbleView.infoDict = [dataArray objectAtIndex:[(KYPointAnnotation*)view.annotation tag]];  //数据全部在数据字典中
-        //bubbleView.infoDict = [dataArray objectAtIndex:0];  //数据全部在数据字典中
-        //        [self showBubble:YES];//先移动地图，完成后再显示气泡
     }
     else {
-        selectedAV = nil;
+        
     }
     [mapView setCenterCoordinate:view.annotation.coordinate animated:YES];
 }
-
-- (void)mapView:(BMKMapView *)mapView didDeselectAnnotationView:(BMKAnnotationView *)view
+//拖动annotation view时view的状态变化
+- (void)mapView:(BMKMapView *)mapView annotationView:(BMKAnnotationView *)view didChangeDragState:(BMKAnnotationViewDragState)newState fromOldState:(BMKAnnotationViewDragState)oldState
 {
-    
-    isPinSelected = NO;
-    if ([view isKindOfClass:[BMKPinAnnotationView class]]) {
-        [self showBubble:NO];
+    if (newState==BMKAnnotationViewDragStateEnding) {
+       _coordinate=[view.annotation coordinate];
     }
 }
-
-#pragma mark 区域改变
-- (void)mapView:(BMKMapView *)mapView regionWillChangeAnimated:(BOOL)animated
-{
-    if (selectedAV) {
-#ifdef Debug
-        CGPoint point = [mapView convertCoordinate:selectedAV.annotation.coordinate toPointToView:selectedAV.superview];
-        //CGRect rect = selectedAV.frame;
-       
-#endif
-    }
-    
-}
-
-- (void)mapView:(BMKMapView *)mapView regionDidChangeAnimated:(BOOL)animated
-{
-    if (selectedAV) {
-        if (isPinSelected) {    //只有当大头针被选中时的区域改变才会显示气泡
-            [self showBubble:YES];       //modify 地图区域改变  - 原代码是没有注释的
-            [self changeBubblePosition];
-        }
-    }
-    
-}
-
-- (void)showBubble:(BOOL)show {
-    if (show) {
-        [bubbleView showFromRect:selectedAV.frame];
-       
-        
-        bubbleView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.001, 0.001);
-        [UIView beginAnimations:nil context:nil];
-        [UIView setAnimationDuration:kTransitionDuration/3];
-        [UIView setAnimationDelegate:self];
-        [UIView setAnimationDidStopSelector:@selector(bounce1AnimationStopped)];
-        bubbleView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.1, 1.1);
-        bubbleView.hidden = NO;
-       
-        [UIView commitAnimations];
-        
-    }
-    else {
-        
-        [UIView beginAnimations:nil context:nil];
-        [UIView setAnimationDuration:kTransitionDuration/3];
-       
-        bubbleView.hidden = YES;
-        [UIView commitAnimations];
-    }
-}
-- (void)changeBubblePosition {
-    if (selectedAV) {
-        CGRect rect = selectedAV.frame;
-        CGPoint center;
-        center.x = rect.origin.x + rect.size.width/2;
-        center.y = rect.origin.y - bubbleView.frame.size.height/2 + 8;
-        bubbleView.center = center;
-    }
-}
-
 @end
