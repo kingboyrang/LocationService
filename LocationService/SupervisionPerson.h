@@ -30,4 +30,7 @@
 @property(nonatomic,copy) NSString *DoorStatus;//车门( “0”--；“1”—；)
 @property(nonatomic,copy) NSString *Phone;//亲情号码
 @property(nonatomic,copy) NSString *OperatingMode;//终端发送频率，单位：秒
+
+@property (nonatomic,readonly) NSString *directionText;//方向
+@property (nonatomic,readonly) NSString *extendText;//转轴
 @end

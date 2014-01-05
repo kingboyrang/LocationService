@@ -136,6 +136,18 @@
 		01B65CF31867D9AC001F11BA /* ico13.png in Resources */ = {isa = PBXBuildFile; fileRef = 01B65CF01867D9AC001F11BA /* ico13.png */; };
 		01B65CF41867D9AC001F11BA /* ico14.png in Resources */ = {isa = PBXBuildFile; fileRef = 01B65CF11867D9AC001F11BA /* ico14.png */; };
 		01B65CF71867DB9A001F11BA /* IndexViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01B65CF61867DB9A001F11BA /* IndexViewController.m */; };
+		01BCCDFD1878E4F900FFC74C /* TrajectoryPaoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 01BCCDFC1878E4F900FFC74C /* TrajectoryPaoView.m */; };
+		01BD39FE1878EBDA00B2F513 /* TKLabelLabelCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 01BD39FD1878EBDA00B2F513 /* TKLabelLabelCell.m */; };
+		01BD3A011878ED3F00B2F513 /* TKTrajectoryPaoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 01BD3A001878ED3F00B2F513 /* TKTrajectoryPaoCell.m */; };
+		01BD3A041879384E00B2F513 /* PersonTrajectoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01BD3A031879384D00B2F513 /* PersonTrajectoryViewController.m */; };
+		01BD3A081879424900B2F513 /* ShowTrajectoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01BD3A071879424900B2F513 /* ShowTrajectoryViewController.m */; };
+		01BD3A0B1879427600B2F513 /* SingleMapShowViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01BD3A0A1879427500B2F513 /* SingleMapShowViewController.m */; };
+		01BD3A0E18795C7E00B2F513 /* CallTrajectoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01BD3A0D18795C7C00B2F513 /* CallTrajectoryViewController.m */; };
+		01BD3A111879604F00B2F513 /* CallPhoneView.m in Sources */ = {isa = PBXBuildFile; fileRef = 01BD3A101879604F00B2F513 /* CallPhoneView.m */; };
+		01BD3A1B1879647900B2F513 /* UIView+InnerShadow.m in Sources */ = {isa = PBXBuildFile; fileRef = 01BD3A141879647900B2F513 /* UIView+InnerShadow.m */; };
+		01BD3A1C1879647900B2F513 /* TitleLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 01BD3A161879647900B2F513 /* TitleLayer.m */; };
+		01BD3A1D1879647900B2F513 /* KnobButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 01BD3A181879647900B2F513 /* KnobButton.m */; };
+		01BD3A1E1879647900B2F513 /* SimpleSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = 01BD3A1A1879647900B2F513 /* SimpleSwitch.m */; };
 		01BE3FDB185EACB6005C25D9 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01BE3FDA185EACB6005C25D9 /* UIKit.framework */; };
 		01BE3FDD185EACB6005C25D9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01BE3FDC185EACB6005C25D9 /* Foundation.framework */; };
 		01BE3FDF185EACB6005C25D9 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01BE3FDE185EACB6005C25D9 /* CoreGraphics.framework */; };
@@ -428,6 +440,30 @@
 		01B65CF11867D9AC001F11BA /* ico14.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ico14.png; sourceTree = "<group>"; };
 		01B65CF51867DB9A001F11BA /* IndexViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IndexViewController.h; sourceTree = "<group>"; };
 		01B65CF61867DB9A001F11BA /* IndexViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IndexViewController.m; sourceTree = "<group>"; };
+		01BCCDFB1878E4F900FFC74C /* TrajectoryPaoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrajectoryPaoView.h; sourceTree = "<group>"; };
+		01BCCDFC1878E4F900FFC74C /* TrajectoryPaoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrajectoryPaoView.m; sourceTree = "<group>"; };
+		01BD39FC1878EBDA00B2F513 /* TKLabelLabelCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TKLabelLabelCell.h; sourceTree = "<group>"; };
+		01BD39FD1878EBDA00B2F513 /* TKLabelLabelCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TKLabelLabelCell.m; sourceTree = "<group>"; };
+		01BD39FF1878ED3F00B2F513 /* TKTrajectoryPaoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TKTrajectoryPaoCell.h; sourceTree = "<group>"; };
+		01BD3A001878ED3F00B2F513 /* TKTrajectoryPaoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TKTrajectoryPaoCell.m; sourceTree = "<group>"; };
+		01BD3A021879384C00B2F513 /* PersonTrajectoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PersonTrajectoryViewController.h; sourceTree = "<group>"; };
+		01BD3A031879384D00B2F513 /* PersonTrajectoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PersonTrajectoryViewController.m; sourceTree = "<group>"; };
+		01BD3A061879424900B2F513 /* ShowTrajectoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShowTrajectoryViewController.h; sourceTree = "<group>"; };
+		01BD3A071879424900B2F513 /* ShowTrajectoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShowTrajectoryViewController.m; sourceTree = "<group>"; };
+		01BD3A091879427500B2F513 /* SingleMapShowViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SingleMapShowViewController.h; sourceTree = "<group>"; };
+		01BD3A0A1879427500B2F513 /* SingleMapShowViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SingleMapShowViewController.m; sourceTree = "<group>"; };
+		01BD3A0C18795C7B00B2F513 /* CallTrajectoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CallTrajectoryViewController.h; sourceTree = "<group>"; };
+		01BD3A0D18795C7C00B2F513 /* CallTrajectoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CallTrajectoryViewController.m; sourceTree = "<group>"; };
+		01BD3A0F1879604F00B2F513 /* CallPhoneView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CallPhoneView.h; sourceTree = "<group>"; };
+		01BD3A101879604F00B2F513 /* CallPhoneView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CallPhoneView.m; sourceTree = "<group>"; };
+		01BD3A131879647900B2F513 /* UIView+InnerShadow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+InnerShadow.h"; sourceTree = "<group>"; };
+		01BD3A141879647900B2F513 /* UIView+InnerShadow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+InnerShadow.m"; sourceTree = "<group>"; };
+		01BD3A151879647900B2F513 /* TitleLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TitleLayer.h; sourceTree = "<group>"; };
+		01BD3A161879647900B2F513 /* TitleLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TitleLayer.m; sourceTree = "<group>"; };
+		01BD3A171879647900B2F513 /* KnobButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KnobButton.h; sourceTree = "<group>"; };
+		01BD3A181879647900B2F513 /* KnobButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KnobButton.m; sourceTree = "<group>"; };
+		01BD3A191879647900B2F513 /* SimpleSwitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleSwitch.h; sourceTree = "<group>"; };
+		01BD3A1A1879647900B2F513 /* SimpleSwitch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimpleSwitch.m; sourceTree = "<group>"; };
 		01BE3FD7185EACB6005C25D9 /* LocationService.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LocationService.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		01BE3FDA185EACB6005C25D9 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		01BE3FDC185EACB6005C25D9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -650,6 +686,8 @@
 		012097DC185ED05300437EA3 /* Index */ = {
 			isa = PBXGroup;
 			children = (
+				01BD3A051879421C00B2F513 /* Trajectory */,
+				01BCCDFA1878E4A300FFC74C /* UI */,
 				012097DD185ED05E00437EA3 /* LoginRegister */,
 				01B65CF51867DB9A001F11BA /* IndexViewController.h */,
 				01B65CF61867DB9A001F11BA /* IndexViewController.m */,
@@ -699,6 +737,8 @@
 				01C5FB82186C1101009986BF /* TrajectoryMessageController.m */,
 				01C0AA0C186D284B00F8A250 /* EditSupervisionViewController.h */,
 				01C0AA0D186D284B00F8A250 /* EditSupervisionViewController.m */,
+				01BD3A0C18795C7B00B2F513 /* CallTrajectoryViewController.h */,
+				01BD3A0D18795C7C00B2F513 /* CallTrajectoryViewController.m */,
 			);
 			name = Target;
 			sourceTree = "<group>";
@@ -814,6 +854,7 @@
 		018988A9185FE8A30073B253 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				01BD3A121879646400B2F513 /* switch */,
 				01B483DE18756622005D4DD9 /* Select */,
 				018E9DF7186BD488008646CF /* Calendar */,
 				0189892518613E440073B253 /* AppUI.h */,
@@ -906,6 +947,8 @@
 				01C5FB99186C217D009986BF /* MessageView.m */,
 				01C5FB9B186C27C0009986BF /* MessageCell.h */,
 				01C5FB9C186C27C1009986BF /* MessageCell.m */,
+				01BD3A0F1879604F00B2F513 /* CallPhoneView.h */,
+				01BD3A101879604F00B2F513 /* CallPhoneView.m */,
 			);
 			name = Trajectory;
 			sourceTree = "<group>";
@@ -1018,6 +1061,47 @@
 				01E9CBA4187566A3005F330A /* CVUISelect.m */,
 			);
 			name = Select;
+			sourceTree = "<group>";
+		};
+		01BCCDFA1878E4A300FFC74C /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				01BCCDFB1878E4F900FFC74C /* TrajectoryPaoView.h */,
+				01BCCDFC1878E4F900FFC74C /* TrajectoryPaoView.m */,
+				01BD39FC1878EBDA00B2F513 /* TKLabelLabelCell.h */,
+				01BD39FD1878EBDA00B2F513 /* TKLabelLabelCell.m */,
+				01BD39FF1878ED3F00B2F513 /* TKTrajectoryPaoCell.h */,
+				01BD3A001878ED3F00B2F513 /* TKTrajectoryPaoCell.m */,
+			);
+			name = UI;
+			sourceTree = "<group>";
+		};
+		01BD3A051879421C00B2F513 /* Trajectory */ = {
+			isa = PBXGroup;
+			children = (
+				01BD3A021879384C00B2F513 /* PersonTrajectoryViewController.h */,
+				01BD3A031879384D00B2F513 /* PersonTrajectoryViewController.m */,
+				01BD3A061879424900B2F513 /* ShowTrajectoryViewController.h */,
+				01BD3A071879424900B2F513 /* ShowTrajectoryViewController.m */,
+				01BD3A091879427500B2F513 /* SingleMapShowViewController.h */,
+				01BD3A0A1879427500B2F513 /* SingleMapShowViewController.m */,
+			);
+			name = Trajectory;
+			sourceTree = "<group>";
+		};
+		01BD3A121879646400B2F513 /* switch */ = {
+			isa = PBXGroup;
+			children = (
+				01BD3A131879647900B2F513 /* UIView+InnerShadow.h */,
+				01BD3A141879647900B2F513 /* UIView+InnerShadow.m */,
+				01BD3A151879647900B2F513 /* TitleLayer.h */,
+				01BD3A161879647900B2F513 /* TitleLayer.m */,
+				01BD3A171879647900B2F513 /* KnobButton.h */,
+				01BD3A181879647900B2F513 /* KnobButton.m */,
+				01BD3A191879647900B2F513 /* SimpleSwitch.h */,
+				01BD3A1A1879647900B2F513 /* SimpleSwitch.m */,
+			);
+			name = switch;
 			sourceTree = "<group>";
 		};
 		01BE3FCE185EACB6005C25D9 = {
@@ -1584,6 +1668,18 @@
 				01B483D218755E2E005D4DD9 /* RangHeader.m in Sources */,
 				01B483DD1875645C005D4DD9 /* AreaRuleViewController.m in Sources */,
 				0146926D187669BE003664BE /* AreaPaoView.m in Sources */,
+				01BCCDFD1878E4F900FFC74C /* TrajectoryPaoView.m in Sources */,
+				01BD39FE1878EBDA00B2F513 /* TKLabelLabelCell.m in Sources */,
+				01BD3A011878ED3F00B2F513 /* TKTrajectoryPaoCell.m in Sources */,
+				01BD3A041879384E00B2F513 /* PersonTrajectoryViewController.m in Sources */,
+				01BD3A081879424900B2F513 /* ShowTrajectoryViewController.m in Sources */,
+				01BD3A0B1879427600B2F513 /* SingleMapShowViewController.m in Sources */,
+				01BD3A0E18795C7E00B2F513 /* CallTrajectoryViewController.m in Sources */,
+				01BD3A111879604F00B2F513 /* CallPhoneView.m in Sources */,
+				01BD3A1B1879647900B2F513 /* UIView+InnerShadow.m in Sources */,
+				01BD3A1C1879647900B2F513 /* TitleLayer.m in Sources */,
+				01BD3A1D1879647900B2F513 /* KnobButton.m in Sources */,
+				01BD3A1E1879647900B2F513 /* SimpleSwitch.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -19,4 +19,7 @@
 @property(nonatomic,copy) NSString *doorStatus;// –开关门（0:开；1：关）
 @property(nonatomic,copy) NSString *pctime;//2013/11/13 12：25：42" –定位的时间
 @property(nonatomic,copy) NSString *address;//云南昆明市" –-定位的地址
+
+@property (nonatomic,readonly) NSString *directionText;//方向
+@property (nonatomic,readonly) NSString *extendText;//转轴
 @end

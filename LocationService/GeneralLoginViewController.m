@@ -26,8 +26,7 @@
     
 }
 - (void)buttonRegister;
-- (void)buttonLoginClick;
-- (void)buttonSubmit;
+- (void)buttonSubmit:(id)sender;
 - (void)buttonCancel;
 - (BOOL)isUIDString;
 - (void)replaceUIDstring;
@@ -96,7 +95,7 @@
     self.cells=[NSMutableArray arrayWithObjects:cell1,cell2,cell3,cell4,cell5, nil];
     
     _buttons=[[LoginButtons alloc] initWithFrame:CGRectMake(0,self.view.bounds.size.height-44*2, self.view.bounds.size.width, 44)];
-    [_buttons.submit addTarget:self action:@selector(buttonSubmit) forControlEvents:UIControlEventTouchUpInside];
+    [_buttons.submit addTarget:self action:@selector(buttonSubmit:) forControlEvents:UIControlEventTouchUpInside];
     [_buttons.cancel addTarget:self action:@selector(buttonCancel) forControlEvents:UIControlEventTouchUpInside];
     _buttons.submit.enabled=NO;
     [self.view addSubview:_buttons];
@@ -185,10 +184,6 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-//登录
--(void)buttonSubmit{
-    [self buttonLoginClick];
-}
 //取消 
 -(void)buttonCancel{
     TKTextFieldCell *cell1=self.cells[1];
@@ -202,7 +197,9 @@
     _buttons.submit.enabled=NO;
 }
 //登录
-- (void)buttonLoginClick{
+- (void)buttonSubmit:(id)sender{
+    UIButton *submit=(UIButton*)sender;
+    
     TKTextFieldCell *cell1=self.cells[1];
     if (!cell1.hasValue) {
         [AlertHelper initWithTitle:@"提示" message:@"请输入帐号/手机号!"];
@@ -230,42 +227,51 @@
         [self showErrorNetWorkNotice:nil];
         return;
     }
+    submit.enabled=NO;
     [self showLoadingAnimatedWithTitle:@"正在登录,请稍后..."];
-    [self pwdDesEncrypWithCompleted:^(NSString *pwd) {
-        //登录
-        NSLog(@"pwd=%@",pwd);
-        TKRegisterCheckCell *cell3=self.cells[4];
-        NSMutableArray *params=[NSMutableArray arrayWithCapacity:2];
-        [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[cell1.textField.text Trim],@"userName", nil]];
-        [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:pwd,@"pwd", nil]];
-        ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
-        args.methodName=@"UIDLogin";
-        args.soapParams=params;
-        [self.serviceHelper asynService:args success:^(ServiceResult *result) {
-            if ([result.xmlString length]>0) {
-                NSString *xml=[result.xmlString stringByReplacingOccurrencesOfString:result.xmlnsAttr withString:@""];
-                [result.xmlParse setDataSource:xml];
-                XmlNode *node=[result.xmlParse soapXmlSelectSingleNode:@"//UIDLoginResult"];
-                NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:[node.InnerText dataUsingEncoding:NSUTF8StringEncoding] options:1 error:nil];
-                if ([dic objectForKey:@"Account"]) {
-                    [self hideLoadingViewAnimated:^(AnimateLoadView *hideView) {
-                        //登录
-                        [Account loginGeneralWithUserId:[cell1.textField.text Trim] password:[cell2.textField.text Trim] encrypt:pwd rememberPassword:cell3.check.hasRemember withData:dic];
-                        MainViewController *main=[[MainViewController alloc] init];
-                        [self presentViewController:main animated:YES completion:nil];
-                        [main release];
-                    }];
-                }else{
-                    [self hideLoadingFailedWithTitle:@"输入的帐号或密码错误,请重新输入!" completed:nil];
-                }
-            }else{
-                [self hideLoadingFailedWithTitle:@"输入的帐号或密码错误,请重新输入!" completed:nil];
+    //登录
+    TKRegisterCheckCell *cell3=self.cells[4];
+    NSMutableArray *params=[NSMutableArray arrayWithCapacity:2];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[cell1.textField.text Trim],@"userName", nil]];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[cell2.textField.text Trim],@"password", nil]];
+    ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
+    args.methodName=@"UIDLogin";
+    args.soapParams=params;
+    [self.serviceHelper asynService:args success:^(ServiceResult *result) {
+        BOOL boo=NO;
+        if ([result.xmlString length]>0) {
+            NSString *xml=[result.xmlString stringByReplacingOccurrencesOfString:result.xmlnsAttr withString:@""];
+            [result.xmlParse setDataSource:xml];
+            XmlNode *node=[result.xmlParse soapXmlSelectSingleNode:@"//UIDLoginResult"];
+            NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:[node.InnerText dataUsingEncoding:NSUTF8StringEncoding] options:1 error:nil];
+            if ([dic objectForKey:@"Account"]) {
+                boo=YES;
+                [self hideLoadingViewAnimated:^(AnimateLoadView *hideView) {
+                    submit.enabled=YES;
+                    //登录
+                    [Account loginGeneralWithUserId:[cell1.textField.text Trim] password:[cell2.textField.text Trim] encrypt:[cell2.textField.text Trim] rememberPassword:cell3.check.hasRemember withData:dic];
+                    MainViewController *main=[[MainViewController alloc] init];
+                    [self presentViewController:main animated:YES completion:nil];
+                    [main release];
+                }];
             }
-        } failed:^(NSError *error, NSDictionary *userInfo) {
-            [self hideLoadingFailedWithTitle:@"输入的帐号或密码错误,请重新输入!" completed:nil];
+        }
+        if (!boo) {
+            [self hideLoadingFailedWithTitle:@"输入的帐号或密码错误,请重新输入!" completed:^(AnimateErrorView *failedView) {
+                submit.enabled=YES;
+            }];
+        }
+        
+    } failed:^(NSError *error, NSDictionary *userInfo) {
+        [self hideLoadingFailedWithTitle:@"输入的帐号或密码错误,请重新输入!" completed:^(AnimateErrorView *failedView) {
+            submit.enabled=YES;
         }];
-
     }];
+    /***
+    [self pwdDesEncrypWithCompleted:^(NSString *pwd) {
+        
+    }];
+     ***/
 }
 //注册
 - (void)buttonRegister{

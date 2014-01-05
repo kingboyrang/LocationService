@@ -1,49 +1,50 @@
 //
-//  TrajectoryViewController.m
+//  PersonTrajectoryViewController.m
 //  LocationService
 //
-//  Created by aJia on 2013/12/26.
-//  Copyright (c) 2013年 lz. All rights reserved.
+//  Created by aJia on 2014/1/5.
+//  Copyright (c) 2014年 lz. All rights reserved.
 //
 
-#import "TrajectoryViewController.h"
+#import "PersonTrajectoryViewController.h"
 #import "Account.h"
-#import "TrajectoryHistory.h"
-#import "AppHelper.h"
+#import "NSDate+TPCategory.h"
 #import "FXLabel.h"
+#import "AppHelper.h"
+#import "TrajectoryHistory.h"
 #import "TKTrajectoryCell.h"
-#import "ShowTrajectoryViewController.h"
 #import "SingleMapShowViewController.h"
-@interface TrajectoryViewController ()<UITableViewDataSource,UITableViewDelegate>{
+#import "ShowTrajectoryViewController.h"
+@interface PersonTrajectoryViewController ()<UITableViewDataSource,UITableViewDelegate>{
     UITableView *_tableView;
 }
-- (void)loadTrajectory;
-- (void)buttonSearchClick;
+- (void)loadingHistory;
 @end
 
-@implementation TrajectoryViewController
+@implementation PersonTrajectoryViewController
 - (void)dealloc{
     [super dealloc];
     [_tableView release],_tableView=nil;
+     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+        
     }
     return self;
 }
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    [self.navBarView setNavBarTitle:[NSString stringWithFormat:@"%@--足迹",self.Entity.Name]];
-    
-    FXLabel *label=(FXLabel*)[self.navBarView viewWithTag:200];
-    CGRect r=label.frame;
-    r.origin.x=33+10;
-    label.frame=r;
-    
-    
+    if (self.Entity&&self.Entity.Name&&[self.Entity.Name length]>0) {
+        [self.navBarView setNavBarTitle:[NSString stringWithFormat:@"%@--足迹",self.Entity.Name]];
+        
+        FXLabel *label=(FXLabel*)[self.navBarView viewWithTag:200];
+        CGRect r=label.frame;
+        r.origin.x=33+10;
+        label.frame=r;
+    }
     if ([self.view.subviews containsObject:self.navBarView]) {
         if (![self.navBarView viewWithTag:300]) {
             UIButton *btn=[UIButton buttonWithType:UIButtonTypeCustom];
@@ -55,6 +56,7 @@
             btn.titleLabel.font=[UIFont fontWithName:DeviceFontName size:DeviceFontSize];
             btn.showsTouchWhenHighlighted = YES;  //指定按钮被按下时发光
             [btn setTitleColor:[UIColor colorFromHexRGB:@"4a7ebb"] forState:UIControlStateHighlighted];
+            [btn addTarget:self action:@selector(buttonMapLinesClick) forControlEvents:UIControlEventTouchUpInside];
             [self.navBarView addSubview:btn];
         }
         if (![self.navBarView viewWithTag:301]) {
@@ -71,11 +73,20 @@
             [self.navBarView addSubview:btn];
         }
     }
-
+    
+    if (self.Entity&&self.Entity.ID&&[self.Entity.ID length]>0) {
+        [self loadingHistory];
+    }else{
+        self.cells=[NSArray array];
+        [_tableView reloadData];
+    }
+    
 }
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    //接收通知
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveTrajectoryNotifice:) name:@"trajectTarget" object:nil];
     
     CGRect r=self.view.bounds;
     r.origin.y=44;
@@ -83,36 +94,82 @@
     _tableView=[[UITableView alloc] initWithFrame:r style:UITableViewStylePlain];
     _tableView.delegate=self;
     _tableView.dataSource=self;
-    _tableView.separatorStyle=UITableViewCellSeparatorStyleNone;
-    _tableView.separatorColor=[UIColor clearColor];
     _tableView.bounces=NO;
     [self.view addSubview:_tableView];
-	
+    
     _trajectorySearch=[[TrajectorySearch alloc] initWithFrame:CGRectMake(0, 44-79, self.view.bounds.size.width, 79)];
     [_trajectorySearch.button addTarget:self action:@selector(buttonSearchClick) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_trajectorySearch];
     [self.view sendSubviewToBack:_trajectorySearch];
-    
-    [self loadTrajectory];
 }
-- (void)loadTrajectory{
-    
-    if (!self.hasNetWork) {
-        [self showErrorNetWorkNotice:nil];
-        return;
+//接收通知
+- (void)receiveTrajectoryNotifice:(NSNotification*)notifice{
+   NSDictionary *dic=[notifice userInfo];
+   SupervisionPerson *entity=[dic objectForKey:@"Entity"];
+   self.Entity=entity;
+}
+//显示地图路线
+- (void)buttonMapLinesClick{
+   if(self.cells&&[self.cells count]>0)
+   {
+       ShowTrajectoryViewController *show=[[ShowTrajectoryViewController alloc] init];
+       show.list=self.cells;
+       [self.navigationController pushViewController:show animated:YES];
+       [show release];
+   }
+}
+//查询
+- (void)buttonSearchClick{
+    [self loadingHistory];
+}
+//查询
+- (void)buttonSwitchClick:(id)sender{
+    UIButton *btn=(UIButton*)sender;
+    if (btn.selected) {//隐藏
+        CGRect r=self.trajectorySearch.frame;
+        r.origin.y=44-r.size.height;
+        
+        CGRect r1=_tableView.frame;
+        r1.origin.y=44;
+        r1.size.height=self.view.bounds.size.height-r1.origin.y-TabHeight;
+        
+        [UIView animateWithDuration:0.5f animations:^{
+            self.trajectorySearch.frame=r;
+            _tableView.frame=r1;
+            btn.selected=NO;
+            [self.view sendSubviewToBack:self.trajectorySearch];
+        }];
+    }else{//显示
+        [self.view sendSubviewToBack:_tableView];
+        
+        CGRect r=self.trajectorySearch.frame;
+        r.origin.y=44;
+        
+        CGRect r1=_tableView.frame;
+        r1.origin.y=44+r.size.height;
+        r1.size.height=self.view.bounds.size.height-r1.origin.y-TabHeight;
+        
+        [UIView animateWithDuration:0.5f animations:^{
+            self.trajectorySearch.frame=r;
+            _tableView.frame=r1;
+            btn.selected=YES;
+            
+        }];
     }
+}
+- (void)loadingHistory{
+
     Account *acc=[Account unarchiverAccount];
-    NSMutableArray *params=[NSMutableArray arrayWithCapacity:6];
+    NSMutableArray *params=[NSMutableArray array];
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:acc.WorkNo,@"workno", nil]];
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:self.Entity.ID,@"id", nil]];
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:self.trajectorySearch.startCalendar.popoverText.popoverTextField.text,@"stime", nil]];
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:self.trajectorySearch.endCalendar.popoverText.popoverTextField.text,@"etime", nil]];
-    //[params addObject:[NSDictionary dictionaryWithObjectsAndKeys:self.trajectorySearch.endCalendar.popoverText.popoverTextField.text,@"pointTime", nil]];
     
     ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
+    args.methodName=@"ObjectHistoryInfo";
     args.serviceURL=DataWebservice1;
     args.serviceNameSpace=DataNameSpace1;
-    args.methodName=@"ObjectHistoryInfo";
     args.soapParams=params;
     
     [self showLoadingAnimatedWithTitle:@"正在加载,请稍后..."];
@@ -139,55 +196,8 @@
         //NSLog(@"error=%@",error.debugDescription);
         [self hideLoadingFailedWithTitle:@"加载失败!" completed:nil];
     }];
+
     
-    
-}
-//查询
-- (void)buttonSearchClick{
-    [self loadTrajectory];
-}
-//地图
-- (void)buttonMapClick{
-    ShowTrajectoryViewController *map=[[ShowTrajectoryViewController alloc] init];
-    map.list=self.cells;
-    map.Entity=self.Entity;
-    [self.navigationController pushViewController:map animated:YES];
-    [map release];
-}
-//查询
-- (void)buttonSwitchClick:(id)sender{
-    UIButton *btn=(UIButton*)sender;
-    if (btn.selected) {//隐藏
-        CGRect r=self.trajectorySearch.frame;
-        r.origin.y=44-r.size.height;
-        
-        CGRect r1=_tableView.frame;
-        r1.origin.y=44;
-        r1.size.height=self.view.bounds.size.height-r1.origin.y;
-        
-        [UIView animateWithDuration:0.5f animations:^{
-            self.trajectorySearch.frame=r;
-            _tableView.frame=r1;
-            btn.selected=NO;
-             [self.view sendSubviewToBack:self.trajectorySearch];
-        }];
-    }else{//显示
-        [self.view sendSubviewToBack:_tableView];
-        
-        CGRect r=self.trajectorySearch.frame;
-        r.origin.y=44;
-        
-        CGRect r1=_tableView.frame;
-        r1.origin.y=44+r.size.height;
-        r1.size.height=self.view.bounds.size.height-r1.origin.y;
-        
-        [UIView animateWithDuration:0.5f animations:^{
-            self.trajectorySearch.frame=r;
-            _tableView.frame=r1;
-            btn.selected=YES;
-            
-        }];
-    }
 }
 - (void)didReceiveMemoryWarning
 {

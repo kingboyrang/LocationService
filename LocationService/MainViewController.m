@@ -12,17 +12,24 @@
 #import "BasicNavigationController.h"
 #import "IndexViewController.h"
 #import "MoreViewController.h"
+#import "Account.h"
+#import "ServiceHelper.h"
+#import "SupervisionPerson.h"
+#import "PersonTrajectoryViewController.h"
 //获取设备的物理高度
 
 @interface MainViewController ()
 - (void)updateSelectedStatus:(int)selectTag lastIndex:(int)prevIndex;
 - (void)_resizeView:(BOOL)show;
+- (void)loadingReadCountWithId:(NSString*)personId;
+- (void)updateInfoUI:(int)total;
 @end
 
 @implementation MainViewController
 -(void)dealloc{
     [super dealloc];
     [_tabbarView release];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -32,10 +39,14 @@
     }
     return self;
 }
-
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveTrajectoryNotifice:) name:@"trajectTarget" object:nil];
    
     [self _initViewController];//初始化子控制器
     [self _initTabbarView];//创建自定义tabBar
@@ -45,7 +56,76 @@
 {
     [super didReceiveMemoryWarning];
 }
+- (void)receiveTrajectoryNotifice:(NSNotification*)notifice{
+    NSDictionary *dic=[notifice userInfo];
+    SupervisionPerson *entity=[dic objectForKey:@"Entity"];
+    [self loadingReadCountWithId:entity.ID];//加载未读信息总数
+}
+- (void)loadingReadCountWithId:(NSString*)personId{
+    Account *acc=[Account unarchiverAccount];
+    NSMutableArray *params=[NSMutableArray array];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:acc.WorkNo,@"workno", nil]];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:personId,@"personid", nil]];
+    
+    ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
+    args.methodName=@"GetNotReadCounts";
+    args.serviceURL=DataWebservice1;
+    args.serviceNameSpace=DataNameSpace1;
+    args.soapParams=params;
+    
+    [ServiceHelper asynService:args success:^(ServiceResult *result) {
+        BOOL boo=NO;
+        if (result.hasSuccess) {
+            NSDictionary *dic=[result json];
+            int total=[[dic objectForKey:@"Result"] intValue];
+            if (total>0) {
+                boo=YES;
+                [self updateInfoUI:total];
+            }
+        }
+        if (!boo) {
+            [self updateInfoUI:0];
+        }
+        
+    } failed:^(NSError *error, NSDictionary *userInfo) {
+        [self updateInfoUI:0];
+    }];
+}
+- (void)updateInfoUI:(int)total{
+   
+    if (total==0) {
+        if ([[_tabbarView viewWithTag:900] isKindOfClass:[UIButton class]]) {
+            UIButton *btn=(UIButton*)[_tabbarView viewWithTag:900];
+            [btn removeFromSuperview];
+            return;
+        }
+    }
+    
+    NSString *title=[NSString stringWithFormat:@"%d",total];
+    CGSize size=[title textSize:[UIFont fontWithName:DeviceFontName size:DeviceFontSize] withWidth:DeviceWidth];
+    CGRect r=CGRectZero;
+    r.origin.y=0;
+    r.size=size;
+    r.origin.x=DeviceWidth*4/5-size.width;
+    
+    if ([[_tabbarView viewWithTag:900] isKindOfClass:[UIButton class]]) {
+        UIButton *btn=(UIButton*)[_tabbarView viewWithTag:900];
+        btn.frame=r;
+        [btn setTitle:title forState:UIControlStateNormal];
+        return;
+    }
 
+   
+    UIButton *btn=[UIButton buttonWithType:UIButtonTypeRoundedRect];
+    btn.frame=r;
+    btn.tag=900;
+    [btn setTitle:title forState:UIControlStateNormal];
+    [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [btn setBackgroundColor:[UIColor colorFromHexRGB:@"4f81bd"]];
+    btn.titleLabel.font=[UIFont fontWithName:DeviceFontName size:DeviceFontSize];
+    [_tabbarView addSubview:btn];
+    
+}
 #pragma mark - UI
 //初始化子控制器
 - (void)_initViewController {
@@ -54,8 +134,7 @@
     BasicNavigationController *nav1=[[[BasicNavigationController alloc] initWithRootViewController:viewController1] autorelease];
     nav1.delegate=self;
 
-   UIViewController *viewController2=[[[UIViewController alloc] init] autorelease];
-     viewController2.view.backgroundColor=[UIColor whiteColor];
+   PersonTrajectoryViewController *viewController2=[[[PersonTrajectoryViewController alloc] init] autorelease];
     BasicNavigationController *nav2=[[[BasicNavigationController alloc] initWithRootViewController:viewController2] autorelease];
     nav2.delegate=self;
     

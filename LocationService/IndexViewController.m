@@ -12,6 +12,8 @@
 #import "Account.h"
 #import "AppHelper.h"
 #import "SupervisionPerson.h"
+#import "KYPointAnnotation.h"
+#import "TrajectoryPaoView.h"
 @interface IndexViewController ()
 - (void)buttonCompassClick;
 - (void)buttonTargetClick;
@@ -40,15 +42,15 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
-       
-    
     CGRect r=self.view.bounds;
     r.origin.y=44;
     r.size.height-=82+44;
     _mapView= [[BMKMapView alloc]initWithFrame:r];
     [self.view addSubview:_mapView];
     
+    NSString *memo=@"亲";
+    CGSize size=[memo textSize:[UIFont fontWithName:DeviceFontName size:DeviceFontSize] withWidth:self.view.bounds.size.width];
+    NSLog(@"size=%@",NSStringFromCGSize(size));
 }
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
@@ -60,14 +62,13 @@
     _mapView.delegate = self; // 此处记得不用的时候需要置nil，否则影响内存的释放
     
     
-    
+    [self loadSupervision];
 }
 
 -(void)viewWillDisappear:(BOOL)animated {
     [_mapView viewWillDisappear];
     _mapView.delegate = nil; // 不用时，置nil
-    
-    
+ 
 }
 //当前定位
 - (void)startUserLocation{
@@ -94,7 +95,18 @@
             if (self.cells&&[self.cells count]>0) {
                 boo=YES;
                 //加载监管目标
-                
+                for (int i=0; i<self.cells.count; i++) {
+                    SupervisionPerson *entity=self.cells[i];
+                    CLLocationCoordinate2D coor;
+                    coor.latitude=[entity.Latitude floatValue];
+                    coor.longitude=[entity.Longitude floatValue];
+                    KYPointAnnotation* item = [[KYPointAnnotation alloc] init];
+                    item.coordinate =coor;
+                    item.title=@"当前位置";
+                    item.tag=100+i;
+                    [_mapView addAnnotation:item];
+                    [item release];
+                }
             }
         }
         if (!boo) {
@@ -136,20 +148,35 @@
 - (BMKAnnotationView *)mapView:(BMKMapView *)mapView viewForAnnotation:(id <BMKAnnotation>)annotation
 {
    
-   BMKPinAnnotationView *newAnnotation = (BMKPinAnnotationView*)[mapView viewForAnnotation:annotation];
+    
+     BMKPinAnnotationView *newAnnotation = (BMKPinAnnotationView*)[mapView viewForAnnotation:annotation];
      NSString *AnnotationViewID = @"renameMark";
+     if ([annotation isKindOfClass:[KYPointAnnotation class]]) {
+        AnnotationViewID = [NSString stringWithFormat:@"renameMark%d",[(KYPointAnnotation*)annotation tag]];
+     }
      if (newAnnotation == nil) {
          newAnnotation = [[BMKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:AnnotationViewID];
          // 设置颜色
-         ((BMKPinAnnotationView*)newAnnotation).pinColor = BMKPinAnnotationColorPurple;
+         ((BMKPinAnnotationView*)newAnnotation).pinColor = BMKPinAnnotationColorRed;
          // 从天上掉下效果
          ((BMKPinAnnotationView*)newAnnotation).animatesDrop = YES;
+         
+         if ([annotation isKindOfClass:[KYPointAnnotation class]]) {
+             int pos=[(KYPointAnnotation*)annotation tag]-100;
+             
+             newAnnotation.centerOffset = CGPointMake(0, -(newAnnotation.frame.size.height * 0.5));
+             newAnnotation.annotation = annotation;
+             //自定义气泡
+             TrajectoryPaoView *_areaPaoView=[[[TrajectoryPaoView alloc] initWithFrame:CGRectMake(0, 0, 300, 350)] autorelease];
+             [_areaPaoView setDataSource:self.cells[pos]];
+             BMKActionPaopaoView *paopao=[[BMKActionPaopaoView alloc] initWithCustomView:_areaPaoView];
+             newAnnotation.paopaoView=paopao;
+             [paopao release];
+         }
          // 设置可拖拽
-         ((BMKPinAnnotationView*)newAnnotation).draggable = YES;
+         //((BMKPinAnnotationView*)newAnnotation).draggable = YES;
      }
      return newAnnotation;
-     
-    
 }
 - (void)mapView:(BMKMapView *)mapView1 didUpdateUserLocation:(BMKUserLocation *)userLocation
 {
@@ -190,6 +217,16 @@
      [_mapView addAnnotation:userLocation];
      */
     //poi检索  异步函数，返回结果在BMKSearchDelegate里的onGetPoiResult:searchType:errorCode:通知
+}
+//选中
+- (void)mapView:(BMKMapView *)mapView didSelectAnnotationView:(BMKAnnotationView *)view
+{
+    if ([view.annotation isKindOfClass:[KYPointAnnotation class]]) {//选中监管目标
+        KYPointAnnotation *elem=(KYPointAnnotation*)view.annotation;
+        int index=elem.tag-100;
+        SupervisionPerson *entity=self.cells[index];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"trajectTarget" object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:entity,@"Entity", nil]];
+    }
 }
 
 @end

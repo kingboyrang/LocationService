@@ -76,8 +76,8 @@
     _tableView=[[UITableView alloc] initWithFrame:r style:UITableViewStylePlain];
     _tableView.delegate=self;
     _tableView.dataSource=self;
-    _tableView.separatorStyle=UITableViewCellSeparatorStyleNone;
-    _tableView.separatorColor=[UIColor clearColor];
+    //_tableView.separatorStyle=UITableViewCellSeparatorStyleNone;
+    //_tableView.separatorColor=[UIColor clearColor];
     _tableView.bounces=NO;
     [self.view addSubview:_tableView];
     
@@ -107,6 +107,7 @@
     args.soapParams=params;
     
     [self.serviceHelper asynService:args success:^(ServiceResult *result) {
+        //NSLog(@"xml=%@",result.xmlString);
         if (result.hasSuccess) {
             NSDictionary *dic=(NSDictionary*)[result json];
             NSArray *source=[dic objectForKey:@"AreaList"];
@@ -248,7 +249,7 @@
         cell.textLabel.textColor=[UIColor blackColor];
     }
     AreaCrawl *area=self.list[indexPath.row];
-    cell.textLabel.text=area.AreaPerson;
+    cell.textLabel.text=area.AreaName;
     return cell;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{

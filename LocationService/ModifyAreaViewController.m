@@ -54,6 +54,8 @@
         _mapView.showsUserLocation = NO;//先关闭显示的定位图层
         _mapView.userTrackingMode = BMKUserTrackingModeNone;//设置定位的状态
         _mapView.showsUserLocation = YES;//显示定位图层
+    }else{//修改
+        [self loadingEditInfo];
     }
 }
 -(void)viewWillDisappear:(BOOL)animated {
@@ -109,7 +111,7 @@
 //修改时加载信息
 - (void)loadingEditInfo{
     NSMutableArray *params=[NSMutableArray array];
-    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:self.AreaId,@"AreaID", nil]];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:self.AreaId,@"areaID", nil]];
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"",@"maptype", nil]];
     
     ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
@@ -305,8 +307,8 @@
         _areaPaoView=[[AreaPaoView alloc] initWithFrame:CGRectMake(0, 0, 250, 35+13*2)];
         _areaPaoView.tag=456;
         //修改时设置值
-        if (self.AreaSource&&[self.AreaSource count]>0&&[self.AreaSource.allKeys containsObject:@"AreaNam"]) {
-            _areaPaoView.field.text=[self.AreaSource objectForKey:@"AreaNam"];
+        if (self.AreaSource&&[self.AreaSource count]>0&&[self.AreaSource.allKeys containsObject:@"AreaName"]) {
+            _areaPaoView.field.text=[self.AreaSource objectForKey:@"AreaName"];
         }
         BMKActionPaopaoView *paopao=[[BMKActionPaopaoView alloc] initWithCustomView:_areaPaoView];
         annotationView.paopaoView=paopao;
