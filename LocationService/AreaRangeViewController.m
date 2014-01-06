@@ -9,11 +9,15 @@
 #import "AreaRangeViewController.h"
 #import "RangHeader.h"
 #import "CVUICalendar.h"
-@interface AreaRangeViewController (){
+#import "LoginButtons.h"
+#import "TKAreaWeekCell.h"
+#import "TKAreaRangeCell.h"
+#define  dicWeeks [NSDictionary dictionaryWithObjectsAndKeys:@"一",@"1",@"二",@"2",@"三",@"3",@"四",@"4",@"五",@"5",@"六",@"6",@"日",@"7", nil]
+@interface AreaRangeViewController ()<UITableViewDataSource,UITableViewDelegate>{
     CVUICalendar *_sCalendar;
     CVUICalendar *_eCalendar;
+    UITableView *_tableView;
 }
-
 @end
 
 @implementation AreaRangeViewController
@@ -38,7 +42,7 @@
 	
     RangHeader *titleView=[[RangHeader alloc] initWithFrame:CGRectMake(0, topY, self.view.bounds.size.width, 30)];
     titleView.label.frame=CGRectMake(0, 5, titleView.frame.size.width, 20);
-    titleView.label.text=@"名称:经开区";
+    titleView.label.text=[NSString stringWithFormat:@"名称:%@",self.AreaName];
     titleView.label.textAlignment=NSTextAlignmentCenter;
     [self.view addSubview:titleView];
     [titleView release];
@@ -65,12 +69,139 @@
     [self.view addSubview:header1];
     [header1 release];
     
+    topY+=30;
+    
+    
+    _tableView=[[UITableView alloc] initWithFrame:CGRectMake(0, topY, self.view.bounds.size.width,self.view.bounds.size.height-topY-44) style:UITableViewStylePlain];
+    _tableView.delegate=self;
+    _tableView.dataSource=self;
+    _tableView.bounces=NO;
+    [self.view addSubview:_tableView];
+    
+    LoginButtons *buttons=[[LoginButtons alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height-44, self.view.bounds.size.width, 44)];
+    [buttons.cancel setTitle:@"上一步" forState:UIControlStateNormal];
+    [buttons.submit setTitle:@"完成" forState:UIControlStateNormal];
+    [buttons.cancel addTarget:self action:@selector(buttonPrevClick) forControlEvents:UIControlEventTouchUpInside];
+    [buttons.submit addTarget:self action:@selector(buttonSubmitClick:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:buttons];
+    [buttons release];
+    
+    self.cells=[NSMutableArray array];
+    self.cellChilds=[NSMutableDictionary dictionary];
+    for (int i=0; i<7; i++) {
+        TKAreaWeekCell *cell=[[TKAreaWeekCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+        cell.label.text=[NSString stringWithFormat:@"星期%@",[dicWeeks objectForKey:[NSString stringWithFormat:@"%d",i+1]]];
+        cell.index=i;
+        [self.cells addObject:cell];
+        [cell release];
+        
+        TKAreaRangeCell *cell1=[[TKAreaRangeCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+        cell1.deleteButton.hidden=YES;
+        cell1.index=i;
+        [cell1.button addTarget:self action:@selector(buttonAddRowClick:) forControlEvents:UIControlEventTouchUpInside];
+        [self.cellChilds setValue:[NSArray arrayWithObjects:cell1, nil] forKey:[NSString stringWithFormat:@"%d",i]];
+        [cell1 release];
+    }
+    
 }
 
+//新增行
+- (void)buttonAddRowClick:(id)sender{
+    UIButton *btn=(UIButton*)sender;
+    id v=[btn superview];
+    while (![v isKindOfClass:[TKAreaRangeCell class]]) {
+        v=[v superview];
+    }
+    TKAreaRangeCell *cell=(TKAreaRangeCell*)v;
+    NSIndexPath *indexPath=[_tableView indexPathForCell:cell];
+
+    NSString *key=[NSString stringWithFormat:@"%d",cell.index];
+    NSMutableArray *source=[self.cellChilds objectForKey:key];
+    TKAreaRangeCell *cell1=[[TKAreaRangeCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+    cell1.button.hidden=YES;
+    cell1.index=cell.index;
+    [cell1.button addTarget:self action:@selector(buttonDeleteRowClick:) forControlEvents:UIControlEventTouchUpInside];
+    [source addObject:cell1];
+    [cell1 release];
+    
+    TKAreaWeekCell *weekCell=self.cells[indexPath.row-1];
+     indexPath=[_tableView indexPathForCell:weekCell];
+    if (weekCell.isOpen) {//打开状态
+        [self.cells insertObject:[source lastObject] atIndex:indexPath.row+source.count];
+        NSIndexPath *insertPath=[NSIndexPath indexPathForRow:indexPath.row+source.count inSection:0];
+        [_tableView beginUpdates];
+        [_tableView insertRowsAtIndexPaths:[NSArray arrayWithObjects:insertPath, nil] withRowAnimation:UITableViewRowAnimationFade];
+        [_tableView endUpdates];
+    }
+}
+//删除行
+- (void)buttonDeleteRowClick:(id)sender{
+    UIButton *btn=(UIButton*)sender;
+    id v=[btn superview];
+    while (![v isKindOfClass:[TKAreaRangeCell class]]) {
+        v=[v superview];
+    }
+    TKAreaRangeCell *cell=(TKAreaRangeCell*)v;
+    NSIndexPath *indexPath=[_tableView indexPathForCell:cell];
+    
+    NSString *key=[NSString stringWithFormat:@"%d",cell.index];
+    NSMutableArray *source=[self.cellChilds objectForKey:key];
+    //删除
+    [self.cells removeObjectAtIndex:indexPath.row];
+    [_tableView beginUpdates];
+    [_tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationFade];
+    [_tableView endUpdates];
+}
+//上一步
+- (void)buttonPrevClick{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+//完成
+- (void)buttonSubmitClick:(id)sender{
+    
+}
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
+#pragma mark - table source & delegate Methods
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    return [self.cells count];
+}
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    UITableViewCell *cell=self.cells[indexPath.row];
+    if (![cell isKindOfClass:[TKAreaWeekCell class]]) {
+        cell.selectionStyle=UITableViewCellSelectionStyleNone;
+    }
+    return cell;
+}
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    TKAreaWeekCell *cell=self.cells[indexPath.row];
+    NSString *key=[NSString stringWithFormat:@"%d",cell.index];
+    NSArray *source=[self.cellChilds objectForKey:key];
+    if (cell.isOpen) {//隐藏
+        [cell setOpen:NO];
+        NSMutableArray *indexPaths=[NSMutableArray array];
+        for (int i=0; i<source.count; i++) {
+            [self.cells removeObjectAtIndex:indexPath.row+i+1];
+            NSIndexPath *indexPath=[NSIndexPath indexPathForRow:indexPath.row+i+1 inSection:0];
+            [indexPaths addObject:indexPath];
+        }
+        [_tableView beginUpdates];
+        [_tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
+        [_tableView endUpdates];
+    }else{//显示
+        [cell setOpen:YES];
+        NSMutableArray *indexPaths=[NSMutableArray array];
+        for (int i=0; i<source.count; i++) {
+            [self.cells insertObject:[source objectAtIndex:i] atIndex:indexPath.row+i+1];
+            NSIndexPath *indexPath=[NSIndexPath indexPathForRow:indexPath.row+i+1 inSection:0];
+            [indexPaths addObject:indexPath];
+        }
+        [_tableView beginUpdates];
+        [_tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
+        [_tableView endUpdates];
+    }
+}
 @end

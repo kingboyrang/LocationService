@@ -37,6 +37,10 @@
         [_offlineMap release];
         _offlineMap = nil;
     }
+    if (_mapView) {
+        [_mapView release];
+        _mapView = nil;
+    }
 }
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -61,11 +65,15 @@
         [btn setTitleColor:[UIColor colorFromHexRGB:@"4a7ebb"] forState:UIControlStateHighlighted];
         [self.navBarView addSubview:btn];
     }
-    
+    _offlineMap.delegate = self;
+    _mapView.delegate=self;
+    //[_offlineMap start:132];
 }
 -(void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    //_offlineMap.delegate = nil; // 不用时，置nil
+     [_mapView viewWillDisappear];
+    _offlineMap.delegate = nil; // 不用时，置nil
+     _mapView.delegate=nil;
 }
 - (void)viewDidLoad
 {
@@ -74,7 +82,7 @@
     r.size.height-=44*2;
     r.origin.y=44;
         
-   
+    _mapView=[[BMKMapView alloc] init];
     
     _tableView=[[UITableView alloc] initWithFrame:r style:UITableViewStylePlain];
     _tableView.delegate=self;
@@ -103,7 +111,7 @@
     
     //初始化离线地图服务
     _offlineMap = [[BMKOfflineMap alloc] init];
-    _offlineMap.delegate = self;
+    
     //获取各城市离线地图更新信息
     _arraylocalDownLoadMapInfo = [[NSMutableArray arrayWithArray:[_offlineMap getAllUpdateInfo]] retain];
     

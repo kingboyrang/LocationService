@@ -47,7 +47,7 @@
 	
     RangHeader *titleView=[[RangHeader alloc] initWithFrame:CGRectMake(0, topY, self.view.bounds.size.width, 30)];
     titleView.label.frame=CGRectMake(0, 5, titleView.frame.size.width, 20);
-    titleView.label.text=@"名称:经开区";
+    titleView.label.text=[NSString stringWithFormat:@"名称:%@",self.AreaName];
     titleView.label.textAlignment=NSTextAlignmentCenter;
     [self.view addSubview:titleView];
     [titleView release];
@@ -55,14 +55,21 @@
     topY+=30+5;
     NSString *title=@"规则";
     CGSize size=[title textSize:[UIFont fontWithName:DeviceFontName size:DeviceFontSize] withWidth:self.view.bounds.size.width];
-    UILabel *labTitle=[[UILabel alloc] initWithFrame:CGRectMake(37, topY+45/2-5, size.width, size.height)];
+    UILabel *labTitle=[[UILabel alloc] initWithFrame:CGRectMake(37, (45-size.height)/2+44+30, size.width, size.height)];
     labTitle.text=title;
     labTitle.font=[UIFont fontWithName:DeviceFontName size:DeviceFontSize];
     labTitle.backgroundColor=[UIColor clearColor];
     [self.view addSubview:labTitle];
     
     _ruleSelect=[[CVUISelect alloc] initWithFrame:CGRectMake(labTitle.frame.size.width+labTitle.frame.origin.x+5, topY, 206, 35)];
+    _ruleSelect.popoverText.popoverTextField.borderStyle=UITextBorderStyleRoundedRect;
     _ruleSelect.popoverText.popoverTextField.placeholder=@"请选择规则";
+    //DownAccessory.png
+    UIImage *img=[UIImage imageNamed:@"DownAccessory.png"];
+    UIImageView *imageView=[[[UIImageView alloc] initWithImage:img] autorelease];
+    _ruleSelect.popoverText.popoverTextField.enabled=NO;
+    _ruleSelect.popoverText.popoverTextField.rightView=imageView;
+   _ruleSelect.popoverText.popoverTextField.rightViewMode=UITextFieldViewModeAlways;
    
     [self.view addSubview:_ruleSelect];
     

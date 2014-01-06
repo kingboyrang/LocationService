@@ -27,6 +27,10 @@
 		012097E3185ED66D00437EA3 /* AppHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 012097E2185ED66D00437EA3 /* AppHelper.m */; };
 		0120BB78186BE08600AE5944 /* bottomico.png in Resources */ = {isa = PBXBuildFile; fileRef = 0120BB76186BE08600AE5944 /* bottomico.png */; };
 		0120BB79186BE08600AE5944 /* topico.png in Resources */ = {isa = PBXBuildFile; fileRef = 0120BB77186BE08600AE5944 /* topico.png */; };
+		0128098F187AAAC5009AE37D /* RightAccessory.png in Resources */ = {isa = PBXBuildFile; fileRef = 0128098D187AAAC5009AE37D /* RightAccessory.png */; };
+		01280990187AAAC5009AE37D /* RightAccessory@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0128098E187AAAC5009AE37D /* RightAccessory@2x.png */; };
+		01280993187AABB9009AE37D /* UpAccessory.png in Resources */ = {isa = PBXBuildFile; fileRef = 01280991187AABB9009AE37D /* UpAccessory.png */; };
+		01280994187AABB9009AE37D /* UpAccessory@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 01280992187AABB9009AE37D /* UpAccessory@2x.png */; };
 		012B32A41869718000717CDD /* SupervisionPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = 012B32A31869718000717CDD /* SupervisionPerson.m */; };
 		012B32A61869881C00717CDD /* MonitorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 012B32A51869881C00717CDD /* MonitorView.xib */; };
 		012B32A91869885D00717CDD /* MonitorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 012B32A81869885D00717CDD /* MonitorView.m */; };
@@ -148,6 +152,12 @@
 		01BD3A1C1879647900B2F513 /* TitleLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 01BD3A161879647900B2F513 /* TitleLayer.m */; };
 		01BD3A1D1879647900B2F513 /* KnobButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 01BD3A181879647900B2F513 /* KnobButton.m */; };
 		01BD3A1E1879647900B2F513 /* SimpleSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = 01BD3A1A1879647900B2F513 /* SimpleSwitch.m */; };
+		01BD3A21187A41D600B2F513 /* TelephoneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01BD3A20187A41D300B2F513 /* TelephoneViewController.m */; };
+		01BD3A23187A49E900B2F513 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01BD3A22187A49E500B2F513 /* CoreTelephony.framework */; };
+		01BD3A28187A5E7100B2F513 /* DownAccessory.png in Resources */ = {isa = PBXBuildFile; fileRef = 01BD3A26187A5E7100B2F513 /* DownAccessory.png */; };
+		01BD3A29187A5E7100B2F513 /* DownAccessory@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 01BD3A27187A5E7100B2F513 /* DownAccessory@2x.png */; };
+		01BD3A2C187A616600B2F513 /* TKAreaRangeCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 01BD3A2B187A616500B2F513 /* TKAreaRangeCell.m */; };
+		01BD3A2E187A7A2500B2F513 /* error.png in Resources */ = {isa = PBXBuildFile; fileRef = 01BD3A2D187A7A2200B2F513 /* error.png */; };
 		01BE3FDB185EACB6005C25D9 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01BE3FDA185EACB6005C25D9 /* UIKit.framework */; };
 		01BE3FDD185EACB6005C25D9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01BE3FDC185EACB6005C25D9 /* Foundation.framework */; };
 		01BE3FDF185EACB6005C25D9 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01BE3FDE185EACB6005C25D9 /* CoreGraphics.framework */; };
@@ -171,6 +181,10 @@
 		01C0AA15186D547800F8A250 /* AreaViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01C0AA14186D547800F8A250 /* AreaViewController.m */; };
 		01C0AA18186D6C5200F8A250 /* InnerBasicViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01C0AA17186D6C5200F8A250 /* InnerBasicViewController.m */; };
 		01C0AA1C186D708400F8A250 /* OnlineMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01C0AA1B186D708400F8A250 /* OnlineMapViewController.m */; };
+		01C170F2187A8B7600CE62DD /* RangeWeekView.m in Sources */ = {isa = PBXBuildFile; fileRef = 01C170F1187A8B7600CE62DD /* RangeWeekView.m */; };
+		01C170F6187AA47A00CE62DD /* TKAreaWeekCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 01C170F5187AA47900CE62DD /* TKAreaWeekCell.m */; };
+		01C170F9187AA66500CE62DD /* checkbox-checked.png in Resources */ = {isa = PBXBuildFile; fileRef = 01C170F7187AA66500CE62DD /* checkbox-checked.png */; };
+		01C170FA187AA66500CE62DD /* checkbox.png in Resources */ = {isa = PBXBuildFile; fileRef = 01C170F8187AA66500CE62DD /* checkbox.png */; };
 		01C5FB83186C1101009986BF /* TrajectoryMessageController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01C5FB82186C1101009986BF /* TrajectoryMessageController.m */; };
 		01C5FB86186C1173009986BF /* TrajectoryMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 01C5FB85186C1173009986BF /* TrajectoryMessage.m */; };
 		01C5FB8E186C134B009986BF /* blueArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 01C5FB88186C134B009986BF /* blueArrow.png */; };
@@ -250,6 +264,10 @@
 		012097E2185ED66D00437EA3 /* AppHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppHelper.m; sourceTree = "<group>"; };
 		0120BB76186BE08600AE5944 /* bottomico.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bottomico.png; sourceTree = "<group>"; };
 		0120BB77186BE08600AE5944 /* topico.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = topico.png; sourceTree = "<group>"; };
+		0128098D187AAAC5009AE37D /* RightAccessory.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = RightAccessory.png; sourceTree = "<group>"; };
+		0128098E187AAAC5009AE37D /* RightAccessory@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "RightAccessory@2x.png"; sourceTree = "<group>"; };
+		01280991187AABB9009AE37D /* UpAccessory.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = UpAccessory.png; sourceTree = "<group>"; };
+		01280992187AABB9009AE37D /* UpAccessory@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "UpAccessory@2x.png"; sourceTree = "<group>"; };
 		012B32A21869718000717CDD /* SupervisionPerson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SupervisionPerson.h; sourceTree = "<group>"; };
 		012B32A31869718000717CDD /* SupervisionPerson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SupervisionPerson.m; sourceTree = "<group>"; };
 		012B32A51869881C00717CDD /* MonitorView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MonitorView.xib; sourceTree = "<group>"; };
@@ -464,6 +482,14 @@
 		01BD3A181879647900B2F513 /* KnobButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KnobButton.m; sourceTree = "<group>"; };
 		01BD3A191879647900B2F513 /* SimpleSwitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleSwitch.h; sourceTree = "<group>"; };
 		01BD3A1A1879647900B2F513 /* SimpleSwitch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimpleSwitch.m; sourceTree = "<group>"; };
+		01BD3A1F187A41D100B2F513 /* TelephoneViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TelephoneViewController.h; sourceTree = "<group>"; };
+		01BD3A20187A41D300B2F513 /* TelephoneViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TelephoneViewController.m; sourceTree = "<group>"; };
+		01BD3A22187A49E500B2F513 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
+		01BD3A26187A5E7100B2F513 /* DownAccessory.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = DownAccessory.png; sourceTree = "<group>"; };
+		01BD3A27187A5E7100B2F513 /* DownAccessory@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "DownAccessory@2x.png"; sourceTree = "<group>"; };
+		01BD3A2A187A616400B2F513 /* TKAreaRangeCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TKAreaRangeCell.h; sourceTree = "<group>"; };
+		01BD3A2B187A616500B2F513 /* TKAreaRangeCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TKAreaRangeCell.m; sourceTree = "<group>"; };
+		01BD3A2D187A7A2200B2F513 /* error.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = error.png; sourceTree = "<group>"; };
 		01BE3FD7185EACB6005C25D9 /* LocationService.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LocationService.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		01BE3FDA185EACB6005C25D9 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		01BE3FDC185EACB6005C25D9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -504,6 +530,12 @@
 		01C0AA17186D6C5200F8A250 /* InnerBasicViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InnerBasicViewController.m; sourceTree = "<group>"; };
 		01C0AA1A186D708400F8A250 /* OnlineMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OnlineMapViewController.h; sourceTree = "<group>"; };
 		01C0AA1B186D708400F8A250 /* OnlineMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OnlineMapViewController.m; sourceTree = "<group>"; };
+		01C170F0187A8B7600CE62DD /* RangeWeekView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RangeWeekView.h; sourceTree = "<group>"; };
+		01C170F1187A8B7600CE62DD /* RangeWeekView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RangeWeekView.m; sourceTree = "<group>"; };
+		01C170F4187AA47900CE62DD /* TKAreaWeekCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TKAreaWeekCell.h; sourceTree = "<group>"; };
+		01C170F5187AA47900CE62DD /* TKAreaWeekCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TKAreaWeekCell.m; sourceTree = "<group>"; };
+		01C170F7187AA66500CE62DD /* checkbox-checked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "checkbox-checked.png"; sourceTree = "<group>"; };
+		01C170F8187AA66500CE62DD /* checkbox.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = checkbox.png; sourceTree = "<group>"; };
 		01C5FB81186C1101009986BF /* TrajectoryMessageController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrajectoryMessageController.h; sourceTree = "<group>"; };
 		01C5FB82186C1101009986BF /* TrajectoryMessageController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrajectoryMessageController.m; sourceTree = "<group>"; };
 		01C5FB84186C1173009986BF /* TrajectoryMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrajectoryMessage.h; sourceTree = "<group>"; };
@@ -620,6 +652,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				01BD3A23187A49E900B2F513 /* CoreTelephony.framework in Frameworks */,
 				01C913BC187111BB00D9A926 /* Security.framework in Frameworks */,
 				01C913BA187111A200D9A926 /* OpenGLES.framework in Frameworks */,
 				01FCBE29186AC430000835D4 /* ImageIO.framework in Frameworks */,
@@ -739,6 +772,8 @@
 				01C0AA0D186D284B00F8A250 /* EditSupervisionViewController.m */,
 				01BD3A0C18795C7B00B2F513 /* CallTrajectoryViewController.h */,
 				01BD3A0D18795C7C00B2F513 /* CallTrajectoryViewController.m */,
+				01BD3A1F187A41D100B2F513 /* TelephoneViewController.h */,
+				01BD3A20187A41D300B2F513 /* TelephoneViewController.m */,
 			);
 			name = Target;
 			sourceTree = "<group>";
@@ -812,6 +847,12 @@
 				01B483D118755E2E005D4DD9 /* RangHeader.m */,
 				0146926B187669BD003664BE /* AreaPaoView.h */,
 				0146926C187669BD003664BE /* AreaPaoView.m */,
+				01BD3A2A187A616400B2F513 /* TKAreaRangeCell.h */,
+				01BD3A2B187A616500B2F513 /* TKAreaRangeCell.m */,
+				01C170F0187A8B7600CE62DD /* RangeWeekView.h */,
+				01C170F1187A8B7600CE62DD /* RangeWeekView.m */,
+				01C170F4187AA47900CE62DD /* TKAreaWeekCell.h */,
+				01C170F5187AA47900CE62DD /* TKAreaWeekCell.m */,
 			);
 			name = UI;
 			sourceTree = "<group>";
@@ -1107,6 +1148,7 @@
 		01BE3FCE185EACB6005C25D9 = {
 			isa = PBXGroup;
 			children = (
+				01BD3A22187A49E500B2F513 /* CoreTelephony.framework */,
 				016924CE1862A33C0040E0C9 /* Entitlements.plist */,
 				01BE3FE0185EACB6005C25D9 /* LocationService */,
 				01BE3FD9185EACB6005C25D9 /* Frameworks */,
@@ -1200,6 +1242,15 @@
 		01BE4002185EAFD2005C25D9 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				01280991187AABB9009AE37D /* UpAccessory.png */,
+				01280992187AABB9009AE37D /* UpAccessory@2x.png */,
+				0128098D187AAAC5009AE37D /* RightAccessory.png */,
+				0128098E187AAAC5009AE37D /* RightAccessory@2x.png */,
+				01C170F7187AA66500CE62DD /* checkbox-checked.png */,
+				01C170F8187AA66500CE62DD /* checkbox.png */,
+				01BD3A2D187A7A2200B2F513 /* error.png */,
+				01BD3A26187A5E7100B2F513 /* DownAccessory.png */,
+				01BD3A27187A5E7100B2F513 /* DownAccessory@2x.png */,
 				0120BB76186BE08600AE5944 /* bottomico.png */,
 				0120BB77186BE08600AE5944 /* topico.png */,
 				0103E609186A8B3C00B96379 /* bg03.png */,
@@ -1270,6 +1321,7 @@
 		01C0AA12186D543000F8A250 /* Area */ = {
 			isa = PBXGroup;
 			children = (
+				01C170F3187A9CE400CE62DD /* Menu */,
 				017C228D187511D200FBF95D /* UI */,
 				01C0AA13186D547800F8A250 /* AreaViewController.h */,
 				01C0AA14186D547800F8A250 /* AreaViewController.m */,
@@ -1293,6 +1345,13 @@
 				01C9138C1871093400D9A926 /* DownloadMapController.mm */,
 			);
 			name = OnlineMap;
+			sourceTree = "<group>";
+		};
+		01C170F3187A9CE400CE62DD /* Menu */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Menu;
 			sourceTree = "<group>";
 		};
 		01C5FB87186C1340009986BF /* Refresh */ = {
@@ -1508,6 +1567,7 @@
 				012097D1185ECA6600437EA3 /* load02.jpg in Resources */,
 				018989071861293F0073B253 /* ico01f.png in Resources */,
 				01036AA01862FF4000300DBF /* ico19.png in Resources */,
+				01280994187AABB9009AE37D /* UpAccessory@2x.png in Resources */,
 				01B65CF21867D9AC001F11BA /* ico12.png in Resources */,
 				01B65CF31867D9AC001F11BA /* ico13.png in Resources */,
 				01F994C31867E76400FEC0F2 /* MoreCell.xib in Resources */,
@@ -1524,6 +1584,7 @@
 				015B62891869599300E488F2 /* bg02.png in Resources */,
 				012B32A61869881C00717CDD /* MonitorView.xib in Resources */,
 				0103E60A186A8B3C00B96379 /* bg03.png in Resources */,
+				01280993187AABB9009AE37D /* UpAccessory.png in Resources */,
 				0120BB79186BE08600AE5944 /* topico.png in Resources */,
 				01C5FB8E186C134B009986BF /* blueArrow.png in Resources */,
 				01C5FB8F186C134B009986BF /* blueArrow@2x.png in Resources */,
@@ -1531,6 +1592,13 @@
 				01C5FB91186C134B009986BF /* blueArrowDown@2x.png in Resources */,
 				01C5FB97186C2153009986BF /* MessageView.xib in Resources */,
 				01C913911871111F00D9A926 /* mapapi.bundle in Resources */,
+				0128098F187AAAC5009AE37D /* RightAccessory.png in Resources */,
+				01BD3A28187A5E7100B2F513 /* DownAccessory.png in Resources */,
+				01BD3A29187A5E7100B2F513 /* DownAccessory@2x.png in Resources */,
+				01280990187AAAC5009AE37D /* RightAccessory@2x.png in Resources */,
+				01BD3A2E187A7A2500B2F513 /* error.png in Resources */,
+				01C170F9187AA66500CE62DD /* checkbox-checked.png in Resources */,
+				01C170FA187AA66500CE62DD /* checkbox.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1680,6 +1748,10 @@
 				01BD3A1C1879647900B2F513 /* TitleLayer.m in Sources */,
 				01BD3A1D1879647900B2F513 /* KnobButton.m in Sources */,
 				01BD3A1E1879647900B2F513 /* SimpleSwitch.m in Sources */,
+				01BD3A21187A41D600B2F513 /* TelephoneViewController.m in Sources */,
+				01BD3A2C187A616600B2F513 /* TKAreaRangeCell.m in Sources */,
+				01C170F2187A8B7600CE62DD /* RangeWeekView.m in Sources */,
+				01C170F6187AA47A00CE62DD /* TKAreaWeekCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

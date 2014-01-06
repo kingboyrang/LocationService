@@ -15,4 +15,6 @@
 }
 @property (nonatomic,retain) SupervisionPerson *Entity;
 @property (nonatomic,strong) CallPhoneView *phoneView;
+//拨打电话
+- (void)callWithPhone:(NSString*)phone;
 @end

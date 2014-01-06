@@ -9,5 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface AreaRangeViewController : BasicViewController
-
+@property(nonatomic,copy) NSString *AreaName;
+@property(nonatomic,retain) NSMutableArray *cells;
+@property(nonatomic,retain) NSMutableDictionary *cellChilds;
 @end

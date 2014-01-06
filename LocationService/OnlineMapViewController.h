@@ -8,12 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import "BMapKit.h"
-@interface OnlineMapViewController : BasicViewController<BMKOfflineMapDelegate>{
+@interface OnlineMapViewController : BasicViewController<BMKOfflineMapDelegate,BMKMapViewDelegate>{
   // BMKMapView* _mapView;//.xib里要有BMKMapView类用于初始化数据驱动BMKMapViewDelegate,
    BMKOfflineMap* _offlineMap;
    NSMutableArray * _arraylocalDownLoadMapInfo;//本地下载的离线地图
     
     int currentDownloadCityId;//当前正在下载的城市id
+    BMKMapView* _mapView;
 }
 @property(nonatomic,strong) NSMutableArray *arraylDownLoadSource;//下载地图
 

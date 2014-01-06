@@ -15,5 +15,6 @@
 @property (nonatomic,copy) NSString *shipPhone;
 @property (nonatomic,copy) NSString *trajectoryPhone;
 
+@property (nonatomic,assign) id controlers;
 - (void)setDataWithShipPhone:(NSString*)phone trajectoryTel:(NSString*)tel;
 @end

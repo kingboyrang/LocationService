@@ -145,11 +145,13 @@
         [cell1.textField becomeFirstResponder];
         return;
     }
+    /***
     if ([acc.Password isEqualToString:[cell1.textField.text Trim]]) {
         [AlertHelper initWithTitle:@"提示" message:@"原密码错误,请重新输入！"];
         [cell1.textField becomeFirstResponder];
         return;
     }
+     ***/
     TKTextFieldCell *cell2=self.cells[3];
     if (!cell2.hasValue) {
         [AlertHelper initWithTitle:@"提示" message:@"请输入新密码!"];
@@ -186,41 +188,46 @@
         return;
     }
     [self showLoadingAnimatedWithTitle:@"正在修改密码,请稍后..."];
-    [self pwdDesEncrypWithCompleted:^(NSString *pwd) {
-        Account *acc=[Account unarchiverAccount];
-        NSMutableArray *params=[NSMutableArray arrayWithCapacity:2];
-        [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:acc.UserId,@"userId", nil]];
-        [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:acc.encryptPwd,@"oldpwd", nil]];
-        [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:pwd,@"newpwd", nil]];
-        
-        ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
-        args.serviceURL=DataWebservice1;
-        args.serviceNameSpace=DataWebservice1;
-        args.methodName=@"ModifyPassword";
-        args.soapParams=params;
-        //NSLog(@"soap=%@",args.soapMessage);
-        [self.serviceHelper asynService:args success:^(ServiceResult *result) {
-            BOOL boo=NO;
-            if (result.hasSuccess) {
-                XmlNode *node=[result methodNode];
-                NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:[node.InnerText dataUsingEncoding:NSUTF8StringEncoding] options:1 error:nil];
-                if ([[dic objectForKey:@"Result"] isEqualToString:@"2"]) {
-                    boo=YES;
-                }
-            }
-            if (boo) {
+    NSMutableArray *params=[NSMutableArray arrayWithCapacity:2];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:acc.UserId,@"userId", nil]];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[cell1.textField.text Trim],@"oldpwd", nil]];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[cell2.textField.text Trim],@"newpwd", nil]];
+    
+    ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
+    args.serviceURL=DataWebservice1;
+    args.serviceNameSpace=DataWebservice1;
+    args.methodName=@"ModifyPassword";
+    args.soapParams=params;
+    [self.serviceHelper asynService:args success:^(ServiceResult *result) {
+        BOOL boo=NO;
+        NSString *stauts=@"0";
+        if (result.hasSuccess) {
+            NSDictionary *dic=[result json];
+            stauts=[dic objectForKey:@"Result"];
+            if ([stauts isEqualToString:@"2"]) {
+                boo=YES;
                 [self hideLoadingViewAnimated:^(AnimateLoadView *hideView) {
-                    [Account editPwd:[cell1.textField.text Trim] encrypt:@""];
+                    [Account editPwd:[cell2.textField.text Trim] encrypt:@""];
                     [self.navigationController popViewControllerAnimated:YES];
                 }];
-            }else{
-                [self hideLoadingFailedWithTitle:@"输入的密码错误,请重新输入!" completed:nil];
             }
-        } failed:^(NSError *error, NSDictionary *userInfo) {
-            [self hideLoadingFailedWithTitle:@"输入的密码错误,请重新输入!" completed:nil];
-        }];
-
+        }
+        if (!boo) {
+            NSString *msg=@"修改失败,帐号不存在!";
+            if ([stauts isEqualToString:@"1"]) {
+                msg=@"修改失败,原密码错误!";
+            }
+            [self hideLoadingFailedWithTitle:msg completed:nil];
+        }
+    } failed:^(NSError *error, NSDictionary *userInfo) {
+        [self hideLoadingFailedWithTitle:@"密码修改失败!" completed:nil];
     }];
+
+    /***
+    [self pwdDesEncrypWithCompleted:^(NSString *pwd) {
+     
+    }];
+     ***/
 }
 //取消
 -(void)buttonCancel{

@@ -16,6 +16,7 @@
 #import "TrajectoryViewController.h"
 #import "TrajectoryMessageController.h"
 #import "EditSupervisionViewController.h"
+#import "CallTrajectoryViewController.h"
 @interface SupervisionViewController ()<UITableViewDataSource,UITableViewDelegate>{
     UITableView *_tableView;
     LoginButtons *_toolBar;
@@ -159,7 +160,10 @@
     [trajectory release];
 }
 -(void)supervisionCallWithEntity:(SupervisionPerson*)entity{
-    
+    CallTrajectoryViewController *controler=[[CallTrajectoryViewController alloc] init];
+    controler.Entity=entity;
+    [self.navigationController pushViewController:controler animated:YES];
+    [controler release];
 }
 //取消删除
 - (void)buttonCancelRemoveClick{

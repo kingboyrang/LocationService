@@ -48,9 +48,12 @@
     _mapView= [[BMKMapView alloc]initWithFrame:r];
     [self.view addSubview:_mapView];
     
+    /***
     NSString *memo=@"亲";
     CGSize size=[memo textSize:[UIFont fontWithName:DeviceFontName size:DeviceFontSize] withWidth:self.view.bounds.size.width];
     NSLog(@"size=%@",NSStringFromCGSize(size));
+     ***/
+   // [_mapView addObserver:self forKeyPath:@"zoomLevel" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:nil];
 }
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
@@ -97,6 +100,9 @@
                 //加载监管目标
                 for (int i=0; i<self.cells.count; i++) {
                     SupervisionPerson *entity=self.cells[i];
+                    if ([entity.Latitude length]==0||[entity.Longitude length]==0) {
+                        continue;
+                    }
                     CLLocationCoordinate2D coor;
                     coor.latitude=[entity.Latitude floatValue];
                     coor.longitude=[entity.Longitude floatValue];

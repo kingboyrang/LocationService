@@ -119,7 +119,9 @@
     args.serviceNameSpace=DataNameSpace1;
     args.methodName=@"GetOneAreaLatLng";
     args.soapParams=params;
+    // NSLog(@"soap=%@",args.soapMessage);
     [self.serviceHelper asynService:args success:^(ServiceResult *result) {
+        //NSLog(@"xml=%@",result.request.responseString);
         if (result.hasSuccess) {
             NSDictionary *dic=[result json];
             if (dic!=nil) {
@@ -205,6 +207,7 @@
             AreaRuleViewController *areaRange=[[AreaRuleViewController alloc] init];
             areaRange.operateType=1;
             areaRange.AreaId=areaId;
+            areaRange.AreaName=_areaPaoView.field.text;
             [self.navigationController pushViewController:areaRange animated:YES];
             [areaRange release];
         }];
@@ -213,6 +216,7 @@
             AreaRuleViewController *areaRange=[[AreaRuleViewController alloc] init];
             areaRange.operateType=2;
             areaRange.AreaId=areaId;
+            areaRange.AreaName=_areaPaoView.field.text;
             [self.navigationController pushViewController:areaRange animated:YES];
             [areaRange release];
         }];
@@ -226,13 +230,13 @@
         return;
     }
     
-    NSString *latlng=[NSString stringWithFormat:@"%f,%f",_coordinate.latitude,_coordinate.longitude];
+    NSString *latlng=[NSString stringWithFormat:@"%f$%f",_coordinate.latitude,_coordinate.longitude];
     Account *acc=[Account unarchiverAccount];
     NSMutableArray *params=[NSMutableArray array];
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:_areaPaoView.field.text,@"AreaName", nil]];
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"",@"remark", nil]];
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:latlng,@"LinePointArystr", nil]];
-    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%f",_silder.value],@"CircleRedius", nil]];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%f",_silder.value*10],@"CircleRedius", nil]];
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"Rotundity",@"AreaType", nil]];
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:acc.WorkNo,@"Workno", nil]];
     
@@ -241,8 +245,10 @@
     args.serviceNameSpace=DataNameSpace1;
     args.methodName=@"AddArea";
     args.soapParams=params;
+     NSLog(@"soap=%@",args.soapMessage);
     [self showLoadingAnimatedWithTitle:@"正在新增,请稍后..."];
     [self.serviceHelper asynService:args success:^(ServiceResult *result) {
+        NSLog(@"xml=%@",result.xmlString);
         BOOL boo=NO;
         if (result.hasSuccess) {
             NSDictionary *dic=[result json];

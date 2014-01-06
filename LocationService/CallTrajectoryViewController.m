@@ -10,6 +10,7 @@
 
 @interface CallTrajectoryViewController ()
 - (void)loadingPhones;
+- (void)cleanMap;
 @end
 
 @implementation CallTrajectoryViewController
@@ -31,7 +32,18 @@
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     [self.navBarView setNavBarTitle:[NSString stringWithFormat:@"%@--电话",self.Entity.Name]];
-    _mapView.delegate = self; // 不用时，置nil
+    _mapView.delegate = self;
+    
+    [self cleanMap];
+    CLLocationCoordinate2D coor;
+    coor.latitude=[self.Entity.Latitude floatValue];
+    coor.longitude=[self.Entity.Longitude floatValue];
+    BMKPointAnnotation* item = [[BMKPointAnnotation alloc] init];
+    item.coordinate = coor;
+    item.title=self.Entity.Address;
+    [_mapView addAnnotation:item];
+    [item release];
+    
 }
 - (void)viewDidLoad
 {
@@ -43,11 +55,24 @@
     [self.view addSubview:_mapView];
     
     _phoneView=[[CallPhoneView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height, self.view.bounds.size.width, 100)];
+    _phoneView.controlers=self;
     [self.view addSubview:_phoneView];
 }
+
 -(void)viewWillDisappear:(BOOL)animated {
     [_mapView viewWillDisappear];
     _mapView.delegate = nil; // 不用时，置nil
+    
+}
+-(void)cleanMap
+{
+    [_mapView removeOverlays:_mapView.overlays];
+    //[_mapView removeAnnotations:_mapView.annotations];
+    NSArray* array = [NSArray arrayWithArray:_mapView.annotations];
+    [_mapView removeAnnotations:array];
+}
+//拨打电话
+- (void)callWithPhone:(NSString*)phone{
     
 }
 //加载电话
@@ -100,5 +125,19 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
+#pragma mark -
+- (void)mapView:(BMKMapView *)mapView didSelectAnnotationView:(BMKAnnotationView *)view{
+    CGRect r=_phoneView.frame;
+    r.origin.y=self.view.bounds.size.height-r.size.height;
+    [UIView animateWithDuration:0.5f animations:^{
+        _phoneView.frame=r;
+    }];
+}
+- (void)mapView:(BMKMapView *)mapView didDeselectAnnotationView:(BMKAnnotationView *)view{
+    CGRect r=_phoneView.frame;
+    r.origin.y=self.view.bounds.size.height;
+    [UIView animateWithDuration:0.5f animations:^{
+        _phoneView.frame=r;
+    }];
+}
 @end

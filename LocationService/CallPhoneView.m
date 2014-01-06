@@ -98,7 +98,10 @@
 }
 //拨打电话
 - (void)buttonCallClick{
-    
+    if(self.controlers&&[self.controlers respondsToSelector:@selector(callWithPhone:)])
+    {
+        [self.controlers performSelector:@selector(callWithPhone:) withObject:self.labPhone.text];
+    }
 }
 /*
 // Only override drawRect: if you perform custom drawing.

@@ -85,7 +85,7 @@
     [_toolBar.submit setTitle:@"删除(0)" forState:UIControlStateNormal];
     [_toolBar.cancel setTitle:@"清空" forState:UIControlStateNormal];
     [_toolBar.cancel addTarget:self action:@selector(buttonCancelRemoveClick) forControlEvents:UIControlEventTouchUpInside];
-    [_toolBar.submit addTarget:self action:@selector(buttonSubmitRemoveClick) forControlEvents:UIControlEventTouchUpInside];
+    [_toolBar.submit addTarget:self action:@selector(buttonSubmitRemoveClick:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_toolBar];
     
     
@@ -145,8 +145,11 @@
     }
 
 }//删除
-- (void)buttonSubmitRemoveClick{
+- (void)buttonSubmitRemoveClick:(id)sender{
     if (self.removeList&&[self.removeList count]>0) {
+        
+        UIButton *btn=(UIButton*)sender;
+        btn.enabled=NO;
         
         NSMutableArray *delSource=[NSMutableArray array];
         for (NSString *sysid in self.removeList.allKeys) {
@@ -155,7 +158,6 @@
                 [delSource addObject:entity];
             }
         }
-        
         [self showLoadingAnimatedWithTitle:@"正在删除,请稍后..."];
         ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
         args.serviceURL=DataWebservice1;
@@ -168,19 +170,23 @@
                 NSDictionary *dic=(NSDictionary*)[result json];
                 if (dic!=nil&&[[dic objectForKey:@"Result"] isEqualToString:@"1"]) {
                     boo=YES;
-                    [self hideLoadingViewAnimated:^(AnimateLoadView *hideView) {
-                        [self.list removeObjectsInArray:delSource];
-                        [_tableView beginUpdates];
-                        [_tableView deleteRowsAtIndexPaths:[NSArray arrayWithArray:[self.removeList allValues]] withRowAnimation:UITableViewRowAnimationFade];
-                        [_tableView endUpdates];
-                        [self.removeList removeAllObjects];
-                    }];
+                    btn.enabled=YES;
+                    [self.list removeObjectsInArray:delSource];
+                    [_tableView beginUpdates];
+                    [_tableView deleteRowsAtIndexPaths:[NSArray arrayWithArray:[self.removeList allValues]] withRowAnimation:UITableViewRowAnimationFade];
+                    [_tableView endUpdates];
+                    [self.removeList removeAllObjects];
+                    [_toolBar.submit setTitle:@"删除(0)" forState:UIControlStateNormal];
+                    
+                    [self hideLoadingSuccessWithTitle:@"删除成功!" completed:nil];
                 }
             }
             if (!boo) {
+                btn.enabled=YES;
                 [self hideLoadingFailedWithTitle:@"删除失败!" completed:nil];
             }
         } failed:^(NSError *error, NSDictionary *userInfo) {
+            btn.enabled=YES;
             [self hideLoadingFailedWithTitle:@"删除失败!" completed:nil];
         }];
     }
@@ -267,7 +273,7 @@
             self.removeList=[NSMutableDictionary dictionary];
         }
         AreaCrawl *entity=self.list[indexPath.row];
-        [self.removeList setValue:[NSString stringWithFormat:@"%d",indexPath.row] forKey:entity.SysID];
+        [self.removeList setValue:indexPath forKey:entity.SysID];
         [_toolBar.submit setTitle:[NSString stringWithFormat:@"删除(%d)",self.removeList.count] forState:UIControlStateNormal];
     }
 }
