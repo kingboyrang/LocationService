@@ -42,6 +42,9 @@
     UIButton *btn=(UIButton*)sender;
     btn.selected=!btn.selected;
 }
+- (BOOL)hasSelected{
+    return _checkbox.selected;
+}
 - (void)setOpen:(BOOL)open{
     self.isOpen=open;
     _rightView.selected=open;

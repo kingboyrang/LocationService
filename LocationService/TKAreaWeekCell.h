@@ -10,6 +10,7 @@
 
 @interface TKAreaWeekCell : UITableViewCell{
 }
+@property (nonatomic,readonly) BOOL hasSelected;
 @property (nonatomic,assign) BOOL isOpen;
 @property (nonatomic,strong) UIButton *checkbox;
 @property (nonatomic,strong) UILabel *label;

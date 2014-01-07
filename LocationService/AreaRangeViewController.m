@@ -21,6 +21,8 @@
     UITableView *_tableView;
 }
 - (int)getCellRow:(TKAreaRangeCell*)cell;
+- (NSString*)RuleDataXml;
+- (NSDictionary*)getRuleTimeXml;
 @end
 
 @implementation AreaRangeViewController
@@ -128,6 +130,35 @@
     }
     return total;
 }
+- (NSDictionary*)getRuleTimeXml{
+    NSMutableDictionary *dic=[NSMutableDictionary dictionary];
+    for (int i=0; i<self.cells.count; i++) {
+        if ([self.cells[i] isKindOfClass:[TKAreaWeekCell class]]) {
+            TKAreaWeekCell *cell=self.cells[i];
+            [dic setValue:cell.hasSelected?@"1":@"0" forKey:[NSString stringWithFormat:@"%d",cell.index]];
+        }
+    }
+    return dic;
+}
+- (NSString*)RuleDataXml{
+    NSMutableString *xml=[NSMutableString stringWithFormat:@"<string>%@</string>",self.AreaId];
+    [xml appendFormat:@"<string>%@</string>",_sCalendar.popoverText.popoverTextField.text];
+    [xml appendFormat:@"<string>%@</string>",_eCalendar.popoverText.popoverTextField.text];
+    
+    NSDictionary *dic=[self getRuleTimeXml];
+    
+    [xml appendFormat:@"<string>%@</string>",[dic objectForKey:@"6"]];//星期天
+    [xml appendFormat:@"<string>%@</string>",[dic objectForKey:@"0"]];//星期一
+    [xml appendFormat:@"<string>%@</string>",[dic objectForKey:@"1"]];//星期二
+    [xml appendFormat:@"<string>%@</string>",[dic objectForKey:@"2"]];//星期三
+    [xml appendFormat:@"<string>%@</string>",[dic objectForKey:@"3"]];//星期四
+    [xml appendFormat:@"<string>%@</string>",[dic objectForKey:@"4"]];//星期五
+    [xml appendFormat:@"<string>%@</string>",[dic objectForKey:@"5"]];//星期六
+    
+    [xml appendFormat:@"<string>%@</string>",self.RuleId];
+    return xml;
+    
+}
 //新增行
 - (void)buttonAddRowClick:(id)sender{
     UIButton *btn=(UIButton*)sender;
@@ -195,7 +226,7 @@
     
     Account *acc=[Account unarchiverAccount];
     NSMutableArray *params=[NSMutableArray array];
-    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"",@"RuleData", nil]];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[self RuleDataXml],@"RuleData", nil]];
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"",@"EnableDay", nil]];
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:acc.WorkNo,@"Workno", nil]];
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"",@"CompanyID", nil]];
