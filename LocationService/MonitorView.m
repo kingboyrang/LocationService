@@ -7,7 +7,8 @@
 //
 
 #import "MonitorView.h"
-
+#import "UIButton+WebCache.h"
+#import "UIImage+TPCategory.h"
 @implementation MonitorView
 
 - (id)initWithFrame:(CGRect)frame
@@ -28,6 +29,18 @@
     self.labPhone.text=entity.SimNo;
     self.labPhone.font=[UIFont fontWithName:DeviceFontName size:DeviceFontSize];
     self.labPhone.textColor=[UIColor blackColor];
+    
+   
+    [self.headImage setImageWithURL:[NSURL URLWithString:entity.Photo] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"bg02.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+        if (image) {
+            if (image.size.width>90||image.size.height>104) {
+                [self.headImage setImage:[image imageByScalingToSize:CGSizeMake(90, 104)] forState:UIControlStateNormal];
+            }else{
+               [self.headImage setImage:image forState:UIControlStateNormal];
+            }
+        }
+    }];
+    //Photo
 }
 
 - (void)dealloc {

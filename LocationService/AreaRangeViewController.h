@@ -10,6 +10,8 @@
 
 @interface AreaRangeViewController : BasicViewController
 @property(nonatomic,copy) NSString *AreaName;
+@property(nonatomic,copy) NSString *AreaId;
+@property(nonatomic,copy) NSString *RuleId;
 @property(nonatomic,retain) NSMutableArray *cells;
 @property(nonatomic,retain) NSMutableDictionary *cellChilds;
 @end

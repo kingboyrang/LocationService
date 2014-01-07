@@ -12,16 +12,24 @@
 #import "LoginButtons.h"
 #import "TKAreaWeekCell.h"
 #import "TKAreaRangeCell.h"
+#import "Account.h"
+#import "AlertHelper.h"
 #define  dicWeeks [NSDictionary dictionaryWithObjectsAndKeys:@"一",@"1",@"二",@"2",@"三",@"3",@"四",@"4",@"五",@"5",@"六",@"6",@"日",@"7", nil]
 @interface AreaRangeViewController ()<UITableViewDataSource,UITableViewDelegate>{
     CVUICalendar *_sCalendar;
     CVUICalendar *_eCalendar;
     UITableView *_tableView;
 }
+- (int)getCellRow:(TKAreaRangeCell*)cell;
 @end
 
 @implementation AreaRangeViewController
-
+- (void)dealloc{
+    [super dealloc];
+    [_sCalendar release];
+    [_eCalendar release];
+    [_tableView release];
+}
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -54,13 +62,16 @@
     [bgView release];
     
     topY+=30+5;
-    _sCalendar=[[CVUICalendar alloc] initWithFrame:CGRectMake(8, topY, 149, 35)];
+    CGFloat lefxt=(self.view.bounds.size.width-149*2)/3;
+    _sCalendar=[[CVUICalendar alloc] initWithFrame:CGRectMake(lefxt, topY, 149, 35)];
     _sCalendar.popoverText.popoverTextField.placeholder=@"开始时间";
+    _sCalendar.popoverText.popoverTextField.borderStyle=UITextBorderStyleRoundedRect;
     [self.view addSubview:_sCalendar];
     
 
-    _eCalendar=[[CVUICalendar alloc] initWithFrame:CGRectMake(self.view.bounds.size.width-2*_sCalendar.frame.size.width-2*_sCalendar.frame.origin.x, topY, 149, 35)];
+    _eCalendar=[[CVUICalendar alloc] initWithFrame:CGRectMake(_sCalendar.frame.size.width+_sCalendar.frame.origin.x+lefxt, topY, 149, 35)];
      _eCalendar.popoverText.popoverTextField.placeholder=@"结果时间";
+    _eCalendar.popoverText.popoverTextField.borderStyle=UITextBorderStyleRoundedRect;
     [self.view addSubview:_eCalendar];
     topY+=35+5;
     
@@ -99,12 +110,24 @@
         cell1.deleteButton.hidden=YES;
         cell1.index=i;
         [cell1.button addTarget:self action:@selector(buttonAddRowClick:) forControlEvents:UIControlEventTouchUpInside];
-        [self.cellChilds setValue:[NSArray arrayWithObjects:cell1, nil] forKey:[NSString stringWithFormat:@"%d",i]];
+        [self.cellChilds setValue:[NSMutableArray arrayWithObjects:cell1, nil] forKey:[NSString stringWithFormat:@"%d",i]];
         [cell1 release];
     }
     
 }
-
+- (int)getCellRow:(TKAreaRangeCell*)cell{
+    NSIndexPath *indexPath=[_tableView indexPathForCell:cell];
+    int row=indexPath.row-1;
+    id v=self.cells[row];
+    int total=0;
+    
+    while (![v isKindOfClass:[TKAreaWeekCell class]]) {
+        row--;
+        v=self.cells[row];
+        total++;
+    }
+    return total;
+}
 //新增行
 - (void)buttonAddRowClick:(id)sender{
     UIButton *btn=(UIButton*)sender;
@@ -117,10 +140,11 @@
 
     NSString *key=[NSString stringWithFormat:@"%d",cell.index];
     NSMutableArray *source=[self.cellChilds objectForKey:key];
+    
     TKAreaRangeCell *cell1=[[TKAreaRangeCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
     cell1.button.hidden=YES;
     cell1.index=cell.index;
-    [cell1.button addTarget:self action:@selector(buttonDeleteRowClick:) forControlEvents:UIControlEventTouchUpInside];
+    [cell1.deleteButton addTarget:self action:@selector(buttonDeleteRowClick:) forControlEvents:UIControlEventTouchUpInside];
     [source addObject:cell1];
     [cell1 release];
     
@@ -146,6 +170,7 @@
     
     NSString *key=[NSString stringWithFormat:@"%d",cell.index];
     NSMutableArray *source=[self.cellChilds objectForKey:key];
+    [source removeObjectAtIndex:[self getCellRow:cell]];
     //删除
     [self.cells removeObjectAtIndex:indexPath.row];
     [_tableView beginUpdates];
@@ -159,6 +184,47 @@
 //完成
 - (void)buttonSubmitClick:(id)sender{
     
+    if ([_sCalendar.popoverText.popoverTextField.text length]==0) {
+        [AlertHelper initWithTitle:@"提示" message:@"请选择有限日期开始时间!"];
+        return;
+    }
+    if ([_eCalendar.popoverText.popoverTextField.text length]==0) {
+        [AlertHelper initWithTitle:@"提示" message:@"请选择有限日期结速时间!"];
+        return;
+    }
+    
+    Account *acc=[Account unarchiverAccount];
+    NSMutableArray *params=[NSMutableArray array];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"",@"RuleData", nil]];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"",@"EnableDay", nil]];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:acc.WorkNo,@"Workno", nil]];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"",@"CompanyID", nil]];
+    
+    ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
+    args.serviceURL=DataWebservice1;
+    args.serviceNameSpace=DataNameSpace1;
+    args.methodName=@"SaveRuleDateAndTime";
+    args.soapParams=params;
+    [self showLoadingAnimatedWithTitle:@"正在执行,请稍后..."];
+    [self.serviceHelper asynService:args success:^(ServiceResult *result) {
+        BOOL boo=NO;
+        NSDictionary *dic=[result json];
+        if(dic!=nil)
+        {
+            if([[dic objectForKey:@"Result"] isEqualToString:@"Success"])
+            {
+                boo=YES;
+                [self hideLoadingViewAnimated:^(AnimateLoadView *hideView) {
+                     [self.navigationController popToViewController:[[self.navigationController viewControllers] objectAtIndex:1] animated:YES];
+                }];
+            }
+        }
+        if (!boo) {
+            [self hideLoadingFailedWithTitle:@"完成失败!" completed:nil];
+        }
+    } failed:^(NSError *error, NSDictionary *userInfo) {
+        [self hideLoadingFailedWithTitle:@"完成失败!" completed:nil];
+    }];
 }
 - (void)didReceiveMemoryWarning
 {
@@ -177,6 +243,7 @@
     return cell;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     TKAreaWeekCell *cell=self.cells[indexPath.row];
     NSString *key=[NSString stringWithFormat:@"%d",cell.index];
     NSArray *source=[self.cellChilds objectForKey:key];
@@ -185,8 +252,7 @@
         NSMutableArray *indexPaths=[NSMutableArray array];
         for (int i=0; i<source.count; i++) {
             [self.cells removeObjectAtIndex:indexPath.row+i+1];
-            NSIndexPath *indexPath=[NSIndexPath indexPathForRow:indexPath.row+i+1 inSection:0];
-            [indexPaths addObject:indexPath];
+            [indexPaths addObject:[NSIndexPath indexPathForRow:indexPath.row+i+1 inSection:0]];
         }
         [_tableView beginUpdates];
         [_tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
@@ -196,8 +262,7 @@
         NSMutableArray *indexPaths=[NSMutableArray array];
         for (int i=0; i<source.count; i++) {
             [self.cells insertObject:[source objectAtIndex:i] atIndex:indexPath.row+i+1];
-            NSIndexPath *indexPath=[NSIndexPath indexPathForRow:indexPath.row+i+1 inSection:0];
-            [indexPaths addObject:indexPath];
+            [indexPaths addObject:[NSIndexPath indexPathForRow:indexPath.row+i+1 inSection:0]];
         }
         [_tableView beginUpdates];
         [_tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];

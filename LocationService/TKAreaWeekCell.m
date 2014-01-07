@@ -18,6 +18,7 @@
     _checkbox.frame=CGRectMake(0, 0, image.size.width, image.size.height);
     [_checkbox setImage:image forState:UIControlStateNormal];
     [_checkbox setImage:[UIImage imageNamed:@"checkbox-checked.png"] forState:UIControlStateSelected];
+    [_checkbox addTarget:self action:@selector(buttonCheckboxClick:) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_checkbox];
     
     _label=[[UILabel alloc] initWithFrame:CGRectZero];
@@ -36,6 +37,10 @@
 }
 - (id) initWithFrame:(CGRect)frame reuseIdentifier:(NSString *)reuseIdentifier {
 	return [self initWithStyle:UITableViewCellStyleDefault  reuseIdentifier:reuseIdentifier];
+}
+- (void)buttonCheckboxClick:(id)sender{
+    UIButton *btn=(UIButton*)sender;
+    btn.selected=!btn.selected;
 }
 - (void)setOpen:(BOOL)open{
     self.isOpen=open;

@@ -119,20 +119,24 @@
     args.serviceNameSpace=DataNameSpace1;
     args.methodName=@"GetOneAreaLatLng";
     args.soapParams=params;
-    // NSLog(@"soap=%@",args.soapMessage);
+    [self showLoadingAnimatedWithTitle:@"正在加载,请稍后..."];
     [self.serviceHelper asynService:args success:^(ServiceResult *result) {
-        //NSLog(@"xml=%@",result.request.responseString);
+        BOOL boo=NO;
         if (result.hasSuccess) {
             NSDictionary *dic=[result json];
             if (dic!=nil) {
                 NSArray *arr=[dic objectForKey:@"AreaLatLngList"];
                 if (arr&&[arr count]>0) {//加载信息
+                    boo=YES;
+                    [self hideLoadingViewAnimated:nil];
                    self.AreaSource=[arr objectAtIndex:0];
                     CLLocationCoordinate2D coor;
                     coor.latitude = [[self.AreaSource objectForKey:@"Lat"] floatValue];
                     coor.longitude = [[self.AreaSource objectForKey:@"Lng"] floatValue];
                     
                     _silder.value=[[self.AreaSource objectForKey:@"CircleRedius"] floatValue]/10;
+                    int meter=(int)_silder.value*10;
+                    _labDistance.text=[NSString stringWithFormat:@"%d米",meter];
                     
                     BMKPointAnnotation  *pointAnnotation = [[[BMKPointAnnotation alloc] init] autorelease];
                     pointAnnotation.coordinate =coor;
@@ -143,8 +147,14 @@
                 }
             }
         }
+        if(!boo)
+        {
+           [self hideLoadingFailedWithTitle:@"加载失败!" completed:nil];
+        }
         
-    } failed:nil];
+    } failed:^(NSError *error, NSDictionary *userInfo) {
+         [self hideLoadingFailedWithTitle:@"加载失败!" completed:nil];
+    }];
     
 }
 - (void)editAreaCompleted:(void(^)(NSString* areaId))completed{
@@ -159,7 +169,7 @@
     NSMutableArray *params=[NSMutableArray array];
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:_areaPaoView.field.text,@"AreaName", nil]];
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:self.AreaId,@"theGUID", nil]];
-    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%f",_silder.value],@"CircleRedius", nil]];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%f",_silder.value*10],@"CircleRedius", nil]];
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:acc.WorkNo,@"Workno", nil]];
     
     ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
@@ -205,7 +215,7 @@
     if (self.operateType==1) {//新增
         [self addAreaCompleted:^(NSString *areaId) {
             AreaRuleViewController *areaRange=[[AreaRuleViewController alloc] init];
-            areaRange.operateType=1;
+            //areaRange.operateType=1;
             areaRange.AreaId=areaId;
             areaRange.AreaName=_areaPaoView.field.text;
             [self.navigationController pushViewController:areaRange animated:YES];
@@ -214,7 +224,7 @@
     }else{//修改
         [self editAreaCompleted:^(NSString *areaId) {
             AreaRuleViewController *areaRange=[[AreaRuleViewController alloc] init];
-            areaRange.operateType=2;
+            //areaRange.operateType=2;
             areaRange.AreaId=areaId;
             areaRange.AreaName=_areaPaoView.field.text;
             [self.navigationController pushViewController:areaRange animated:YES];
@@ -230,7 +240,7 @@
         return;
     }
     
-    NSString *latlng=[NSString stringWithFormat:@"%f$%f",_coordinate.latitude,_coordinate.longitude];
+    NSString *latlng=[NSString stringWithFormat:@"%f,%f",_coordinate.latitude,_coordinate.longitude];
     Account *acc=[Account unarchiverAccount];
     NSMutableArray *params=[NSMutableArray array];
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:_areaPaoView.field.text,@"AreaName", nil]];
@@ -245,10 +255,8 @@
     args.serviceNameSpace=DataNameSpace1;
     args.methodName=@"AddArea";
     args.soapParams=params;
-     NSLog(@"soap=%@",args.soapMessage);
     [self showLoadingAnimatedWithTitle:@"正在新增,请稍后..."];
     [self.serviceHelper asynService:args success:^(ServiceResult *result) {
-        NSLog(@"xml=%@",result.xmlString);
         BOOL boo=NO;
         if (result.hasSuccess) {
             NSDictionary *dic=[result json];

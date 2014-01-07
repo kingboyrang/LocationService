@@ -158,10 +158,20 @@
 //创建自定义tabBar
 - (void)_initTabbarView {
     _tabbarView = [[UIView alloc] initWithFrame:CGRectMake(0, DeviceHeight-TabHeight, DeviceWidth, TabHeight)];
-    _tabbarView.backgroundColor=[UIColor redColor];
+    _tabbarView.backgroundColor=[UIColor colorFromHexRGB:@"f6f6f6"];
     _tabbarView.autoresizesSubviews=YES;
     _tabbarView.autoresizingMask=UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleTopMargin;
     [self.view addSubview:_tabbarView];
+    
+    /***
+    UIImage *image=[UIImage imageNamed:@"logintop.jpg"];
+    UIImageView *imageView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, image.size.width, image.size.height)];
+    [imageView setImage:image];
+    [_tabbarView addSubview:imageView];
+     ***/
+
+    
+    
     NSArray *backgroud = @[@"ico01.png",@"ico02.png",@"ico03.png",@"ico04.png",@"ico05.png"];
     NSArray *heightBackground= @[@"ico01f.png",@"ico02f.png",@"ico03f.png",@"ico04f.png",@"ico05f.png"];
     

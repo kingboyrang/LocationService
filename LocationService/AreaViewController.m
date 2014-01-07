@@ -12,6 +12,7 @@
 #import "AppHelper.h"
 #import "LoginButtons.h"
 #import "ModifyAreaViewController.h"
+#import "AreaRangeViewController.h"
 @interface AreaViewController ()<UITableViewDataSource,UITableViewDelegate>{
     UITableView *_tableView;
     LoginButtons *_toolBar;
@@ -193,6 +194,12 @@
 }
 //新增
 - (void)buttonAddClick{
+    AreaRangeViewController *range=[[AreaRangeViewController alloc] init];
+    range.AreaName=@"清湖市场";
+    [self.navigationController pushViewController:range animated:YES];
+    [range release];
+    return;
+    
     ModifyAreaViewController *modify=[[ModifyAreaViewController alloc] init];
     modify.operateType=1;//新增
     [self.navigationController pushViewController:modify animated:YES];

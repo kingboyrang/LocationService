@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface TKAreaRangeCell : UITableViewCell{
+@interface TKAreaRangeCell : UITableViewCell<UITextFieldDelegate>{
 @private UILabel *_labLine;
 }
 @property (nonatomic,strong) UITextField *startField;

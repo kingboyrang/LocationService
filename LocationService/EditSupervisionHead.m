@@ -142,6 +142,7 @@
         args.serviceNameSpace=DataNameSpace1;
         args.methodName=@"UpImage";
         args.soapParams=params;
+        //NSLog(@"soap=%@",args.soapMessage);
         [self.serviceHelper asynService:args success:^(ServiceResult *result) {
             BOOL boo=NO;
             NSString *name=@"";

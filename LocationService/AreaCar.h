@@ -13,6 +13,6 @@
 @property(nonatomic,copy) NSString *Name;//"祝文涛",  --目标名称
 @property(nonatomic,copy) NSString *IDCard;//"42dd7a24-3048-4211-9f86-90c785cc319f", --设备ID
 @property(nonatomic,copy) NSString *PType;//"C" –类型
-@property(nonatomic,copy) NSString *Phot;//头像
+@property(nonatomic,copy) NSString *Photo;//头像
 
 @end

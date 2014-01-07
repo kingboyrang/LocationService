@@ -19,6 +19,7 @@
     _startField=[[UITextField alloc] initWithFrame:CGRectZero];
     _startField.borderStyle=UITextBorderStyleRoundedRect;
     _startField.contentVerticalAlignment=UIControlContentVerticalAlignmentCenter;
+    _startField.delegate=self;
     [self.contentView addSubview:_startField];
     
     NSString *title=@"~";
@@ -33,6 +34,7 @@
     _endField=[[UITextField alloc] initWithFrame:CGRectZero];
     _endField.borderStyle=UITextBorderStyleRoundedRect;
     _endField.contentVerticalAlignment=UIControlContentVerticalAlignmentCenter;
+    _endField.delegate=self;
     [self.contentView addSubview:_endField];
     
     //_addButton=[UIButton buttonWithType:UIButtonTypeContactAdd];
@@ -54,6 +56,11 @@
 
 - (id) initWithFrame:(CGRect)frame reuseIdentifier:(NSString *)reuseIdentifier {
 	return [self initWithStyle:UITableViewCellStyleDefault  reuseIdentifier:reuseIdentifier];
+}
+#pragma mark - field delegate Methods
+- (BOOL)textFieldShouldReturn:(UITextField *)textField{
+    [textField resignFirstResponder];
+    return YES;
 }
 - (void)layoutSubviews{
     [super layoutSubviews];

@@ -44,7 +44,7 @@
     [super viewDidLoad];
     CGRect r=self.view.bounds;
     r.origin.y=44;
-    r.size.height-=82+44;
+    r.size.height-=TabHeight+44;
     _mapView= [[BMKMapView alloc]initWithFrame:r];
     [self.view addSubview:_mapView];
     
@@ -91,8 +91,8 @@
     [self.serviceHelper asynService:args success:^(ServiceResult *result) {
         BOOL boo=NO;
         if (result.hasSuccess) {
-            XmlNode *node=[result methodNode];
-            NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:[node.InnerText dataUsingEncoding:NSUTF8StringEncoding] options:1 error:nil];
+           
+            NSDictionary *dic=[result json];
             NSArray *source=[dic objectForKey:@"Person"];
             self.cells=[NSMutableArray arrayWithArray:[AppHelper arrayWithSource:source className:@"SupervisionPerson"]];
             if (self.cells&&[self.cells count]>0) {
