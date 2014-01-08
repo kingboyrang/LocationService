@@ -15,5 +15,6 @@
 @property(nonatomic,retain) UIDatePicker *datePicker;
 @property(nonatomic,retain,setter = setDateForFormat:) NSDateFormatter *dateForFormat;
 @property(nonatomic,retain) CVUIPopoverView *popoverView;
+@property(nonatomic,assign) BOOL isClearEmpty;
 -(void)setDateForFormat:(NSDateFormatter *)format;
 @end

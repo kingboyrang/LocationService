@@ -27,7 +27,7 @@
     if (self) {
         // Initialization code
         [self loadControl:frame];
-                
+        self.isClearEmpty=YES;
     }
     return self;
 }
@@ -58,11 +58,13 @@
 -(void)showPopoverView{
    [self setCalendarValue];//赋值
 }
--(void)donePopoverView{
-    self.popoverText.popoverTextField.text  =[self.dateForFormat stringFromDate:self.datePicker.date];
+-(void)donePopoverView{//确认事件赋值
+    self.popoverText.popoverTextField.text=[self.dateForFormat stringFromDate:self.datePicker.date];
 }
 -(void)clearPopoverView{
-    self.popoverText.popoverTextField.text=@"";
+    if (self.isClearEmpty) {
+        self.popoverText.popoverTextField.text=@"";
+    }
 }
 #pragma mark -
 #pragma mark 私有方法

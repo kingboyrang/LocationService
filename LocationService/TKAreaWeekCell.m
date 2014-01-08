@@ -45,6 +45,9 @@
 - (BOOL)hasSelected{
     return _checkbox.selected;
 }
+- (void)setSelectedWeek:(BOOL)selected{
+    _checkbox.selected=selected;
+}
 - (void)setOpen:(BOOL)open{
     self.isOpen=open;
     _rightView.selected=open;

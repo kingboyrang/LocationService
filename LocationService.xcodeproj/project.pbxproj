@@ -75,7 +75,6 @@
 		016924CD1862984C0040E0C9 /* LoginButtons.m in Sources */ = {isa = PBXBuildFile; fileRef = 016924CC1862984C0040E0C9 /* LoginButtons.m */; };
 		016924CF1862A33C0040E0C9 /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 016924CE1862A33C0040E0C9 /* Entitlements.plist */; };
 		017C2292187511DF00FBF95D /* KYPointAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 017C228F187511DF00FBF95D /* KYPointAnnotation.m */; };
-		017C2293187511DF00FBF95D /* KYBubbleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 017C2291187511DF00FBF95D /* KYBubbleView.m */; };
 		0189889A185FD8E10073B253 /* LoginWay.m in Sources */ = {isa = PBXBuildFile; fileRef = 01898899185FD8E10073B253 /* LoginWay.m */; };
 		0189889E185FE0990073B253 /* BasicViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0189889D185FE0990073B253 /* BasicViewController.m */; };
 		018988A0185FE1710073B253 /* logintop.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 0189889F185FE1710073B253 /* logintop.jpg */; };
@@ -190,7 +189,6 @@
 		01C0AA15186D547800F8A250 /* AreaViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01C0AA14186D547800F8A250 /* AreaViewController.m */; };
 		01C0AA18186D6C5200F8A250 /* InnerBasicViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01C0AA17186D6C5200F8A250 /* InnerBasicViewController.m */; };
 		01C0AA1C186D708400F8A250 /* OnlineMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01C0AA1B186D708400F8A250 /* OnlineMapViewController.m */; };
-		01C170F2187A8B7600CE62DD /* RangeWeekView.m in Sources */ = {isa = PBXBuildFile; fileRef = 01C170F1187A8B7600CE62DD /* RangeWeekView.m */; };
 		01C170F6187AA47A00CE62DD /* TKAreaWeekCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 01C170F5187AA47900CE62DD /* TKAreaWeekCell.m */; };
 		01C5FB83186C1101009986BF /* TrajectoryMessageController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01C5FB82186C1101009986BF /* TrajectoryMessageController.m */; };
 		01C5FB86186C1173009986BF /* TrajectoryMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 01C5FB85186C1173009986BF /* TrajectoryMessage.m */; };
@@ -220,6 +218,7 @@
 		01F994D01867E97F00FEC0F2 /* ico09.png in Resources */ = {isa = PBXBuildFile; fileRef = 01F994CA1867E97F00FEC0F2 /* ico09.png */; };
 		01F994D11867E97F00FEC0F2 /* ico10.png in Resources */ = {isa = PBXBuildFile; fileRef = 01F994CB1867E97F00FEC0F2 /* ico10.png */; };
 		01F994D21867E97F00FEC0F2 /* ico11.png in Resources */ = {isa = PBXBuildFile; fileRef = 01F994CC1867E97F00FEC0F2 /* ico11.png */; };
+		01FB5E2D187CECFA0025ADC7 /* AreaTimeSpan.m in Sources */ = {isa = PBXBuildFile; fileRef = 01FB5E2C187CECFA0025ADC7 /* AreaTimeSpan.m */; };
 		01FCBDFB186ABE1C000835D4 /* EditSupervisionHead.m in Sources */ = {isa = PBXBuildFile; fileRef = 01FCBDFA186ABE1C000835D4 /* EditSupervisionHead.m */; };
 		01FCBE1B186AC35A000835D4 /* NSData+GIF.m in Sources */ = {isa = PBXBuildFile; fileRef = 01FCBE01186AC35A000835D4 /* NSData+GIF.m */; };
 		01FCBE1C186AC35A000835D4 /* SDImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 01FCBE03186AC35A000835D4 /* SDImageCache.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
@@ -342,8 +341,6 @@
 		016924CE1862A33C0040E0C9 /* Entitlements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Entitlements.plist; sourceTree = "<group>"; };
 		017C228E187511DF00FBF95D /* KYPointAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KYPointAnnotation.h; sourceTree = "<group>"; };
 		017C228F187511DF00FBF95D /* KYPointAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KYPointAnnotation.m; sourceTree = "<group>"; };
-		017C2290187511DF00FBF95D /* KYBubbleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KYBubbleView.h; sourceTree = "<group>"; };
-		017C2291187511DF00FBF95D /* KYBubbleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KYBubbleView.m; sourceTree = "<group>"; };
 		01898898185FD8E10073B253 /* LoginWay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginWay.h; sourceTree = "<group>"; };
 		01898899185FD8E10073B253 /* LoginWay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginWay.m; sourceTree = "<group>"; };
 		0189889C185FE0990073B253 /* BasicViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BasicViewController.h; sourceTree = "<group>"; };
@@ -546,8 +543,6 @@
 		01C0AA17186D6C5200F8A250 /* InnerBasicViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InnerBasicViewController.m; sourceTree = "<group>"; };
 		01C0AA1A186D708400F8A250 /* OnlineMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OnlineMapViewController.h; sourceTree = "<group>"; };
 		01C0AA1B186D708400F8A250 /* OnlineMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OnlineMapViewController.m; sourceTree = "<group>"; };
-		01C170F0187A8B7600CE62DD /* RangeWeekView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RangeWeekView.h; sourceTree = "<group>"; };
-		01C170F1187A8B7600CE62DD /* RangeWeekView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RangeWeekView.m; sourceTree = "<group>"; };
 		01C170F4187AA47900CE62DD /* TKAreaWeekCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TKAreaWeekCell.h; sourceTree = "<group>"; };
 		01C170F5187AA47900CE62DD /* TKAreaWeekCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TKAreaWeekCell.m; sourceTree = "<group>"; };
 		01C5FB81186C1101009986BF /* TrajectoryMessageController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrajectoryMessageController.h; sourceTree = "<group>"; };
@@ -627,6 +622,8 @@
 		01F994CA1867E97F00FEC0F2 /* ico09.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ico09.png; sourceTree = "<group>"; };
 		01F994CB1867E97F00FEC0F2 /* ico10.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ico10.png; sourceTree = "<group>"; };
 		01F994CC1867E97F00FEC0F2 /* ico11.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ico11.png; sourceTree = "<group>"; };
+		01FB5E2B187CECFA0025ADC7 /* AreaTimeSpan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AreaTimeSpan.h; sourceTree = "<group>"; };
+		01FB5E2C187CECFA0025ADC7 /* AreaTimeSpan.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AreaTimeSpan.m; sourceTree = "<group>"; };
 		01FCBDF9186ABE1C000835D4 /* EditSupervisionHead.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditSupervisionHead.h; sourceTree = "<group>"; };
 		01FCBDFA186ABE1C000835D4 /* EditSupervisionHead.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditSupervisionHead.m; sourceTree = "<group>"; };
 		01FCBE00186AC35A000835D4 /* NSData+GIF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+GIF.h"; sourceTree = "<group>"; };
@@ -714,6 +711,8 @@
 				01C0AA10186D538F00F8A250 /* AreaCrawl.m */,
 				01E9CBA618756B44005F330A /* AreaCar.h */,
 				01E9CBA718756B44005F330A /* AreaCar.m */,
+				01FB5E2B187CECFA0025ADC7 /* AreaTimeSpan.h */,
+				01FB5E2C187CECFA0025ADC7 /* AreaTimeSpan.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -855,16 +854,12 @@
 			children = (
 				017C228E187511DF00FBF95D /* KYPointAnnotation.h */,
 				017C228F187511DF00FBF95D /* KYPointAnnotation.m */,
-				017C2290187511DF00FBF95D /* KYBubbleView.h */,
-				017C2291187511DF00FBF95D /* KYBubbleView.m */,
 				01B483D018755E2D005D4DD9 /* RangHeader.h */,
 				01B483D118755E2E005D4DD9 /* RangHeader.m */,
 				0146926B187669BD003664BE /* AreaPaoView.h */,
 				0146926C187669BD003664BE /* AreaPaoView.m */,
 				01BD3A2A187A616400B2F513 /* TKAreaRangeCell.h */,
 				01BD3A2B187A616500B2F513 /* TKAreaRangeCell.m */,
-				01C170F0187A8B7600CE62DD /* RangeWeekView.h */,
-				01C170F1187A8B7600CE62DD /* RangeWeekView.m */,
 				01C170F4187AA47900CE62DD /* TKAreaWeekCell.h */,
 				01C170F5187AA47900CE62DD /* TKAreaWeekCell.m */,
 			);
@@ -1691,7 +1686,6 @@
 				01BE401B185EB0B8005C25D9 /* NSData+TPCategory.m in Sources */,
 				016924C018618DE60040E0C9 /* WBBlueGradientView.m in Sources */,
 				016924C118618DE60040E0C9 /* WBErrorNoticeView.m in Sources */,
-				017C2293187511DF00FBF95D /* KYBubbleView.m in Sources */,
 				018988C91860241E0073B253 /* TKRegisterCheckCell.m in Sources */,
 				01BE401C185EB0B8005C25D9 /* UIImage+TPCategory.m in Sources */,
 				01BE401D185EB0B8005C25D9 /* UIColor+TPCategory.m in Sources */,
@@ -1778,8 +1772,8 @@
 				01BD3A1E1879647900B2F513 /* SimpleSwitch.m in Sources */,
 				01BD3A21187A41D600B2F513 /* TelephoneViewController.m in Sources */,
 				01BD3A2C187A616600B2F513 /* TKAreaRangeCell.m in Sources */,
-				01C170F2187A8B7600CE62DD /* RangeWeekView.m in Sources */,
 				01C170F6187AA47A00CE62DD /* TKAreaWeekCell.m in Sources */,
+				01FB5E2D187CECFA0025ADC7 /* AreaTimeSpan.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

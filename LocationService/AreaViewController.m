@@ -63,7 +63,6 @@
             [self.navBarView addSubview:btn];
         }
     }
-    
     [self loadingArea];//重新加载资料
 
 }
@@ -194,12 +193,13 @@
 }
 //新增
 - (void)buttonAddClick{
+   /***
     AreaRangeViewController *range=[[AreaRangeViewController alloc] init];
     range.AreaName=@"清湖市场";
     [self.navigationController pushViewController:range animated:YES];
     [range release];
     return;
-    
+      **/
     ModifyAreaViewController *modify=[[ModifyAreaViewController alloc] init];
     modify.operateType=1;//新增
     [self.navigationController pushViewController:modify animated:YES];

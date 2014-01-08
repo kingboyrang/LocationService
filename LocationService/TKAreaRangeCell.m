@@ -16,10 +16,12 @@
 - (id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
 	if(!(self=[super initWithStyle:style reuseIdentifier:reuseIdentifier])) return nil;
     
-    _startField=[[UITextField alloc] initWithFrame:CGRectZero];
-    _startField.borderStyle=UITextBorderStyleRoundedRect;
-    _startField.contentVerticalAlignment=UIControlContentVerticalAlignmentCenter;
-    _startField.delegate=self;
+    _startField=[[CVUICalendar alloc] initWithFrame:CGRectZero];
+    _startField.datePicker.datePickerMode=UIDatePickerModeTime;
+    [_startField.dateForFormat setDateFormat:@"HH:mm"];
+    //_startField.borderStyle=UITextBorderStyleRoundedRect;
+    //_startField.contentVerticalAlignment=UIControlContentVerticalAlignmentCenter;
+    //_startField.delegate=self;
     [self.contentView addSubview:_startField];
     
     NSString *title=@"~";
@@ -31,10 +33,9 @@
     _labLine.font=[UIFont fontWithName:DeviceFontName size:DeviceFontSize];
     [self.contentView addSubview:_labLine];
     
-    _endField=[[UITextField alloc] initWithFrame:CGRectZero];
-    _endField.borderStyle=UITextBorderStyleRoundedRect;
-    _endField.contentVerticalAlignment=UIControlContentVerticalAlignmentCenter;
-    _endField.delegate=self;
+    _endField=[[CVUICalendar alloc] initWithFrame:CGRectZero];
+    _endField.datePicker.datePickerMode=UIDatePickerModeTime;
+    [_endField.dateForFormat setDateFormat:@"HH:mm"];
     [self.contentView addSubview:_endField];
     
     //_addButton=[UIButton buttonWithType:UIButtonTypeContactAdd];
@@ -56,6 +57,14 @@
 
 - (id) initWithFrame:(CGRect)frame reuseIdentifier:(NSString *)reuseIdentifier {
 	return [self initWithStyle:UITableViewCellStyleDefault  reuseIdentifier:reuseIdentifier];
+}
+- (NSString*)timeSlot{
+    NSString *str1=[_startField.popoverText.popoverTextField.text Trim];
+    NSString *str2=[_endField.popoverText.popoverTextField.text Trim];
+    if ([str1 length]>0&&[str2 length]>0) {
+        return [NSString stringWithFormat:@"%@~%@",str1,str2];
+    }
+    return @"";
 }
 #pragma mark - field delegate Methods
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{

@@ -7,13 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
-
-@interface TKAreaRangeCell : UITableViewCell<UITextFieldDelegate>{
+#import "CVUICalendar.h"
+@interface TKAreaRangeCell : UITableViewCell{
 @private UILabel *_labLine;
 }
-@property (nonatomic,strong) UITextField *startField;
-@property (nonatomic,strong) UITextField *endField;
+@property (nonatomic,strong) CVUICalendar *startField;
+@property (nonatomic,strong) CVUICalendar *endField;
 @property (nonatomic,strong) UIButton *button;
 @property (nonatomic,strong) UIButton *deleteButton;
 @property (nonatomic,assign) int index;
+@property (nonatomic,readonly) NSString *timeSlot;//时间段
 @end

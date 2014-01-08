@@ -16,6 +16,8 @@
 @property (nonatomic,strong) UILabel *label;
 @property (nonatomic,strong) UIButton *rightView;
 @property (nonatomic,assign) int index;
+@property (nonatomic,assign) int Sort;//排序
 
+- (void)setSelectedWeek:(BOOL)selected;
 - (void)setOpen:(BOOL)open;
 @end

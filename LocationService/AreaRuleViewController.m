@@ -303,9 +303,11 @@
 }
 //下一步
 - (void)buttonNextClick:(id)sender{
-    [self addRuleCompleted:^(NSString *ruleId) {
+    [self addRuleCompleted:^(NSString *areaId) {
         AreaRangeViewController *areaRange=[[AreaRangeViewController alloc] init];
         areaRange.AreaName=self.AreaName;
+        areaRange.AreaId=areaId;
+        areaRange.RuleId=self.ruleId;
         [self.navigationController pushViewController:areaRange animated:YES];
         [areaRange release];
     }];
