@@ -158,7 +158,7 @@
         [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[cell2.textField.text Trim],@"phoneNum", nil]];
         [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[cell3.textField.text Trim],@"strIMEI", nil]];
         [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[cell4.textField.text Trim],@"Password", nil]];
-        [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:self.Entity.Photo,@"photo", nil]];
+        [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:self.Entity.fileName,@"photo", nil]];
         [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:acc.WorkNo,@"CurWorkNo", nil]];
         
         ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
@@ -166,8 +166,9 @@
         args.serviceNameSpace=DataNameSpace1;
         args.methodName=@"UpdatePerson";
         args.soapParams=params;
-        
+        NSLog(@"soap=%@",args.soapMessage);
         [self.serviceHelper asynService:args success:^(ServiceResult *result) {
+            NSLog(@"xml=%@",result.request.responseString);
             BOOL boo=NO;
             if (result.hasSuccess) {
                 XmlNode *node=[result methodNode];

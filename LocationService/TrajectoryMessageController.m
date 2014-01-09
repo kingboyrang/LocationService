@@ -23,7 +23,11 @@
 @end
 
 @implementation TrajectoryMessageController
-
+- (void)dealloc{
+    [super dealloc];
+    [_toolBar release];
+    [_tableView release];
+}
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -47,6 +51,10 @@
         [btn setTitleColor:[UIColor colorFromHexRGB:@"4a7ebb"] forState:UIControlStateHighlighted];
         [self.navBarView addSubview:btn];
     }
+    if (curPage==0) {
+        [_tableView launchRefreshing];
+    }
+    
 }
 - (void)viewDidLoad
 {
@@ -72,6 +80,17 @@
     if (curPage==0) {
         [_tableView launchRefreshing];
     }
+}
+- (void)receiveParams:(SupervisionPerson*)entity{
+    self.Entity=entity;
+    curPage=0;
+    pageSize=10;
+}
+- (BOOL)canShowMessage{
+    if (self.Entity&&self.Entity.ID&&[self.Entity.ID length]>0) {
+        return YES;
+    }
+    return NO;
 }
 - (BOOL)existsFindyById:(NSString*)msgId{
     if (self.cells&&[self.cells count]>0) {
@@ -268,6 +287,9 @@
                             [insertIndexPaths addObject:newPath];
                             total++;
                         }
+                        [self showSuccessViewWithHide:^(AnimateErrorView *successView) {
+                            successView.labelTitle.text=[NSString stringWithFormat:@"更新%d笔信息!",insertIndexPaths.count];
+                        } completed:nil];
                         //重新呼叫UITableView的方法, 來生成行.
                         [_tableView beginUpdates];
                         [_tableView insertRowsAtIndexPaths:insertIndexPaths withRowAnimation:UITableViewRowAnimationFade];

@@ -14,4 +14,5 @@
 @property(nonatomic,retain) NSArray *cells;
 @property(nonatomic,strong) TrajectorySearch *trajectorySearch;
 @property(nonatomic,strong) SupervisionPerson *Entity;
+@property(nonatomic,assign) BOOL canShowTrajectory;
 @end

@@ -7,7 +7,13 @@
 //
 
 #import "TrajectoryMessage.h"
-
+#import "NSDate+TPCategory.h"
 @implementation TrajectoryMessage
-
+- (NSString*)formatDateText{
+    if (_PCTime&&[_PCTime length]>0) {
+        NSDate *date=[NSDate dateFromString:_PCTime withFormat:@"yyyy/MM/dd HH:mm:ss"];
+        return [date stringWithFormat:@"yyyy/MM/dd HH:mm"];
+    }
+    return @"";
+}
 @end

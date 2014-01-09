@@ -20,4 +20,6 @@
 
 @property(nonatomic,strong) NSMutableDictionary *removeList;//删除
 @property(nonatomic,strong) NSMutableDictionary *readList;//标记已读
+@property(nonatomic,readonly) BOOL canShowMessage;//标记已读
+- (void)receiveParams:(SupervisionPerson*)entity;
 @end

@@ -197,6 +197,16 @@
 }
 //下一步
 - (void)buttonCancel{
+    
+    /***
+    SupervisionExtend *extend=[[SupervisionExtend alloc] init];
+    extend.PersonId=@"a81081ee-bc77-4358-9f68-6acb6fb2b201";
+    extend.operateType=1;//新增
+    extend.DeviceCode=@"81438cf3-be6e-4c47-80bf-1d12b0083c3d";
+    [self.navigationController pushViewController:extend animated:YES];
+    [extend release];
+    return;
+    ***/
     [self finishAddTrajectory:^(NSString *personId,NSString *code) {
         SupervisionExtend *extend=[[SupervisionExtend alloc] init];
         extend.PersonId=personId;

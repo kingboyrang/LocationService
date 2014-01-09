@@ -56,6 +56,7 @@
         _tableView.dataSource=self;
         _tableView.separatorStyle=UITableViewCellSeparatorStyleNone;
         _tableView.separatorColor=[UIColor clearColor];
+        _tableView.backgroundColor=[UIColor clearColor];
         _tableView.bounces=NO;
         [self addSubview:_tableView];
         
@@ -162,7 +163,7 @@
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     UITableViewCell *cell=self.cells[indexPath.row];
-    if (indexPath.row!=self.cells.count-1) {
+    if (indexPath.row==self.cells.count-1) {
         cell.detailTextLabel.text=@"详细信息";
         cell.detailTextLabel.font=[UIFont fontWithName:DeviceFontName size:DeviceFontSize];
         cell.accessoryType=UITableViewCellAccessoryDisclosureIndicator;

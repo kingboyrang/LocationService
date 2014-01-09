@@ -20,6 +20,7 @@
         [_mapView release];
         _mapView = nil;
     }
+    
 }
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -43,6 +44,7 @@
     item.title=self.Entity.Address;
     [_mapView addAnnotation:item];
     [item release];
+    [_mapView setCenterCoordinate:coor];
     
 }
 - (void)viewDidLoad
@@ -57,9 +59,17 @@
     _phoneView=[[CallPhoneView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height, self.view.bounds.size.width, 100)];
     _phoneView.controlers=self;
     [self.view addSubview:_phoneView];
+    
+    
 }
-
+- (BOOL)canShowCall{
+    if (self.Entity&&self.Entity.ID&&[self.Entity.ID length]>0) {
+        return YES;
+    }
+    return NO;
+}
 -(void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
     [_mapView viewWillDisappear];
     _mapView.delegate = nil; // 不用时，置nil
     

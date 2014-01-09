@@ -110,13 +110,16 @@
     [self showLoadingAnimatedWithTitle:@"正在加载,请稍后..."];
     [self.serviceHelper asynService:args success:^(ServiceResult *result) {
         [self hideLoadingViewAnimated:nil];
-        if (result.hasSuccess) {
-            XmlNode *node=[result methodNode];
-            NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:[node.InnerText dataUsingEncoding:NSUTF8StringEncoding] options:1 error:nil];
+    
+            NSDictionary *dic=[result json];
+        if (dic!=nil) {
             NSArray *source=[dic objectForKey:@"Person"];
+            //NSLog(@"source=%@",source);
             self.cells=[NSMutableArray arrayWithArray:[self arrayToSupervisions:source]];
             [_tableView reloadData];
+
         }
+                  
     } failed:^(NSError *error, NSDictionary *userInfo) {
         [self hideLoadingFailedWithTitle:@"加载失败!" completed:nil];
     }];

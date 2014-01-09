@@ -7,7 +7,7 @@
 //
 
 #import "TrajectoryHistory.h"
-
+#import "NSDate+TPCategory.h"
 @implementation TrajectoryHistory
 - (NSString*)directionText{
     if (_angle&&[_angle length]>0) {
@@ -47,5 +47,11 @@
     }
     return @"反转";
 }
-
+- (NSString*)formatDateText{
+    if (_pctime&&[_pctime length]>0) {
+        NSDate *date=[NSDate dateFromString:_pctime withFormat:@"yyyy/MM/dd HH:mm:ss"];
+        return [date stringWithFormat:@"yyyy/MM/dd HH:mm"];
+    }
+    return @"";
+}
 @end

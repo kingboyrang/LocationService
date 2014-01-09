@@ -37,6 +37,11 @@
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     [self.navBarView setNavBarTitle:@"监管目标"];
+    
+    if (self.operateType==2) {//修改
+        //加载修改信息
+        [self loadingEditInfo];
+    }
 }
 - (void)viewDidLoad
 {
@@ -104,10 +109,7 @@
     
     self.cells=[NSMutableArray arrayWithObjects:cell1,cell2,cell3,cell4,cell5,cell6,cell7,cell8,cell9,cell10, nil];
     
-    if (self.operateType==2) {//修改
-        //加载修改信息
-        [self loadingEditInfo];
-    }
+    
    
 }
 //获取修改信息
@@ -199,8 +201,13 @@
 - (void)buttonSubmit{
  
     Account *acc=[Account unarchiverAccount];
-    
     TKTextFieldCell *cell1=self.cells[1];
+    if (!cell1.hasValue) {
+        [AlertHelper initWithTitle:@"提示" message:@"请输入信号发送频率!"];
+        [cell1.textField becomeFirstResponder];
+        return;
+    }
+
     TKTextFieldCell *cell2=self.cells[3];
     if (!cell2.hasValue) {
         [AlertHelper initWithTitle:@"提示" message:@"请输入SOS号!"];
@@ -222,8 +229,6 @@
         [cell4.textField becomeFirstResponder];
         return;
     }
-    
-    
     NSString *affection=@"";
     if ([cell4.textField.text length]>0) {
         affection=[NSString stringWithFormat:@"%@,1",cell4.textField.text];
@@ -251,8 +256,10 @@
     args.methodName=@"SaveTeleAndFreqIn";
     args.soapParams=params;
     NSString *memo=self.operateType==1?@"新增":@"修改";
+    NSLog(@"soap==%@",args.soapMessage);
     [self showLoadingAnimatedWithTitle:[NSString stringWithFormat:@"正在%@,请稍后...",memo]];
     [self.serviceHelper asynService:args success:^(ServiceResult *result) {
+        NSLog(@"xml=%@",result.request.responseString);
         BOOL boo=NO;
         if (result.hasSuccess) {
             NSDictionary *dic=(NSDictionary*)[result json];
@@ -346,5 +353,13 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
+#pragma mark table source & delegate methods
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    return [self.cells count];
+}
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    UITableViewCell *cell=self.cells[indexPath.row];
+    cell.selectionStyle=UITableViewCellSelectionStyleNone;
+    return cell;
+}
 @end

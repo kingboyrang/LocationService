@@ -20,4 +20,6 @@
 @property(nonatomic,copy) NSString *PName;//--被监控者名称
 @property(nonatomic,copy) NSString *Photo;//http://localhost:10001/UpDoc/PersonLogo/1351569200.jpg",  --被监控者头像
 @property(nonatomic,copy) NSString *ExceptionID;//--异常类型
+
+@property (nonatomic,readonly) NSString *formatDateText;//转轴
 @end

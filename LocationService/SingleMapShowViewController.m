@@ -46,6 +46,7 @@
     item.title=@"当前位置";
     [_mapView addAnnotation:item];
     [item release];
+    [_mapView setCenterCoordinate:coor];
     
 }
 - (void)viewDidLoad

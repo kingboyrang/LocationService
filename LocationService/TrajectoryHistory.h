@@ -22,4 +22,5 @@
 
 @property (nonatomic,readonly) NSString *directionText;//方向
 @property (nonatomic,readonly) NSString *extendText;//转轴
+@property (nonatomic,readonly) NSString *formatDateText;//转轴
 @end

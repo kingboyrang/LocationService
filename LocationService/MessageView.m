@@ -28,7 +28,7 @@
 - (void)setDataSource:(TrajectoryMessage*)entity{
     self.labName.text=entity.PName;
     self.labLimit.text=entity.Reason;
-    self.labTime.text=entity.PCTime;
+    self.labTime.text=entity.formatDateText;
     self.labAddress.text=entity.Address;
     self.labAddress.numberOfLines=0;
     self.labAddress.lineBreakMode=NSLineBreakByWordWrapping;

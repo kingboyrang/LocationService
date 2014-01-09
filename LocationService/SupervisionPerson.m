@@ -74,4 +74,13 @@
     }
     return @"反转";
 }
+- (NSString*)fileName{
+    if (_Photo&&[_Photo length]>0) {
+        int pos=[_Photo lastIndexOf:@"/"];
+        if (pos!=-1) {
+            return [_Photo substringFromIndex:pos+1];
+        }
+    }
+    return @"";
+}
 @end

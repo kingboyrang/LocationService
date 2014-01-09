@@ -25,7 +25,6 @@
 - (void)dealloc{
     [super dealloc];
     [_tableView release],_tableView=nil;
-     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -52,7 +51,6 @@
             btn.tag=300;
             [btn setTitle:@"地图" forState:UIControlStateNormal];
             [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-            [btn addTarget:self action:@selector(buttonMapClick) forControlEvents:UIControlEventTouchUpInside];
             btn.titleLabel.font=[UIFont fontWithName:DeviceFontName size:DeviceFontSize];
             btn.showsTouchWhenHighlighted = YES;  //指定按钮被按下时发光
             [btn setTitleColor:[UIColor colorFromHexRGB:@"4a7ebb"] forState:UIControlStateHighlighted];
@@ -85,8 +83,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    //接收通知
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveTrajectoryNotifice:) name:@"trajectTarget" object:nil];
+    
     
     CGRect r=self.view.bounds;
     r.origin.y=44;
@@ -102,11 +99,11 @@
     [self.view addSubview:_trajectorySearch];
     [self.view sendSubviewToBack:_trajectorySearch];
 }
-//接收通知
-- (void)receiveTrajectoryNotifice:(NSNotification*)notifice{
-   NSDictionary *dic=[notifice userInfo];
-   SupervisionPerson *entity=[dic objectForKey:@"Entity"];
-   self.Entity=entity;
+- (BOOL)canShowTrajectory{
+    if (self.Entity&&self.Entity.ID&&[self.Entity.ID length]>0) {
+        return YES;
+    }
+    return NO;
 }
 //显示地图路线
 - (void)buttonMapLinesClick{
@@ -217,7 +214,7 @@
         
     }
     TrajectoryHistory *entity=self.cells[indexPath.row];
-    cell.label.text=entity.pctime;
+    cell.label.text=entity.formatDateText;
     cell.address.text=entity.address;
     return cell;
 }

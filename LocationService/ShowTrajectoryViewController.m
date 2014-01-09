@@ -177,6 +177,7 @@
             item.tag=100+i;
             [_mapView addAnnotation:item];
             [item release];
+            [_mapView setCenterCoordinate:coor];
         }
     }
 }

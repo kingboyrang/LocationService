@@ -16,6 +16,10 @@
 #import "ServiceHelper.h"
 #import "SupervisionPerson.h"
 #import "PersonTrajectoryViewController.h"
+#import "CallTrajectoryViewController.h"
+#import "TrajectoryMessageController.h"
+#import "UIImage+TPCategory.h"
+#import <QuartzCore/QuartzCore.h>
 //获取设备的物理高度
 
 @interface MainViewController ()
@@ -23,6 +27,7 @@
 - (void)_resizeView:(BOOL)show;
 - (void)loadingReadCountWithId:(NSString*)personId;
 - (void)updateInfoUI:(int)total;
+- (void)showRecordMessage:(BOOL)show;//显示记录总数
 @end
 
 @implementation MainViewController
@@ -41,6 +46,11 @@
 }
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+   
+    if(self.Entity&&self.Entity.ID&&[self.Entity.ID length]>0)
+    {
+        [self loadingReadCountWithId:self.Entity.ID];//加载未读信息总数
+    }
 }
 - (void)viewDidLoad
 {
@@ -51,15 +61,14 @@
     [self _initViewController];//初始化子控制器
     [self _initTabbarView];//创建自定义tabBar
 }
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
 }
 - (void)receiveTrajectoryNotifice:(NSNotification*)notifice{
     NSDictionary *dic=[notifice userInfo];
-    SupervisionPerson *entity=[dic objectForKey:@"Entity"];
-    [self loadingReadCountWithId:entity.ID];//加载未读信息总数
+    self.Entity=[dic objectForKey:@"Entity"];
+    [self loadingReadCountWithId:self.Entity.ID];//加载未读信息总数
 }
 - (void)loadingReadCountWithId:(NSString*)personId{
     Account *acc=[Account unarchiverAccount];
@@ -94,8 +103,8 @@
 - (void)updateInfoUI:(int)total{
    
     if (total==0) {
-        if ([[_tabbarView viewWithTag:900] isKindOfClass:[UIButton class]]) {
-            UIButton *btn=(UIButton*)[_tabbarView viewWithTag:900];
+        if ([[self.view viewWithTag:900] isKindOfClass:[UILabel class]]) {
+            UILabel *btn=(UILabel*)[self.view viewWithTag:900];
             [btn removeFromSuperview];
             return;
         }
@@ -104,27 +113,37 @@
     NSString *title=[NSString stringWithFormat:@"%d",total];
     CGSize size=[title textSize:[UIFont fontWithName:DeviceFontName size:DeviceFontSize] withWidth:DeviceWidth];
     CGRect r=CGRectZero;
-    r.origin.y=0;
-    r.size=size;
-    r.origin.x=DeviceWidth*4/5-size.width;
+    r.size.width=size.width+2;
+    r.size.height=size.width+2;
+    r.origin.x=DeviceWidth*4/5-DeviceWidth/10;
+    r.origin.y=DeviceHeight-r.size.height-20;
     
-    if ([[_tabbarView viewWithTag:900] isKindOfClass:[UIButton class]]) {
-        UIButton *btn=(UIButton*)[_tabbarView viewWithTag:900];
+    if ([[self.view viewWithTag:900] isKindOfClass:[UIButton class]]) {
+        UILabel *btn=(UILabel*)[self.view viewWithTag:900];
         btn.frame=r;
-        [btn setTitle:title forState:UIControlStateNormal];
+        btn.text=title;
+        //[btn setTitle:title forState:UIControlStateNormal];
         return;
     }
-
-   
-    UIButton *btn=[UIButton buttonWithType:UIButtonTypeRoundedRect];
-    btn.frame=r;
+    UILabel *btn=[[UILabel alloc] initWithFrame:r];
     btn.tag=900;
-    [btn setTitle:title forState:UIControlStateNormal];
-    [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [btn setBackgroundColor:[UIColor colorFromHexRGB:@"4f81bd"]];
-    btn.titleLabel.font=[UIFont fontWithName:DeviceFontName size:DeviceFontSize];
-    [_tabbarView addSubview:btn];
+    btn.text=title;
+    btn.backgroundColor=[UIColor colorFromHexRGB:@"f38400"];
+    btn.font=[UIFont fontWithName:DeviceFontName size:DeviceFontSize];
+    btn.textAlignment=NSTextAlignmentCenter;
+    //btn.layer.borderWidth=2.0;
+    //btn.layer.borderColor=[UIColor colorFromHexRGB:@"f38400"].CGColor;
+    btn.layer.cornerRadius=r.size.width/2;
+    btn.layer.masksToBounds=YES;
+    [self.view addSubview:btn];
+    [btn release];
     
+}
+- (void)showRecordMessage:(BOOL)show{
+    if ([[self.view viewWithTag:900] isKindOfClass:[UILabel class]]) {
+        UILabel *btn=(UILabel*)[self.view viewWithTag:900];
+        btn.hidden=show;
+    }
 }
 #pragma mark - UI
 //初始化子控制器
@@ -138,13 +157,11 @@
     BasicNavigationController *nav2=[[[BasicNavigationController alloc] initWithRootViewController:viewController2] autorelease];
     nav2.delegate=self;
     
-   UIViewController *viewController3=[[[UIViewController alloc] init] autorelease];
-     viewController3.view.backgroundColor=[UIColor whiteColor];
+    CallTrajectoryViewController *viewController3=[[[CallTrajectoryViewController alloc] init] autorelease];
      BasicNavigationController *nav3=[[[BasicNavigationController alloc] initWithRootViewController:viewController3] autorelease];
      nav3.delegate=self;
     
-    UIViewController *viewController4=[[[UIViewController alloc] init] autorelease];
-    viewController4.view.backgroundColor=[UIColor whiteColor];
+    TrajectoryMessageController *viewController4=[[[TrajectoryMessageController alloc] init] autorelease];
     BasicNavigationController *nav4=[[[BasicNavigationController alloc] initWithRootViewController:viewController4] autorelease];
     nav4.delegate=self;
     
@@ -162,15 +179,6 @@
     _tabbarView.autoresizesSubviews=YES;
     _tabbarView.autoresizingMask=UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleTopMargin;
     [self.view addSubview:_tabbarView];
-    
-    /***
-    UIImage *image=[UIImage imageNamed:@"logintop.jpg"];
-    UIImageView *imageView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, image.size.width, image.size.height)];
-    [imageView setImage:image];
-    [_tabbarView addSubview:imageView];
-     ***/
-
-    
     
     NSArray *backgroud = @[@"ico01.png",@"ico02.png",@"ico03.png",@"ico04.png",@"ico05.png"];
     NSArray *heightBackground= @[@"ico01f.png",@"ico02f.png",@"ico03f.png",@"ico04f.png",@"ico05f.png"];
@@ -199,13 +207,37 @@
        [_tabbarView addSubview:button];
         [button release];
     }
-    
 }
 
 #pragma mark - actions
 //tab 按钮的点击事件
 - (void)selectedTab:(UIButton *)button {
 
+    //1,2,3  未选中监管目标，则不可以点击
+    int position=button.tag-100;
+    if (position>=1&&position<4) {
+        BasicNavigationController *nav=[self.viewControllers objectAtIndex:position];
+        id viewControl=[nav.viewControllers objectAtIndex:0];
+        if (position==1) {
+            PersonTrajectoryViewController *trajectory=(PersonTrajectoryViewController*)viewControl;
+            if (!trajectory.canShowTrajectory) {
+                return;
+            }
+        }
+        if (position==2) {
+            CallTrajectoryViewController *trajectory=(CallTrajectoryViewController*)viewControl;
+            if (!trajectory.canShowCall) {
+                return;
+            }
+        }
+        if (position==3) {
+            TrajectoryMessageController *trajectory=(TrajectoryMessageController*)viewControl;
+            if (!trajectory.canShowMessage) {
+                return;
+            }
+        }
+    }
+    
     button.selected=YES;
     if (_prevSelectIndex!=button.tag-100) {
         UIButton *btn=(UIButton*)[_tabbarView viewWithTag:100+_prevSelectIndex];
@@ -261,8 +293,10 @@
     int count = navigationController.viewControllers.count;
     if (count == 1) {
         [self showTabbar:YES];
+        [self showRecordMessage:YES];//显示记录总数
     }else if (count== 2) {
         [self showTabbar:NO];
+        [self showRecordMessage:NO];
     }
     
     if ( viewController == [navigationController.viewControllers objectAtIndex:0]) {

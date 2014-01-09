@@ -14,6 +14,11 @@
 #import "SupervisionPerson.h"
 #import "KYPointAnnotation.h"
 #import "TrajectoryPaoView.h"
+#import "MainViewController.h"
+#import "BasicNavigationController.h"
+#import "PersonTrajectoryViewController.h"
+#import "CallTrajectoryViewController.h"
+#import "TrajectoryMessageController.h"
 @interface IndexViewController ()
 - (void)buttonCompassClick;
 - (void)buttonTargetClick;
@@ -29,6 +34,7 @@
         [_mapView release];
         _mapView = nil;
     }
+    
 }
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -95,6 +101,7 @@
             NSDictionary *dic=[result json];
             NSArray *source=[dic objectForKey:@"Person"];
             self.cells=[NSMutableArray arrayWithArray:[AppHelper arrayWithSource:source className:@"SupervisionPerson"]];
+           
             if (self.cells&&[self.cells count]>0) {
                 boo=YES;
                 //加载监管目标
@@ -112,6 +119,8 @@
                     item.tag=100+i;
                     [_mapView addAnnotation:item];
                     [item release];
+                    [_mapView setCenterCoordinate:coor];
+                    
                 }
             }
         }
@@ -215,7 +224,7 @@
     item.title=@"当前位置";
     [_mapView addAnnotation:item];
     [item release];
-    
+   
     /*
      //标记我的位置
      BMKUserLocation *userLocation = mapView.userLocation;
@@ -231,7 +240,22 @@
         KYPointAnnotation *elem=(KYPointAnnotation*)view.annotation;
         int index=elem.tag-100;
         SupervisionPerson *entity=self.cells[index];
+        //记录总数
         [[NSNotificationCenter defaultCenter] postNotificationName:@"trajectTarget" object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:entity,@"Entity", nil]];
+        
+        MainViewController *main=(MainViewController*)self.tabBarController;
+        //轨迹
+        BasicNavigationController *nav1=[main.viewControllers objectAtIndex:1];
+        PersonTrajectoryViewController *person=[nav1.viewControllers objectAtIndex:0];
+        person.Entity=entity;
+        //电话
+        BasicNavigationController *nav2=[main.viewControllers objectAtIndex:2];
+        CallTrajectoryViewController *call=[nav2.viewControllers objectAtIndex:0];
+        call.Entity=entity;
+        //信息
+        BasicNavigationController *nav3=[main.viewControllers objectAtIndex:3];
+        TrajectoryMessageController *message=[nav3.viewControllers objectAtIndex:0];
+        [message receiveParams:entity];
     }
 }
 
