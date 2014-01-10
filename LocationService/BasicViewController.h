@@ -12,6 +12,8 @@
 #import "AnimateErrorView.h"
 #import "ServiceHelper.h"
 #import "NavBarView.h"
+#import "Account.h"
+#import "BMapKit.h"
 @interface BasicViewController : UIViewController
 @property(nonatomic,strong) NavBarView *navBarView;
 @property(nonatomic,assign) BOOL showBarView;
@@ -42,4 +44,6 @@
 - (void) showMessageWithTitle:(NSString*)title;
 - (void) showMessageWithTitle:(NSString*)title innerView:(UIView*)view dismissed:(void(^)())completed;
 - (CATransition *)getAnimation:(NSInteger)type subtype:(NSInteger)subtype;
+
+- (void)setCurrentMapLevel:(BMKMapView*)map;//设置地图等级
 @end

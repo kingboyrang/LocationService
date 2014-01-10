@@ -52,7 +52,16 @@
         [self.navBarView addSubview:btn];
     }
     if (curPage==0) {
-        [_tableView launchRefreshing];
+        if (self.Entity&&self.Entity.ID&&[self.Entity.ID length]>0) {
+            [_tableView launchRefreshing];
+        }else{
+            if (self.cells&&[self.cells count]>0) {
+                [self.cells removeAllObjects];
+            }else{
+                self.cells=[NSMutableArray array];
+            }
+            [_tableView reloadData];
+        }
     }
     
 }
@@ -61,14 +70,21 @@
     [super viewDidLoad];
     CGRect r=self.view.bounds;
     r.origin.y=44;
+    if ([self.navigationController.viewControllers[0] isKindOfClass:[self class]]) {
+        r.size.height-=TabHeight*2;
+    }
     _tableView =[[PullingRefreshTableView alloc] initWithFrame:r pullingDelegate:self];
     _tableView.dataSource=self;
     _tableView.delegate=self;
-    _tableView.separatorStyle=UITableViewCellSeparatorStyleNone;
-    _tableView.backgroundColor=[UIColor clearColor];
+    //_tableView.separatorStyle=UITableViewCellSeparatorStyleNone;
+    //_tableView.backgroundColor=[UIColor clearColor];
     [self.view addSubview:_tableView];
     
-    _toolBar=[[LoginButtons alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height+44, self.view.bounds.size.width, 44)];
+    CGFloat topY=self.view.bounds.size.height+44;
+    if ([self.navigationController.viewControllers[0] isKindOfClass:[self class]]) {
+        topY-=TabHeight;
+    }
+    _toolBar=[[LoginButtons alloc] initWithFrame:CGRectMake(0, topY, self.view.bounds.size.width, 44)];
     [_toolBar.cancel setTitle:@"删除(0)" forState:UIControlStateNormal];
     [_toolBar.submit setTitle:@"标记已读(0)" forState:UIControlStateNormal];
     [_toolBar.cancel addTarget:self action:@selector(buttonRemoveClick:) forControlEvents:UIControlEventTouchUpInside];
@@ -77,9 +93,6 @@
     
     curPage=0;
     pageSize=10;
-    if (curPage==0) {
-        [_tableView launchRefreshing];
-    }
 }
 - (void)receiveParams:(SupervisionPerson*)entity{
     self.Entity=entity;
@@ -212,6 +225,11 @@
         CGRect r1=_tableView.frame;
         r1.size.height=self.view.bounds.size.height-44*2;
         
+        if ([self.navigationController.viewControllers[0] isKindOfClass:[self class]]) {
+            r.origin.y-=TabHeight;
+            r1.size.height-=TabHeight;
+        }
+        
         [UIView animateWithDuration:0.5f animations:^(){
             _toolBar.frame=r;
             _tableView.frame=r1;
@@ -233,6 +251,11 @@
         
         CGRect r1=_tableView.frame;
         r1.size.height=self.view.bounds.size.height-44;
+        
+        if ([self.navigationController.viewControllers[0] isKindOfClass:[self class]]) {
+            r.origin.y-=TabHeight;
+            r1.size.height-=TabHeight;
+        }
         
         [UIView animateWithDuration:0.5f animations:^(){
             _toolBar.frame=r;

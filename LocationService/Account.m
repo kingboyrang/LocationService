@@ -22,6 +22,7 @@
     [encoder encodeBool:self.isFirstRun forKey:@"isFirstRun"];
     [encoder encodeBool:self.isLogin forKey:@"isLogin"];
     [encoder encodeBool:self.isRememberPwd forKey:@"isRememberPwd"];
+    [encoder encodeFloat:self.zoomLevel forKey:@"zoomLevel"];
 }
 - (id)initWithCoder:(NSCoder *)aDecoder{
     if (self=[super init]) {
@@ -37,6 +38,7 @@
         self.isFirstRun=[aDecoder decodeBoolForKey:@"isFirstRun"];
         self.isLogin=[aDecoder decodeBoolForKey:@"isLogin"];
         self.isRememberPwd=[aDecoder decodeBoolForKey:@"isRememberPwd"];
+        self.zoomLevel=[aDecoder decodeFloatForKey:@"zoomLevel"];
     }
     return self;
 }
@@ -55,6 +57,7 @@
     acc.Phone=@"";
     acc.WorkNo=@"";
     acc.Way=@"";
+    acc.zoomLevel=11.0;
     [acc save];
 }
 + (void)loginGeneralWithUserId:(NSString*)userId password:(NSString*)pwd encrypt:(NSString*)encrypt rememberPassword:(BOOL)remember withData:(NSDictionary*)dic{
@@ -126,6 +129,7 @@
     if(![FileHelper existsFilePath:path]){ //如果不存在
         Account *acc=[[[Account alloc] init] autorelease];
         acc.isFirstRun=YES;
+        acc.zoomLevel=11.0;
         return acc;
     }
     return (Account*)[NSKeyedUnarchiver unarchiveObjectWithFile: path];
@@ -138,5 +142,9 @@
     Account *acc=[Account unarchiverAccount];
     acc.isFirstRun=NO;
     [acc save];
+}
++ (float)mapZoomLevel{
+    Account *acc=[Account unarchiverAccount];
+    return acc.zoomLevel;
 }
 @end

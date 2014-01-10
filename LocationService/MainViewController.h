@@ -8,11 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import "SupervisionPerson.h"
+#import "RecordView.h"
 @interface MainViewController : UITabBarController<UINavigationControllerDelegate>{
 @private
     UIView *_tabbarView;
     int _prevSelectIndex;
     int _barButtonItemCount;
+    RecordView *_recordView;
 }
 @property (nonatomic,retain) SupervisionPerson *Entity;
 - (void)setSelectedItemIndex:(int)index;

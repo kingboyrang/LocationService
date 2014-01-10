@@ -147,14 +147,17 @@
 		01B483CF18755AE5005D4DD9 /* AreaRangeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01B483CE18755AE5005D4DD9 /* AreaRangeViewController.m */; };
 		01B483D218755E2E005D4DD9 /* RangHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 01B483D118755E2E005D4DD9 /* RangHeader.m */; };
 		01B483DD1875645C005D4DD9 /* AreaRuleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01B483DC1875645A005D4DD9 /* AreaRuleViewController.m */; };
-		01B65CF71867DB9A001F11BA /* IndexViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01B65CF61867DB9A001F11BA /* IndexViewController.m */; };
+		01B65CF71867DB9A001F11BA /* IndexViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 01B65CF61867DB9A001F11BA /* IndexViewController.mm */; };
+		01BBF6EB187FC94700D4892B /* record.png in Resources */ = {isa = PBXBuildFile; fileRef = 01BBF6EA187FC94600D4892B /* record.png */; };
+		01BBF6EE187FC96000D4892B /* RecordView.m in Sources */ = {isa = PBXBuildFile; fileRef = 01BBF6ED187FC96000D4892B /* RecordView.m */; };
+		01BBF6F1187FEEEC00D4892B /* OfflineDemoMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01BBF6F0187FEEEC00D4892B /* OfflineDemoMapViewController.m */; };
 		01BCCDFD1878E4F900FFC74C /* TrajectoryPaoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 01BCCDFC1878E4F900FFC74C /* TrajectoryPaoView.m */; };
 		01BD39FE1878EBDA00B2F513 /* TKLabelLabelCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 01BD39FD1878EBDA00B2F513 /* TKLabelLabelCell.m */; };
 		01BD3A011878ED3F00B2F513 /* TKTrajectoryPaoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 01BD3A001878ED3F00B2F513 /* TKTrajectoryPaoCell.m */; };
 		01BD3A041879384E00B2F513 /* PersonTrajectoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01BD3A031879384D00B2F513 /* PersonTrajectoryViewController.m */; };
-		01BD3A081879424900B2F513 /* ShowTrajectoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01BD3A071879424900B2F513 /* ShowTrajectoryViewController.m */; };
-		01BD3A0B1879427600B2F513 /* SingleMapShowViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01BD3A0A1879427500B2F513 /* SingleMapShowViewController.m */; };
-		01BD3A0E18795C7E00B2F513 /* CallTrajectoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01BD3A0D18795C7C00B2F513 /* CallTrajectoryViewController.m */; };
+		01BD3A081879424900B2F513 /* ShowTrajectoryViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 01BD3A071879424900B2F513 /* ShowTrajectoryViewController.mm */; };
+		01BD3A0B1879427600B2F513 /* SingleMapShowViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 01BD3A0A1879427500B2F513 /* SingleMapShowViewController.mm */; };
+		01BD3A0E18795C7E00B2F513 /* CallTrajectoryViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 01BD3A0D18795C7C00B2F513 /* CallTrajectoryViewController.mm */; };
 		01BD3A111879604F00B2F513 /* CallPhoneView.m in Sources */ = {isa = PBXBuildFile; fileRef = 01BD3A101879604F00B2F513 /* CallPhoneView.m */; };
 		01BD3A1B1879647900B2F513 /* UIView+InnerShadow.m in Sources */ = {isa = PBXBuildFile; fileRef = 01BD3A141879647900B2F513 /* UIView+InnerShadow.m */; };
 		01BD3A1C1879647900B2F513 /* TitleLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 01BD3A161879647900B2F513 /* TitleLayer.m */; };
@@ -470,7 +473,12 @@
 		01B483DB18756459005D4DD9 /* AreaRuleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AreaRuleViewController.h; sourceTree = "<group>"; };
 		01B483DC1875645A005D4DD9 /* AreaRuleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AreaRuleViewController.m; sourceTree = "<group>"; };
 		01B65CF51867DB9A001F11BA /* IndexViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IndexViewController.h; sourceTree = "<group>"; };
-		01B65CF61867DB9A001F11BA /* IndexViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IndexViewController.m; sourceTree = "<group>"; };
+		01B65CF61867DB9A001F11BA /* IndexViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = IndexViewController.mm; sourceTree = "<group>"; };
+		01BBF6EA187FC94600D4892B /* record.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = record.png; sourceTree = "<group>"; };
+		01BBF6EC187FC96000D4892B /* RecordView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecordView.h; sourceTree = "<group>"; };
+		01BBF6ED187FC96000D4892B /* RecordView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecordView.m; sourceTree = "<group>"; };
+		01BBF6EF187FEEEC00D4892B /* OfflineDemoMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OfflineDemoMapViewController.h; sourceTree = "<group>"; };
+		01BBF6F0187FEEEC00D4892B /* OfflineDemoMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OfflineDemoMapViewController.m; sourceTree = "<group>"; };
 		01BCCDFB1878E4F900FFC74C /* TrajectoryPaoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrajectoryPaoView.h; sourceTree = "<group>"; };
 		01BCCDFC1878E4F900FFC74C /* TrajectoryPaoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrajectoryPaoView.m; sourceTree = "<group>"; };
 		01BD39FC1878EBDA00B2F513 /* TKLabelLabelCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TKLabelLabelCell.h; sourceTree = "<group>"; };
@@ -480,11 +488,11 @@
 		01BD3A021879384C00B2F513 /* PersonTrajectoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PersonTrajectoryViewController.h; sourceTree = "<group>"; };
 		01BD3A031879384D00B2F513 /* PersonTrajectoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PersonTrajectoryViewController.m; sourceTree = "<group>"; };
 		01BD3A061879424900B2F513 /* ShowTrajectoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShowTrajectoryViewController.h; sourceTree = "<group>"; };
-		01BD3A071879424900B2F513 /* ShowTrajectoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShowTrajectoryViewController.m; sourceTree = "<group>"; };
+		01BD3A071879424900B2F513 /* ShowTrajectoryViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ShowTrajectoryViewController.mm; sourceTree = "<group>"; };
 		01BD3A091879427500B2F513 /* SingleMapShowViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SingleMapShowViewController.h; sourceTree = "<group>"; };
-		01BD3A0A1879427500B2F513 /* SingleMapShowViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SingleMapShowViewController.m; sourceTree = "<group>"; };
+		01BD3A0A1879427500B2F513 /* SingleMapShowViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SingleMapShowViewController.mm; sourceTree = "<group>"; };
 		01BD3A0C18795C7B00B2F513 /* CallTrajectoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CallTrajectoryViewController.h; sourceTree = "<group>"; };
-		01BD3A0D18795C7C00B2F513 /* CallTrajectoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CallTrajectoryViewController.m; sourceTree = "<group>"; };
+		01BD3A0D18795C7C00B2F513 /* CallTrajectoryViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CallTrajectoryViewController.mm; sourceTree = "<group>"; };
 		01BD3A0F1879604F00B2F513 /* CallPhoneView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CallPhoneView.h; sourceTree = "<group>"; };
 		01BD3A101879604F00B2F513 /* CallPhoneView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CallPhoneView.m; sourceTree = "<group>"; };
 		01BD3A131879647900B2F513 /* UIView+InnerShadow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+InnerShadow.h"; sourceTree = "<group>"; };
@@ -736,7 +744,7 @@
 				01BCCDFA1878E4A300FFC74C /* UI */,
 				012097DD185ED05E00437EA3 /* LoginRegister */,
 				01B65CF51867DB9A001F11BA /* IndexViewController.h */,
-				01B65CF61867DB9A001F11BA /* IndexViewController.m */,
+				01B65CF61867DB9A001F11BA /* IndexViewController.mm */,
 			);
 			name = Index;
 			sourceTree = "<group>";
@@ -784,7 +792,7 @@
 				01C0AA0C186D284B00F8A250 /* EditSupervisionViewController.h */,
 				01C0AA0D186D284B00F8A250 /* EditSupervisionViewController.m */,
 				01BD3A0C18795C7B00B2F513 /* CallTrajectoryViewController.h */,
-				01BD3A0D18795C7C00B2F513 /* CallTrajectoryViewController.m */,
+				01BD3A0D18795C7C00B2F513 /* CallTrajectoryViewController.mm */,
 				01BD3A1F187A41D100B2F513 /* TelephoneViewController.h */,
 				01BD3A20187A41D300B2F513 /* TelephoneViewController.m */,
 			);
@@ -981,6 +989,8 @@
 				0189892C1861405B0073B253 /* AnimateErrorView.m */,
 				01498EEC1867C81D0098043F /* NavBarView.h */,
 				01498EED1867C81D0098043F /* NavBarView.m */,
+				01BBF6EC187FC96000D4892B /* RecordView.h */,
+				01BBF6ED187FC96000D4892B /* RecordView.m */,
 			);
 			name = UI;
 			sourceTree = "<group>";
@@ -1132,9 +1142,9 @@
 				01BD3A021879384C00B2F513 /* PersonTrajectoryViewController.h */,
 				01BD3A031879384D00B2F513 /* PersonTrajectoryViewController.m */,
 				01BD3A061879424900B2F513 /* ShowTrajectoryViewController.h */,
-				01BD3A071879424900B2F513 /* ShowTrajectoryViewController.m */,
+				01BD3A071879424900B2F513 /* ShowTrajectoryViewController.mm */,
 				01BD3A091879427500B2F513 /* SingleMapShowViewController.h */,
-				01BD3A0A1879427500B2F513 /* SingleMapShowViewController.m */,
+				01BD3A0A1879427500B2F513 /* SingleMapShowViewController.mm */,
 			);
 			name = Trajectory;
 			sourceTree = "<group>";
@@ -1251,6 +1261,7 @@
 		01BE4002185EAFD2005C25D9 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				01BBF6EA187FC94600D4892B /* record.png */,
 				01A4C77D187BE54E00B3963D /* ico01.png */,
 				01A4C77E187BE54E00B3963D /* ico01f.png */,
 				01A4C77F187BE54E00B3963D /* ico02.png */,
@@ -1354,6 +1365,8 @@
 		01C0AA19186D706900F8A250 /* OnlineMap */ = {
 			isa = PBXGroup;
 			children = (
+				01BBF6EF187FEEEC00D4892B /* OfflineDemoMapViewController.h */,
+				01BBF6F0187FEEEC00D4892B /* OfflineDemoMapViewController.m */,
 				01C913BD18715D6200D9A926 /* UI */,
 				01C0AA1A186D708400F8A250 /* OnlineMapViewController.h */,
 				01C0AA1B186D708400F8A250 /* OnlineMapViewController.m */,
@@ -1622,6 +1635,7 @@
 				01BD3A2E187A7A2500B2F513 /* error.png in Resources */,
 				01B340ED187B91E0008D5EE5 /* Icon-Small-50.png in Resources */,
 				01A4C790187BE54E00B3963D /* ico05f.png in Resources */,
+				01BBF6EB187FC94700D4892B /* record.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1681,7 +1695,7 @@
 				016924BE18618DE60040E0C9 /* NSOperationQueue+WBNoticeExtensions.m in Sources */,
 				016924C418618DE60040E0C9 /* WBNoticeOperation.m in Sources */,
 				01898912186129E80073B253 /* MainViewController.m in Sources */,
-				01B65CF71867DB9A001F11BA /* IndexViewController.m in Sources */,
+				01B65CF71867DB9A001F11BA /* IndexViewController.mm in Sources */,
 				018988D318603C040073B253 /* TKLoginButtonCell.m in Sources */,
 				01BE401B185EB0B8005C25D9 /* NSData+TPCategory.m in Sources */,
 				016924C018618DE60040E0C9 /* WBBlueGradientView.m in Sources */,
@@ -1762,9 +1776,9 @@
 				01BD39FE1878EBDA00B2F513 /* TKLabelLabelCell.m in Sources */,
 				01BD3A011878ED3F00B2F513 /* TKTrajectoryPaoCell.m in Sources */,
 				01BD3A041879384E00B2F513 /* PersonTrajectoryViewController.m in Sources */,
-				01BD3A081879424900B2F513 /* ShowTrajectoryViewController.m in Sources */,
-				01BD3A0B1879427600B2F513 /* SingleMapShowViewController.m in Sources */,
-				01BD3A0E18795C7E00B2F513 /* CallTrajectoryViewController.m in Sources */,
+				01BD3A081879424900B2F513 /* ShowTrajectoryViewController.mm in Sources */,
+				01BD3A0B1879427600B2F513 /* SingleMapShowViewController.mm in Sources */,
+				01BD3A0E18795C7E00B2F513 /* CallTrajectoryViewController.mm in Sources */,
 				01BD3A111879604F00B2F513 /* CallPhoneView.m in Sources */,
 				01BD3A1B1879647900B2F513 /* UIView+InnerShadow.m in Sources */,
 				01BD3A1C1879647900B2F513 /* TitleLayer.m in Sources */,
@@ -1774,6 +1788,8 @@
 				01BD3A2C187A616600B2F513 /* TKAreaRangeCell.m in Sources */,
 				01C170F6187AA47A00CE62DD /* TKAreaWeekCell.m in Sources */,
 				01FB5E2D187CECFA0025ADC7 /* AreaTimeSpan.m in Sources */,
+				01BBF6EE187FC96000D4892B /* RecordView.m in Sources */,
+				01BBF6F1187FEEEC00D4892B /* OfflineDemoMapViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

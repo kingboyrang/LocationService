@@ -11,9 +11,6 @@
 #import "KYPointAnnotation.h"
 #import "Account.h"
 #import "AppHelper.h"
-#define MYBUNDLE_NAME @ "mapapi.bundle"
-#define MYBUNDLE_PATH [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: MYBUNDLE_NAME]
-#define MYBUNDLE [NSBundle bundleWithPath: MYBUNDLE_PATH]
 
 @interface ShowTrajectoryViewController ()
 - (void)cleanMap;
@@ -59,6 +56,7 @@
     _mapView.delegate = self; // 此处记得不用的时候需要置nil，否则影响内存的释放
     
     [self cleanMap];
+    [self loadingHistory];
 }
 - (void)viewDidLoad
 {
@@ -66,14 +64,17 @@
     
     _trajectorySearch=[[TrajectorySearch alloc] initWithFrame:CGRectMake(0, 44-79, self.view.bounds.size.width, 79)];
     [_trajectorySearch.button addTarget:self action:@selector(buttonSearchClick) forControlEvents:UIControlEventTouchUpInside];
+    _trajectorySearch.backgroundColor=[UIColor whiteColor];
     [self.view addSubview:_trajectorySearch];
     [self.view sendSubviewToBack:_trajectorySearch];
     
     CGRect r=self.view.bounds;
     r.origin.y=44;
-    r.size.height-=82+44;
+    r.size.height-=TabHeight;
     _mapView= [[BMKMapView alloc]initWithFrame:r];
     [self.view addSubview:_mapView];
+    
+    [self setCurrentMapLevel:_mapView];
 }
 -(void)viewWillDisappear:(BOOL)animated {
     [_mapView viewWillDisappear];
@@ -91,15 +92,15 @@
         CGRect r=self.trajectorySearch.frame;
         r.origin.y=44-r.size.height;
         
-        CGRect r1=_mapView.frame;
-        r1.origin.y=44;
-        r1.size.height=self.view.bounds.size.height-r1.origin.y;
+       
         
         [UIView animateWithDuration:0.5f animations:^{
             self.trajectorySearch.frame=r;
-            _mapView.frame=r1;
             btn.selected=NO;
-            [self.view sendSubviewToBack:self.trajectorySearch];
+        } completion:^(BOOL finished) {
+            if (finished) {
+                [self.view sendSubviewToBack:self.trajectorySearch];
+            }
         }];
     }else{//显示
         [self.view sendSubviewToBack:_mapView];
@@ -107,13 +108,8 @@
         CGRect r=self.trajectorySearch.frame;
         r.origin.y=44;
         
-        CGRect r1=_mapView.frame;
-        r1.origin.y=44+r.size.height;
-        r1.size.height=self.view.bounds.size.height-r1.origin.y;
-        
         [UIView animateWithDuration:0.5f animations:^{
             self.trajectorySearch.frame=r;
-            _mapView.frame=r1;
             btn.selected=YES;
             
         }];
@@ -134,7 +130,7 @@
     args.serviceNameSpace=DataNameSpace1;
     args.soapParams=params;
     
-    [self showLoadingAnimatedWithTitle:@"正在查询,请稍后..."];
+    [self showLoadingAnimatedWithTitle:@"正在加载足迹,请稍后..."];
     [self.serviceHelper asynService:args success:^(ServiceResult *result) {
         
         BOOL boo=NO;
@@ -152,12 +148,12 @@
             }
         }
         if (!boo) {
-            [self hideLoadingFailedWithTitle:@"查询失败!" completed:nil];
+            [self hideLoadingFailedWithTitle:@"加载失败!" completed:nil];
         }
         
     } failed:^(NSError *error, NSDictionary *userInfo) {
         //NSLog(@"error=%@",error.debugDescription);
-        [self hideLoadingFailedWithTitle:@"查询失败!" completed:nil];
+        [self hideLoadingFailedWithTitle:@"加载失败!" completed:nil];
     }];
 }
 - (void)loadingPointAnnotations
@@ -177,7 +173,9 @@
             item.tag=100+i;
             [_mapView addAnnotation:item];
             [item release];
-            [_mapView setCenterCoordinate:coor];
+            if (i==self.list.count-1) {
+                [_mapView setCenterCoordinate:coor animated:YES];
+            }
         }
     }
 }
@@ -188,36 +186,31 @@
     NSArray* array = [NSArray arrayWithArray:_mapView.annotations];
     [_mapView removeAnnotations:array];
 }
-- (NSString*)getMyBundlePath1:(NSString *)filename
-{
-	
-	NSBundle * libBundle = MYBUNDLE ;
-	if ( libBundle && filename ){
-		NSString * s=[[libBundle resourcePath ] stringByAppendingPathComponent : filename];
-		return s;
-	}
-	return nil ;
-}
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-- (BMKAnnotationView*)getRouteAnnotationView:(BMKMapView *)mapview viewForAnnotation:(id <BMKAnnotation>)routeAnnotation
+- (BMKAnnotationView *)mapView:(BMKMapView *)mapView viewForAnnotation:(id <BMKAnnotation>)annotation
 {
     int index=0;
     NSString *annotaionIdentifier=@"route_node";
-    if ([routeAnnotation isKindOfClass:[KYPointAnnotation class]]) {
-        KYPointAnnotation *kypoint=(KYPointAnnotation*)routeAnnotation;
+    if ([annotation isKindOfClass:[KYPointAnnotation class]]) {
+        KYPointAnnotation *kypoint=(KYPointAnnotation*)annotation;
         index=kypoint.tag-100;
         annotaionIdentifier=[NSString stringWithFormat:@"route_node%d",kypoint.tag];
     }
-    
 	BMKAnnotationView* view = nil;
-    view = [mapview dequeueReusableAnnotationViewWithIdentifier:annotaionIdentifier];
+    view = [mapView dequeueReusableAnnotationViewWithIdentifier:annotaionIdentifier];
     if (view == nil) {
-        view = [[[BMKAnnotationView alloc]initWithAnnotation:routeAnnotation reuseIdentifier:annotaionIdentifier] autorelease];
+        view = [[[BMKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:annotaionIdentifier] autorelease];
         view.canShowCallout = TRUE;
+        
+        //自定义图片
+        UIImage* image = [UIImage imageNamed:@"mapapi.bundle/images/icon_direction.png"];
+        view.image = image;
+        view.annotation = annotation;
+        
         
         //自定义气泡
         TrajectoryPaoView *_areaPaoView=[[[TrajectoryPaoView alloc] initWithFrame:CGRectMake(0, 0, 300, 350)] autorelease];
@@ -226,13 +219,8 @@
         view.paopaoView=paopao;
         [paopao release];
         
-    } else {
-        [view setNeedsDisplay];
+        
     }
-    
-    UIImage* image = [UIImage imageWithContentsOfFile:[self getMyBundlePath1:@"images/icon_direction.png"]];
-    view.image = image;
-    view.annotation = routeAnnotation;
-	return view;
+   	return view;
 }
 @end

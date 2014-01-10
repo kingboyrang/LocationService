@@ -46,7 +46,7 @@
     item.title=@"当前位置";
     [_mapView addAnnotation:item];
     [item release];
-    [_mapView setCenterCoordinate:coor];
+    [_mapView setCenterCoordinate:coor animated:YES];
     
 }
 - (void)viewDidLoad
@@ -58,6 +58,7 @@
     r.size.height-=44;
     _mapView= [[BMKMapView alloc]initWithFrame:r];
     [self.view addSubview:_mapView];
+    [self setCurrentMapLevel:_mapView];
 }
 -(void)viewWillDisappear:(BOOL)animated {
     [_mapView viewWillDisappear];

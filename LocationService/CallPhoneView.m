@@ -30,9 +30,9 @@
         [self addSubview:_labPhone];
         
         CGFloat topY=20+10;
-        CGFloat leftX=(frame.size.width-(16*2+2*2+100))/2;
+        CGFloat leftX=(frame.size.width-(32*2+2*2+100))/2;
         
-        UILabel *lab1=[[UILabel alloc] initWithFrame:CGRectMake(leftX, topY,16, 40)];
+        UILabel *lab1=[[UILabel alloc] initWithFrame:CGRectMake(leftX, topY,32, 40)];
         lab1.textColor=[UIColor blackColor];
         lab1.font=[UIFont fontWithName:DeviceFontName size:DeviceFontSize];
         lab1.backgroundColor=[UIColor clearColor];
@@ -40,7 +40,7 @@
         [self addSubview:lab1];
         [lab1 release];
         
-        leftX+=16+2;
+        leftX+=32+2;
         _switchPhone=[[SimpleSwitch alloc] initWithFrame:CGRectMake(leftX, (40-25)/2+topY, 100, 25)];
         _switchPhone.titleOn = @"亲情";
         _switchPhone.titleOff = @"监听";
@@ -51,7 +51,7 @@
         [self addSubview:_switchPhone];
         
         leftX+=100+2;
-        UILabel *lab2=[[UILabel alloc] initWithFrame:CGRectMake(leftX, topY,16, 40)];
+        UILabel *lab2=[[UILabel alloc] initWithFrame:CGRectMake(leftX, topY,32, 40)];
         lab2.textColor=[UIColor blackColor];
         lab2.font=[UIFont fontWithName:DeviceFontName size:DeviceFontSize];
         lab2.backgroundColor=[UIColor clearColor];
@@ -61,6 +61,7 @@
         
         topY+=40+5;
         
+    
         _button=[UIButton buttonWithType:UIButtonTypeCustom];
         _button.frame=CGRectMake(0, topY, frame.size.width, 44);
         [_button setTitle:@"拨打" forState:UIControlStateNormal];
@@ -70,6 +71,12 @@
         [_button setTitleColor:[UIColor colorFromHexRGB:@"4a7ebb"] forState:UIControlStateHighlighted];
         [_button addTarget:self action:@selector(buttonCallClick) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:_button];
+        
+        UIView *bgView=[[UIView alloc] initWithFrame:_button.frame];
+        bgView.backgroundColor=[UIColor colorFromHexRGB:@"131313"];
+        [self addSubview:bgView];
+        [self sendSubviewToBack:bgView];
+        [bgView release];
         
         CGRect r=self.frame;
         r.size.height=topY+44;

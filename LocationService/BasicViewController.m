@@ -43,6 +43,15 @@
     }
     return self;
 }
+//设置地图等级
+- (void)setCurrentMapLevel:(BMKMapView*)map
+{
+    float level=[Account mapZoomLevel];
+    if (level==0) {
+        level=11.0;
+    }
+    map.zoomLevel=level;
+}
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     if (self.showBarView) {

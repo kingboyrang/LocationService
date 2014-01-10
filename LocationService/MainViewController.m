@@ -60,6 +60,8 @@
    
     [self _initViewController];//初始化子控制器
     [self _initTabbarView];//创建自定义tabBar
+    
+    _recordView=[[RecordView alloc] initWithFrame:CGRectMake(DeviceWidth*4/5-DeviceWidth/10, DeviceHeight-27-20, 27, 27)];
 }
 - (void)didReceiveMemoryWarning
 {
@@ -67,8 +69,17 @@
 }
 - (void)receiveTrajectoryNotifice:(NSNotification*)notifice{
     NSDictionary *dic=[notifice userInfo];
-    self.Entity=[dic objectForKey:@"Entity"];
-    [self loadingReadCountWithId:self.Entity.ID];//加载未读信息总数
+    id v=[dic objectForKey:@"Entity"];
+    if ([v isKindOfClass:[SupervisionPerson class]]) {
+        self.Entity=[dic objectForKey:@"Entity"];
+    }else{
+        self.Entity=nil;
+    }
+    if (self.Entity&&self.Entity.ID&&[self.Entity.ID length]>0) {
+        [self loadingReadCountWithId:self.Entity.ID];//加载未读信息总数
+    }else{
+        [self updateInfoUI:0];
+    }
 }
 - (void)loadingReadCountWithId:(NSString*)personId{
     Account *acc=[Account unarchiverAccount];
@@ -102,47 +113,38 @@
 }
 - (void)updateInfoUI:(int)total{
    
-    if (total==0) {
-        if ([[self.view viewWithTag:900] isKindOfClass:[UILabel class]]) {
-            UILabel *btn=(UILabel*)[self.view viewWithTag:900];
-            [btn removeFromSuperview];
-            return;
+    [_recordView setRecordCount:total];
+    if (_recordView.hasValue) {
+       
+        if (![self.view.subviews containsObject:_recordView]) {
+            CGRect r=_recordView.frame;
+            CGFloat w=DeviceWidth/5;
+            if (r.size.width>w/2) {
+                r.origin.x=DeviceWidth/3+(w-r.size.width)/2+5;
+            }else{
+                r.origin.x=DeviceWidth*4/5-DeviceWidth/10;
+            }
+            _recordView.frame=r;
+            [self.view addSubview:_recordView];
+        }
+    }else{
+        if ([self.view.subviews containsObject:_recordView]) {
+            [_recordView removeFromSuperview];
         }
     }
     
-    NSString *title=[NSString stringWithFormat:@"%d",total];
-    CGSize size=[title textSize:[UIFont fontWithName:DeviceFontName size:DeviceFontSize] withWidth:DeviceWidth];
-    CGRect r=CGRectZero;
-    r.size.width=size.width+2;
-    r.size.height=size.width+2;
-    r.origin.x=DeviceWidth*4/5-DeviceWidth/10;
-    r.origin.y=DeviceHeight-r.size.height-20;
-    
-    if ([[self.view viewWithTag:900] isKindOfClass:[UIButton class]]) {
-        UILabel *btn=(UILabel*)[self.view viewWithTag:900];
-        btn.frame=r;
-        btn.text=title;
-        //[btn setTitle:title forState:UIControlStateNormal];
-        return;
-    }
-    UILabel *btn=[[UILabel alloc] initWithFrame:r];
-    btn.tag=900;
-    btn.text=title;
-    btn.backgroundColor=[UIColor colorFromHexRGB:@"f38400"];
-    btn.font=[UIFont fontWithName:DeviceFontName size:DeviceFontSize];
-    btn.textAlignment=NSTextAlignmentCenter;
-    //btn.layer.borderWidth=2.0;
-    //btn.layer.borderColor=[UIColor colorFromHexRGB:@"f38400"].CGColor;
-    btn.layer.cornerRadius=r.size.width/2;
-    btn.layer.masksToBounds=YES;
-    [self.view addSubview:btn];
-    [btn release];
-    
 }
 - (void)showRecordMessage:(BOOL)show{
-    if ([[self.view viewWithTag:900] isKindOfClass:[UILabel class]]) {
-        UILabel *btn=(UILabel*)[self.view viewWithTag:900];
-        btn.hidden=show;
+    if (show) {
+        if (_recordView.hasValue) {
+            if (![self.view.subviews containsObject:_recordView]) {
+                [self.view addSubview:_recordView];
+            }
+        }
+    }else{
+        if ([self.view.subviews containsObject:_recordView]) {
+            [_recordView removeFromSuperview];
+        }
     }
 }
 #pragma mark - UI
@@ -296,6 +298,8 @@
         [self showRecordMessage:YES];//显示记录总数
     }else if (count== 2) {
         [self showTabbar:NO];
+    }
+    if (count>1) {
         [self showRecordMessage:NO];
     }
     

@@ -19,12 +19,17 @@
 #import "PersonTrajectoryViewController.h"
 #import "CallTrajectoryViewController.h"
 #import "TrajectoryMessageController.h"
+#import "AlertHelper.h"
 @interface IndexViewController ()
 - (void)buttonCompassClick;
 - (void)buttonTargetClick;
 - (void)buttonMonitorClick;
 - (void)cleanMap;
 - (void)startUserLocation;
+- (void)setRecetiveSupersion:(SupervisionPerson*)entity;
+- (SupervisionPerson*)findByGuidEntity:(NSString*)guid;
+- (void)setOrginTrajectorySupersion;
+- (void)changedAdTimer:(NSTimer *)timer;
 @end
 
 @implementation IndexViewController
@@ -53,13 +58,67 @@
     r.size.height-=TabHeight+44;
     _mapView= [[BMKMapView alloc]initWithFrame:r];
     [self.view addSubview:_mapView];
+
+    [self setCurrentMapLevel:_mapView];
     
     /***
-    NSString *memo=@"亲";
-    CGSize size=[memo textSize:[UIFont fontWithName:DeviceFontName size:DeviceFontSize] withWidth:self.view.bounds.size.width];
-    NSLog(@"size=%@",NSStringFromCGSize(size));
-     ***/
+    //先执行一次
+    [self loadSupervision];
+     //30秒刷新一次
+    [NSTimer scheduledTimerWithTimeInterval:30.0f target:self selector:@selector(changedAdTimer:) userInfo:nil repeats:YES];
+    ***/
    // [_mapView addObserver:self forKeyPath:@"zoomLevel" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:nil];
+}
+//更新一次
+- (void)changedAdTimer:(NSTimer *)timer
+{
+    [self loadSupervision];
+    [self setOrginTrajectorySupersion];//重设
+}
+- (void)setOrginTrajectorySupersion{
+    if(self.cells&&[self.cells count]>0)
+    {
+        MainViewController *main=(MainViewController*)self.tabBarController;
+        //轨迹
+        BasicNavigationController *nav1=[main.viewControllers objectAtIndex:1];
+        PersonTrajectoryViewController *person=[nav1.viewControllers objectAtIndex:0];
+        if (person.canShowTrajectory) {
+            SupervisionPerson *entity=[self findByGuidEntity:person.Entity.ID];
+            [self setRecetiveSupersion:entity];
+            return;
+        }
+    }
+    [self setRecetiveSupersion:nil];
+}
+- (SupervisionPerson*)findByGuidEntity:(NSString*)guid{
+    if (self.cells&&[self.cells count]>0) {
+        NSString *match=[NSString stringWithFormat:@"SELF.ID =='%@'",guid];
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:match];
+        NSArray *results = [self.cells filteredArrayUsingPredicate:predicate];
+        if (results&&[results count]>0) {
+            SupervisionPerson *item=[results objectAtIndex:0];
+            return item;
+        }
+    }
+    return nil;
+}
+- (void)setRecetiveSupersion:(SupervisionPerson*)entity{
+    //记录总数
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"trajectTarget" object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:entity==nil?[NSNull null]:entity,@"Entity", nil]];
+    
+    MainViewController *main=(MainViewController*)self.tabBarController;
+    //轨迹
+    BasicNavigationController *nav1=[main.viewControllers objectAtIndex:1];
+    PersonTrajectoryViewController *person=[nav1.viewControllers objectAtIndex:0];
+    person.Entity=entity;
+    //电话
+    BasicNavigationController *nav2=[main.viewControllers objectAtIndex:2];
+    CallTrajectoryViewController *call=[nav2.viewControllers objectAtIndex:0];
+    call.Entity=entity;
+    //信息
+    BasicNavigationController *nav3=[main.viewControllers objectAtIndex:3];
+    TrajectoryMessageController *message=[nav3.viewControllers objectAtIndex:0];
+    [message receiveParams:entity];
 }
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
@@ -69,12 +128,12 @@
     
     [_mapView viewWillAppear];
     _mapView.delegate = self; // 此处记得不用的时候需要置nil，否则影响内存的释放
-    
-    
-    [self loadSupervision];
+    [self changedAdTimer:nil];
 }
 
 -(void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
     [_mapView viewWillDisappear];
     _mapView.delegate = nil; // 不用时，置nil
  
@@ -101,7 +160,6 @@
             NSDictionary *dic=[result json];
             NSArray *source=[dic objectForKey:@"Person"];
             self.cells=[NSMutableArray arrayWithArray:[AppHelper arrayWithSource:source className:@"SupervisionPerson"]];
-           
             if (self.cells&&[self.cells count]>0) {
                 boo=YES;
                 //加载监管目标
@@ -120,7 +178,6 @@
                     [_mapView addAnnotation:item];
                     [item release];
                     [_mapView setCenterCoordinate:coor];
-                    
                 }
             }
         }
@@ -140,7 +197,10 @@
 }
 //设置当前地图等级
 - (void)buttonCompassClick{
-    
+    Account *acc=[Account unarchiverAccount];
+    acc.zoomLevel=_mapView.zoomLevel;
+    [acc save];
+    [AlertHelper initWithTitle:@"提示" message:@"当前地图等级保存成功!"];
 }
 //新增监管目标
 - (void)buttonTargetClick{
@@ -240,22 +300,9 @@
         KYPointAnnotation *elem=(KYPointAnnotation*)view.annotation;
         int index=elem.tag-100;
         SupervisionPerson *entity=self.cells[index];
-        //记录总数
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"trajectTarget" object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:entity,@"Entity", nil]];
         
-        MainViewController *main=(MainViewController*)self.tabBarController;
-        //轨迹
-        BasicNavigationController *nav1=[main.viewControllers objectAtIndex:1];
-        PersonTrajectoryViewController *person=[nav1.viewControllers objectAtIndex:0];
-        person.Entity=entity;
-        //电话
-        BasicNavigationController *nav2=[main.viewControllers objectAtIndex:2];
-        CallTrajectoryViewController *call=[nav2.viewControllers objectAtIndex:0];
-        call.Entity=entity;
-        //信息
-        BasicNavigationController *nav3=[main.viewControllers objectAtIndex:3];
-        TrajectoryMessageController *message=[nav3.viewControllers objectAtIndex:0];
-        [message receiveParams:entity];
+        [self setRecetiveSupersion:entity];
+       
     }
 }
 

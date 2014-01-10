@@ -81,7 +81,7 @@
     r.size.height-=44*2+73;
     _mapView= [[BMKMapView alloc]initWithFrame:r];
     [self.view addSubview:_mapView];
-    _mapView.zoomLevel = 16;
+    [self setCurrentMapLevel:_mapView];//设置地图等级
     
     
     CGFloat topY=r.origin.y+r.size.height+5;

@@ -7,7 +7,7 @@
 //
 
 #import "CallTrajectoryViewController.h"
-
+#import "TelephoneViewController.h"
 @interface CallTrajectoryViewController ()
 - (void)loadingPhones;
 - (void)cleanMap;
@@ -33,6 +33,8 @@
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     [self.navBarView setNavBarTitle:[NSString stringWithFormat:@"%@--电话",self.Entity.Name]];
+    
+     [_mapView viewWillAppear]; 
     _mapView.delegate = self;
     
     [self cleanMap];
@@ -53,10 +55,18 @@
     CGRect r=self.view.bounds;
     r.origin.y=44;
     r.size.height-=44;
+    if ([self.navigationController.viewControllers[0] isKindOfClass:[self class]]) {
+        r.size.height-=TabHeight;
+    }
     _mapView= [[BMKMapView alloc]initWithFrame:r];
     [self.view addSubview:_mapView];
+    [self setCurrentMapLevel:_mapView];
     
-    _phoneView=[[CallPhoneView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height, self.view.bounds.size.width, 100)];
+    CGFloat topY=self.view.bounds.size.height;
+    if ([self.navigationController.viewControllers[0] isKindOfClass:[self class]]) {
+        topY-=TabHeight;
+    }
+    _phoneView=[[CallPhoneView alloc] initWithFrame:CGRectMake(0, topY, self.view.bounds.size.width, 100)];
     _phoneView.controlers=self;
     [self.view addSubview:_phoneView];
     
@@ -83,7 +93,11 @@
 }
 //拨打电话
 - (void)callWithPhone:(NSString*)phone{
-    
+    TelephoneViewController *tele=[[TelephoneViewController alloc] init];
+    tele.Phone=phone;
+    tele.Entity=self.Entity;
+    [self.navigationController pushViewController:tele animated:YES];
+    [tele release];
 }
 //加载电话
 - (void)loadingPhones{
@@ -139,6 +153,9 @@
 - (void)mapView:(BMKMapView *)mapView didSelectAnnotationView:(BMKAnnotationView *)view{
     CGRect r=_phoneView.frame;
     r.origin.y=self.view.bounds.size.height-r.size.height;
+    if ([self.navigationController.viewControllers[0] isKindOfClass:[self class]]) {
+        r.origin.y-=TabHeight;
+    }
     [UIView animateWithDuration:0.5f animations:^{
         _phoneView.frame=r;
     }];
@@ -146,6 +163,9 @@
 - (void)mapView:(BMKMapView *)mapView didDeselectAnnotationView:(BMKAnnotationView *)view{
     CGRect r=_phoneView.frame;
     r.origin.y=self.view.bounds.size.height;
+    if ([self.navigationController.viewControllers[0] isKindOfClass:[self class]]) {
+        r.origin.y-=TabHeight;
+    }
     [UIView animateWithDuration:0.5f animations:^{
         _phoneView.frame=r;
     }];

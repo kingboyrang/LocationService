@@ -19,7 +19,7 @@
 @property(nonatomic,assign) BOOL isFirstRun;//第一次启动App
 @property(nonatomic,assign) BOOL isLogin;//是否已登入
 @property(nonatomic,assign) BOOL isRememberPwd;//是否记住密码
-
+@property(nonatomic,assign) float zoomLevel;//地图等级
 //保存
 - (void)save;
 //注销
@@ -39,4 +39,5 @@
 //第一次启动
 + (BOOL)firstRunning;
 + (void)finishRunning;
++ (float)mapZoomLevel;
 @end

@@ -14,6 +14,7 @@
 #import "NSDate+TPCategory.h"
 #import "AlertHelper.h"
 #import "EditSupervisionViewController.h"
+#import "IndexViewController.h"
 @interface SupervisionExtend ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>{
     UITableView *_tableView;
 }
@@ -256,17 +257,19 @@
     args.methodName=@"SaveTeleAndFreqIn";
     args.soapParams=params;
     NSString *memo=self.operateType==1?@"新增":@"修改";
-    NSLog(@"soap==%@",args.soapMessage);
     [self showLoadingAnimatedWithTitle:[NSString stringWithFormat:@"正在%@,请稍后...",memo]];
     [self.serviceHelper asynService:args success:^(ServiceResult *result) {
-        NSLog(@"xml=%@",result.request.responseString);
         BOOL boo=NO;
         if (result.hasSuccess) {
             NSDictionary *dic=(NSDictionary*)[result json];
             if (dic!=nil&&[[dic objectForKey:@"Result"] isEqualToString:@"1"]) {
                 boo=YES;
                 [self hideLoadingViewAnimated:^(AnimateLoadView *hideView) {
-                    [self.navigationController popToViewController:[[self.navigationController viewControllers] objectAtIndex:2] animated:YES];
+                    int row=1;
+                    if ([self.navigationController.viewControllers[0] isKindOfClass:[IndexViewController class]]) {
+                        row=0;
+                    }
+                    [self.navigationController popToViewController:[[self.navigationController viewControllers] objectAtIndex:row] animated:YES];
                 }];
             }
         }

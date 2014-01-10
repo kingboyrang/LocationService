@@ -492,6 +492,7 @@
     args.serviceNameSpace=DataNameSpace1;
     args.methodName=@"SaveRuleDateAndTime";
     args.soapParams=params;
+    NSLog(@"soap=%@",args.soapMessage);
     [self showLoadingAnimatedWithTitle:@"正在执行,请稍后..."];
     [self.serviceHelper asynService:args success:^(ServiceResult *result) {
         BOOL boo=NO;

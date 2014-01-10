@@ -111,6 +111,7 @@
    {
        ShowTrajectoryViewController *show=[[ShowTrajectoryViewController alloc] init];
        show.list=self.cells;
+       show.Entity=self.Entity;
        [self.navigationController pushViewController:show animated:YES];
        [show release];
    }
@@ -257,6 +258,7 @@
     return bgView;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     TrajectoryHistory *entity=self.cells[indexPath.row];
     SingleMapShowViewController *map=[[SingleMapShowViewController alloc] init];
     map.Entity=entity;

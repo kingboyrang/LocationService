@@ -12,6 +12,7 @@
 #import "TKMapCell.h"
 #import "UIActionSheet+Blocks.h"
 #import "UIDevice+TPCategory.h"
+#import "OfflineDemoMapViewController.h"
 @interface OnlineMapViewController ()<UITableViewDataSource,UITableViewDelegate>{
     UITableView *_tableView;
 }
@@ -230,7 +231,14 @@
     
     RIButtonItem *viewerBtn=[RIButtonItem new];
     viewerBtn.label=@"查看地图";
-    viewerBtn.action=nil;
+    viewerBtn.action=^(){
+        BMKOLSearchRecord *entity=self.arraylDownLoadSource[row];
+        OfflineDemoMapViewController *offlineMapViewCtrl = [[[OfflineDemoMapViewController alloc] init] autorelease];
+        offlineMapViewCtrl.cityId = entity.cityID;
+        offlineMapViewCtrl.offlineServiceOfMapview = _offlineMap;
+        [self.navigationController pushViewController:offlineMapViewCtrl animated:YES];
+        [offlineMapViewCtrl release];
+    };
     
     RIButtonItem *pauseBtn=[RIButtonItem new];
     pauseBtn.label=@"暂停";
@@ -279,7 +287,13 @@
     
     RIButtonItem *viewerBtn=[RIButtonItem new];
     viewerBtn.label=@"查看地图";
-    viewerBtn.action=nil;
+    viewerBtn.action=^(){
+        OfflineDemoMapViewController *offlineMapViewCtrl = [[[OfflineDemoMapViewController alloc] init] autorelease];
+        offlineMapViewCtrl.cityId = entity.cityID;
+        offlineMapViewCtrl.offlineServiceOfMapview = _offlineMap;
+        [self.navigationController pushViewController:offlineMapViewCtrl animated:YES];
+        [offlineMapViewCtrl release];
+    };
     
     RIButtonItem *delBtn=[RIButtonItem new];
     delBtn.label=@"删除";

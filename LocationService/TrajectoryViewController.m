@@ -79,7 +79,7 @@
     
     CGRect r=self.view.bounds;
     r.origin.y=44;
-    r.size.height-=44*2;
+    r.size.height-=44;
     _tableView=[[UITableView alloc] initWithFrame:r style:UITableViewStylePlain];
     _tableView.delegate=self;
     _tableView.dataSource=self;
@@ -250,6 +250,7 @@
     return bgView;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     TrajectoryHistory *entity=self.cells[indexPath.row];
     SingleMapShowViewController *map=[[SingleMapShowViewController alloc] init];
     map.Entity=entity;
