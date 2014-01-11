@@ -218,6 +218,9 @@
 - (void)finishSelectedImage:(UIImage*)image{
     [_imageHead setImage:image];
 }
+- (void)finishUploadFileName:(NSString*)fileName{
+    self.Entity.Photo=fileName;
+}
 - (void)replacePhonestring:(UITextField*)field{
     NSRegularExpression *regular;
     regular = [[NSRegularExpression alloc] initWithPattern:@"[^0-9]+"

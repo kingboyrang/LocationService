@@ -152,11 +152,9 @@
     args.serviceNameSpace=DataNameSpace1;
     args.methodName=@"GetSuperviseInfo";
     args.soapParams=[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:acc.WorkNo,@"WorkNo", nil], nil];
-    
     [self.serviceHelper asynService:args success:^(ServiceResult *result) {
         BOOL boo=NO;
         if (result.hasSuccess) {
-           
             NSDictionary *dic=[result json];
             NSArray *source=[dic objectForKey:@"Person"];
             self.cells=[NSMutableArray arrayWithArray:[AppHelper arrayWithSource:source className:@"SupervisionPerson"]];
@@ -205,6 +203,7 @@
 //新增监管目标
 - (void)buttonTargetClick{
     AddSupervision *supervision=[[AddSupervision alloc] init];
+    supervision.operateType=1;//新增
     [self.navigationController pushViewController:supervision animated:YES];
     [supervision release];
 }

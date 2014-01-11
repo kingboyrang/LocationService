@@ -138,7 +138,7 @@
         cell.label.text=[NSString stringWithFormat:@"星期%@",[dicWeeks objectForKey:[NSString stringWithFormat:@"%d",weekDay]]];
         cell.index=weekDay-1;//星期几
         cell.Sort=i;
-        [cell setSelectedWeek:NO];
+        //[cell setSelectedWeek:NO];
         [self.cells addObject:cell];
         [cell release];
         
@@ -320,7 +320,10 @@
                     if ([key isEqualToString:@"6"]&&arr&&[arr count]>0) {
                        end=[arr[0] objectForKey:@"validSTime"];
                     }
-                    [self handlerLimitWithArray:arr week:key];
+                    if (arr&&[arr count]>0) {
+                        [self handlerLimitWithArray:arr week:key];
+                    }
+                    
                 }
             }
             if ([start length]>0) {

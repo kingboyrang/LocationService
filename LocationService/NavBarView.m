@@ -42,13 +42,16 @@
     [self addSubview:fx];
 }
 - (void)setBackButtonWithTarget:(id)target action:(SEL)action{
-    UIButton *btn=[UIButton backButtonTarget:target action:action forControlEvents:UIControlEventTouchUpInside];
-    btn.tag=201;
-    CGRect r=btn.frame;
-    r.origin.x=5;
-    r.origin.y=(self.bounds.size.height-r.size.height)/2;
-    btn.frame=r;
-    [self addSubview:btn];
+    if (![self viewWithTag:201]) {
+        UIButton *btn=[UIButton backButtonTarget:target action:action forControlEvents:UIControlEventTouchUpInside];
+        btn.tag=201;
+        CGRect r=btn.frame;
+        r.origin.x=5;
+        r.origin.y=(self.bounds.size.height-r.size.height)/2;
+        btn.frame=r;
+        [self addSubview:btn];
+    }
+   
 }
 - (void)setMonitorButtonWithTarget:(id)target action:(SEL)action{
     if (![self viewWithTag:204]) {

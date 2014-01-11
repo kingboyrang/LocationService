@@ -13,6 +13,7 @@
 #import "UIActionSheet+Blocks.h"
 #import "UIDevice+TPCategory.h"
 #import "OfflineDemoMapViewController.h"
+#import "AppUI.h"
 @interface OnlineMapViewController ()<UITableViewDataSource,UITableViewDelegate>{
     UITableView *_tableView;
 }
@@ -38,10 +39,13 @@
         [_offlineMap release];
         _offlineMap = nil;
     }
+    /***
     if (_mapView) {
         [_mapView release];
         _mapView = nil;
     }
+     **/
+    [_tableView release];
 }
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -55,26 +59,31 @@
     [super viewWillAppear:animated];
     [self.navBarView setNavBarTitle:@"离线地图"];
     if (![self.navBarView viewWithTag:301]) {
-        UIButton *btn=[UIButton buttonWithType:UIButtonTypeCustom];
-        btn.frame=CGRectMake(self.view.bounds.size.width-50, (44-35)/2, 50, 35);
+        UIButton *btn=[AppUI createhighlightButtonWithTitle:@"添加" frame:CGRectMake(self.view.bounds.size.width-50, (44-35)/2, 50, 35)];
         btn.tag=301;
-        [btn setTitle:@"添加" forState:UIControlStateNormal];
-        [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         [btn addTarget:self action:@selector(buttonAddClick:) forControlEvents:UIControlEventTouchUpInside];
-        btn.titleLabel.font=[UIFont fontWithName:DeviceFontName size:DeviceFontSize];
-        btn.showsTouchWhenHighlighted = YES;  //指定按钮被按下时发光
-        [btn setTitleColor:[UIColor colorFromHexRGB:@"4a7ebb"] forState:UIControlStateHighlighted];
         [self.navBarView addSubview:btn];
     }
+    if (_offlineMap==nil)
+    {
+        NSLog(@"重新alloc====");
+        _offlineMap = [[BMKOfflineMap alloc] init];
+    }
     _offlineMap.delegate = self;
-    _mapView.delegate=self;
-    //[_offlineMap start:132];
+    //_mapView.delegate=self;
+     NSLog(@"viewWillAppear====");
 }
 -(void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-     [_mapView viewWillDisappear];
+     //[_mapView viewWillDisappear];
+    //_mapView.delegate=nil;
+    
     _offlineMap.delegate = nil; // 不用时，置nil
-     _mapView.delegate=nil;
+    [_offlineMap release];
+    _offlineMap=nil;
+    
+    NSLog(@"viewWillDisappear");
+     
 }
 - (void)viewDidLoad
 {
@@ -83,7 +92,7 @@
     r.size.height-=44*2;
     r.origin.y=44;
         
-    _mapView=[[BMKMapView alloc] init];
+    //_mapView=[[BMKMapView alloc] init];
     
     _tableView=[[UITableView alloc] initWithFrame:r style:UITableViewStylePlain];
     _tableView.delegate=self;
@@ -117,6 +126,8 @@
     _arraylocalDownLoadMapInfo = [[NSMutableArray arrayWithArray:[_offlineMap getAllUpdateInfo]] retain];
     
     currentDownloadCityId=-1;
+    
+    
     
 }
 #pragma mark 包大小转换工具类（将包大小转换成合适单位）
@@ -225,29 +236,29 @@
 }
 //删除正在下载的地图
 - (void)viewerDownloadWithEntity:(BMKOLSearchRecord*)entity withRow:(int)row{
-    RIButtonItem *canBtn=[RIButtonItem new];
+    RIButtonItem *canBtn=[RIButtonItem item];
     canBtn.label=@"取消";
     canBtn.action=nil;
     
-    RIButtonItem *viewerBtn=[RIButtonItem new];
+    RIButtonItem *viewerBtn=[RIButtonItem item];
     viewerBtn.label=@"查看地图";
     viewerBtn.action=^(){
         BMKOLSearchRecord *entity=self.arraylDownLoadSource[row];
         OfflineDemoMapViewController *offlineMapViewCtrl = [[[OfflineDemoMapViewController alloc] init] autorelease];
         offlineMapViewCtrl.cityId = entity.cityID;
-        offlineMapViewCtrl.offlineServiceOfMapview = _offlineMap;
+        //offlineMapViewCtrl.offlineServiceOfMapview = _offlineMap;
         [self.navigationController pushViewController:offlineMapViewCtrl animated:YES];
         [offlineMapViewCtrl release];
     };
     
-    RIButtonItem *pauseBtn=[RIButtonItem new];
+    RIButtonItem *pauseBtn=[RIButtonItem item];
     pauseBtn.label=@"暂停";
     pauseBtn.action=^(){
         BMKOLSearchRecord *entity=self.arraylDownLoadSource[row];
         [self pauseDownloadWithCityId:entity.cityID];//暂停下载
     };
     
-    RIButtonItem *delBtn=[RIButtonItem new];
+    RIButtonItem *delBtn=[RIButtonItem item];
     delBtn.label=@"删除";
     delBtn.action=^(){
         BMKOLSearchRecord *entity=self.arraylDownLoadSource[row];
@@ -281,21 +292,21 @@
 }
 //查看或删除已下载的地图
 - (void)viewerlocalMapWithEntity:(BMKOLUpdateElement*)entity withRow:(int)row{
-    RIButtonItem *canBtn=[RIButtonItem new];
+    RIButtonItem *canBtn=[RIButtonItem item];
     canBtn.label=@"取消";
     canBtn.action=nil;
     
-    RIButtonItem *viewerBtn=[RIButtonItem new];
+    RIButtonItem *viewerBtn=[RIButtonItem item];
     viewerBtn.label=@"查看地图";
     viewerBtn.action=^(){
         OfflineDemoMapViewController *offlineMapViewCtrl = [[[OfflineDemoMapViewController alloc] init] autorelease];
         offlineMapViewCtrl.cityId = entity.cityID;
-        offlineMapViewCtrl.offlineServiceOfMapview = _offlineMap;
+        //offlineMapViewCtrl.offlineServiceOfMapview = _offlineMap;
         [self.navigationController pushViewController:offlineMapViewCtrl animated:YES];
         [offlineMapViewCtrl release];
     };
     
-    RIButtonItem *delBtn=[RIButtonItem new];
+    RIButtonItem *delBtn=[RIButtonItem item];
     delBtn.label=@"删除";
     delBtn.action=^(){
         int sec=0;

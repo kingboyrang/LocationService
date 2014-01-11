@@ -214,6 +214,11 @@
 - (void)buttonNextClick:(id)sender{
     if (self.operateType==1) {//新增
         [self addAreaCompleted:^(NSString *areaId) {
+            /**以防返回操作时，无法使用***/
+            self.AreaId=areaId;
+            self.operateType=2;
+            
+            
             AreaRuleViewController *areaRange=[[AreaRuleViewController alloc] init];
             //areaRange.operateType=1;
             areaRange.AreaId=areaId;

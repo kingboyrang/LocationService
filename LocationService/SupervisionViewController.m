@@ -17,6 +17,7 @@
 #import "TrajectoryMessageController.h"
 #import "EditSupervisionViewController.h"
 #import "CallTrajectoryViewController.h"
+#import "AppUI.h"
 @interface SupervisionViewController ()<UITableViewDataSource,UITableViewDelegate>{
     UITableView *_tableView;
     LoginButtons *_toolBar;
@@ -46,27 +47,15 @@
     
     if ([self.view.subviews containsObject:self.navBarView]) {
         if (![self.navBarView viewWithTag:300]) {
-            UIButton *btn=[UIButton buttonWithType:UIButtonTypeCustom];
-            btn.frame=CGRectMake(self.view.bounds.size.width-90, (44-35)/2, 50, 35);
+            UIButton *btn=[AppUI createhighlightButtonWithTitle:@"添加" frame:CGRectMake(self.view.bounds.size.width-90, (44-35)/2, 50, 35)];
             btn.tag=300;
-            [btn setTitle:@"添加" forState:UIControlStateNormal];
-            [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
             [btn addTarget:self action:@selector(buttonAddClick) forControlEvents:UIControlEventTouchUpInside];
-            btn.titleLabel.font=[UIFont fontWithName:DeviceFontName size:DeviceFontSize];
-            btn.showsTouchWhenHighlighted = YES;  //指定按钮被按下时发光
-            [btn setTitleColor:[UIColor colorFromHexRGB:@"4a7ebb"] forState:UIControlStateHighlighted];
             [self.navBarView addSubview:btn];
         }
         if (![self.navBarView viewWithTag:301]) {
-            UIButton *btn=[UIButton buttonWithType:UIButtonTypeCustom];
-            btn.frame=CGRectMake(self.view.bounds.size.width-50, (44-35)/2, 50, 35);
+            UIButton *btn=[AppUI createhighlightButtonWithTitle:@"编辑" frame:CGRectMake(self.view.bounds.size.width-50, (44-35)/2, 50, 35)];
             btn.tag=301;
-            [btn setTitle:@"编辑" forState:UIControlStateNormal];
-            [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
             [btn addTarget:self action:@selector(buttonEditClick:) forControlEvents:UIControlEventTouchUpInside];
-            btn.titleLabel.font=[UIFont fontWithName:DeviceFontName size:DeviceFontSize];
-            btn.showsTouchWhenHighlighted = YES;  //指定按钮被按下时发光
-            [btn setTitleColor:[UIColor colorFromHexRGB:@"4a7ebb"] forState:UIControlStateHighlighted];
             [self.navBarView addSubview:btn];
         }
     }
@@ -242,6 +231,7 @@
 //新增
 - (void)buttonAddClick{
     AddSupervision *add=[[AddSupervision alloc] init];
+    add.operateType=1;//表示新增
     [self.navigationController pushViewController:add animated:YES];
     [add release];
 }

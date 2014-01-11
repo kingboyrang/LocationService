@@ -10,7 +10,7 @@
 #import "BMapKit.h"
 @interface OfflineDemoMapViewController : BasicViewController<BMKMapViewDelegate>{
     BMKMapView* _mapView;
+    BMKOfflineMap* _officeMap;
 }
 @property (nonatomic, assign) int cityId;
-@property (nonatomic, retain) BMKOfflineMap* offlineServiceOfMapview;
 @end

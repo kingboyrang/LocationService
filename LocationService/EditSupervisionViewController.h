@@ -12,4 +12,5 @@
 @property(nonatomic,strong) SupervisionPerson *Entity;
 @property(nonatomic,strong) NSMutableArray *cells;
 - (void)finishSelectedImage:(UIImage*)image;
+- (void)finishUploadFileName:(NSString*)fileName;
 @end

@@ -12,8 +12,8 @@
 -(NSString*)paramsFormatString:(NSArray*)params;
 @end
 
-static NSString *defaultWebServiceUrl=@"http://ibdcloud.com:8083/User_APP.asmx";
-static NSString *defaultWebServiceNameSpace=@"http://tempuri.org/";
+static NSString *defaultWebServiceUrl=DataWebserviceURL;
+static NSString *defaultWebServiceNameSpace=DataNameSpace;
 
 @implementation ServiceArgs
 

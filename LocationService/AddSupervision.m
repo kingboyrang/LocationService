@@ -27,6 +27,9 @@
 - (void)replacePhonestring:(UITextField*)field;
 - (void)uploadImageWithId:(NSString*)personId completed:(void(^)(NSString *fileName))completed;
 - (void)finishAddTrajectory:(void(^)(NSString *personId,NSString *code))completed;
+- (void)loadingPersonInfo;
+- (void)finishEditTrajectory:(void(^)(NSString *personId))completed;
+- (NSString*)getUploadFileName;
 @end
 
 @implementation AddSupervision
@@ -47,6 +50,8 @@
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     [self.navBarView setNavBarTitle:@"监管目标"];
+    
+    [self loadingPersonInfo];//修改时，加载信息
 }
 - (void)viewDidLoad
 {
@@ -107,6 +112,34 @@
     
     self.cells=[NSMutableArray arrayWithObjects:cell1,cell2,cell3,cell4,cell5,cell6,cell7,cell8, nil];
 }
+//修改时，加载信息
+- (void)loadingPersonInfo{
+    if (self.operateType==2&&self.PersonID&&[self.PersonID length]>0) {
+        
+        ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
+        args.methodName=@"GetPersonByID";
+        args.serviceURL=DataWebservice1;
+        args.serviceNameSpace=DataNameSpace1;
+        args.soapParams=[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:self.PersonID,@"personID", nil], nil];
+        
+        [self.serviceHelper asynService:args success:^(ServiceResult *result) {
+            NSDictionary *dic=[result json];
+            if(dic!=nil)
+            {
+                NSArray *source=[dic objectForKey:@"Person"];
+                if ([source count]>0) {
+                    NSDictionary *item=[source objectAtIndex:0];
+                    self.PhoneName=[item objectForKey:@"Photo"];
+                    
+                    TKTextFieldCell *cell1=self.cells[1];
+                    cell1.textField.text=[item objectForKey:@"Name"];
+                    
+                }
+            }
+        } failed:nil];
+    }
+}
+//新增
 - (void)finishAddTrajectory:(void(^)(NSString *personId,NSString *code))completed{
     if (!self.hasNetWork) {
         [self showErrorNetWorkNotice:nil];
@@ -166,6 +199,7 @@
                     boo=YES;
                     [self hideLoadingViewAnimated:^(AnimateLoadView *hideView) {
                         if (completed) {
+                            self.PhoneName=fileName;
                             completed([dic objectForKey:@"ID"],[dic objectForKey:@"DeviceCode"]);
                         }
                     }];
@@ -189,6 +223,88 @@
         }];
     }];
 }
+//修改
+- (void)finishEditTrajectory:(void(^)(NSString *personId))completed{
+    if (!self.hasNetWork) {
+        [self showErrorNetWorkNotice:nil];
+        return;
+    }
+    Account *acc=[Account unarchiverAccount];
+    TKTextFieldCell *cell1=self.cells[1];
+    
+    if (!cell1.hasValue) {
+        [AlertHelper initWithTitle:@"提示" message:@"请输入名称!"];
+        [cell1.textField becomeFirstResponder];
+        return;
+    }
+    
+    TKTextFieldCell *cell2=self.cells[3];
+    if (!cell2.hasValue) {
+        [AlertHelper initWithTitle:@"提示" message:@"请输入IMEI号码!"];
+        [cell2.textField becomeFirstResponder];
+        return;
+    }
+    TKTextFieldCell *cell3=self.cells[5];
+    if (!cell3.hasValue) {
+        [AlertHelper initWithTitle:@"提示" message:@"请输入SIM卡号!"];
+        [cell3.textField becomeFirstResponder];
+        return;
+    }
+    TKTextFieldCell *cell4=self.cells[7];
+    if (!cell4.hasValue) {
+        [AlertHelper initWithTitle:@"提示" message:@"请输入密码!"];
+        [cell4.textField becomeFirstResponder];
+        return;
+    }
+    
+    [self showLoadingAnimatedWithTitle:@"修改监管目标,请稍后..."];
+    
+    NSMutableArray *params=[NSMutableArray arrayWithCapacity:6];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:self.PersonID,@"personID", nil]];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[cell1.textField.text Trim],@"Name", nil]];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[cell2.textField.text Trim],@"phoneNum", nil]];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[cell3.textField.text Trim],@"strIMEI", nil]];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[cell4.textField.text Trim],@"Password", nil]];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[self getUploadFileName],@"photo", nil]];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:acc.WorkNo,@"CurWorkNo", nil]];
+    
+    ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
+    args.serviceURL=DataWebservice1;
+    args.serviceNameSpace=DataNameSpace1;
+    args.methodName=@"UpdatePerson";
+    args.soapParams=params;
+    [self.serviceHelper asynService:args success:^(ServiceResult *result) {
+        BOOL boo=NO;
+        if (result.hasSuccess) {
+            XmlNode *node=[result methodNode];
+            NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:[node.InnerText dataUsingEncoding:NSUTF8StringEncoding] options:1 error:nil];
+            if ([[dic objectForKey:@"Result"] isEqualToString:@"1"]) {
+                boo=YES;
+                [self hideLoadingViewAnimated:^(AnimateLoadView *hideView) {
+                    if (completed) {
+                        completed(self.PersonID);
+                    }
+                }];
+                return;
+            }
+        }
+        if (!boo) {
+            [self hideLoadingFailedWithTitle:@"修改监管目标失败!" completed:nil];
+        }
+    } failed:^(NSError *error, NSDictionary *userInfo) {
+        [self hideLoadingFailedWithTitle:@"修改监管目标失败!" completed:nil];
+    }];
+    
+}
+- (NSString*)getUploadFileName{
+    if (self.PhoneName&&[self.PhoneName length]>0) {
+        int pos=[self.PhoneName lastIndexOf:@"/"];
+        if (pos!=-1) {
+            return [self.PhoneName substringFromIndex:pos+1];
+        }
+    }
+    return @"";
+}
 //完成
 - (void)buttonSubmit{
     [self finishAddTrajectory:^(NSString *personId,NSString *code) {
@@ -197,39 +313,52 @@
 }
 //下一步
 - (void)buttonCancel{
-    
-    /***
-    SupervisionExtend *extend=[[SupervisionExtend alloc] init];
-    extend.PersonId=@"a81081ee-bc77-4358-9f68-6acb6fb2b201";
-    extend.operateType=1;//新增
-    extend.DeviceCode=@"81438cf3-be6e-4c47-80bf-1d12b0083c3d";
-    [self.navigationController pushViewController:extend animated:YES];
-    [extend release];
-    return;
-    ***/
-    [self finishAddTrajectory:^(NSString *personId,NSString *code) {
-        SupervisionExtend *extend=[[SupervisionExtend alloc] init];
-        extend.PersonId=personId;
-        extend.operateType=1;//新增
-        extend.DeviceCode=code;
-        [self.navigationController pushViewController:extend animated:YES];
-        [extend release];
-    }];
+    if (self.operateType==1) {//新增
+        [self finishAddTrajectory:^(NSString *personId,NSString *code) {
+            self.operateType=2;//修改
+            self.PersonID=personId;//修改
+            self.DeviceCode=code;
+            
+            SupervisionExtend *extend=[[SupervisionExtend alloc] init];
+            extend.PersonId=personId;
+            extend.operateType=1;//新增
+            extend.DeviceCode=code;
+            [self.navigationController pushViewController:extend animated:YES];
+            [extend release];
+        }];
+    }else{//修改
+        [self finishEditTrajectory:^(NSString *personId) {
+            self.operateType=2;//修改
+            self.PersonID=personId;//修改
+            
+            SupervisionExtend *extend=[[SupervisionExtend alloc] init];
+            extend.PersonId=personId;
+            extend.operateType=1;//新增
+            extend.DeviceCode=self.DeviceCode;
+            [self.navigationController pushViewController:extend animated:YES];
+            [extend release];
+            
+        }];
+    }
 }
 //选照片
 - (void)buttonChooseImage{
     SupervisionPerson *entity=[[[SupervisionPerson alloc] init] autorelease];
-    entity.ID=@"";
+    entity.ID=self.operateType==1?@"":self.PersonID;
     entity.Name=@"监管目标头像";
     EditSupervisionHead *head=[[EditSupervisionHead alloc] init];
     head.Entity=entity;
-    head.operateType=1;//新增
+    head.operateType=self.operateType;//新增
     head.delegate=self;
     [self.navigationController pushViewController:head animated:YES];
     [head release];
 }
 - (void)finishSelectedImage:(UIImage*)image{
     [_imageHead setImage:image];
+}
+//获取修改的图片名称
+- (void)finishUploadFileName:(NSString*)fileName{
+    self.PhoneName=fileName;
 }
 - (void)didReceiveMemoryWarning
 {

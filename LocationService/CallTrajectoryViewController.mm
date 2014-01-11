@@ -48,6 +48,8 @@
     [item release];
     [_mapView setCenterCoordinate:coor];
     
+    [self loadingPhones];//加载电话
+    
 }
 - (void)viewDidLoad
 {

@@ -166,7 +166,7 @@
     }
     NSString *emailRegEx =@"^[a-zA-Z0-9_]+$";
     NSPredicate *regExPredicate = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", emailRegEx];
-    if ([regExPredicate evaluateWithObject:cell2.textField.text]) {
+    if (![regExPredicate evaluateWithObject:cell2.textField.text]) {
         [AlertHelper initWithTitle:@"提示" message:@"新密码格式错误,只能由字母、数字、下划线组成!"];
         [cell2.textField becomeFirstResponder];
         return;
@@ -189,13 +189,11 @@
     }
     [self showLoadingAnimatedWithTitle:@"正在修改密码,请稍后..."];
     NSMutableArray *params=[NSMutableArray arrayWithCapacity:2];
-    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:acc.UserId,@"userId", nil]];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:acc.WorkNo,@"userId", nil]];
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[cell1.textField.text Trim],@"oldpwd", nil]];
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[cell2.textField.text Trim],@"newpwd", nil]];
     
     ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
-    args.serviceURL=DataWebservice1;
-    args.serviceNameSpace=DataWebservice1;
     args.methodName=@"ModifyPassword";
     args.soapParams=params;
     [self.serviceHelper asynService:args success:^(ServiceResult *result) {

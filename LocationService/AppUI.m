@@ -37,4 +37,14 @@
     secondLabel.shadowBlur = 5.0f;
     return [secondLabel autorelease];
 }
++(UIButton*)createhighlightButtonWithTitle:(NSString*)title frame:(CGRect)frame{
+    UIButton *btn=[UIButton buttonWithType:UIButtonTypeCustom];
+    btn.frame=frame;
+    [btn setTitle:title forState:UIControlStateNormal];
+    [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    btn.titleLabel.font=[UIFont fontWithName:DeviceFontName size:DeviceFontSize];
+    btn.showsTouchWhenHighlighted = YES;  //指定按钮被按下时发光
+    [btn setTitleColor:[UIColor colorFromHexRGB:@"4a7ebb"] forState:UIControlStateHighlighted];
+    return btn;
+}
 @end

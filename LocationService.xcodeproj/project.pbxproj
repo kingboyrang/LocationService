@@ -150,7 +150,7 @@
 		01B65CF71867DB9A001F11BA /* IndexViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 01B65CF61867DB9A001F11BA /* IndexViewController.mm */; };
 		01BBF6EB187FC94700D4892B /* record.png in Resources */ = {isa = PBXBuildFile; fileRef = 01BBF6EA187FC94600D4892B /* record.png */; };
 		01BBF6EE187FC96000D4892B /* RecordView.m in Sources */ = {isa = PBXBuildFile; fileRef = 01BBF6ED187FC96000D4892B /* RecordView.m */; };
-		01BBF6F1187FEEEC00D4892B /* OfflineDemoMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01BBF6F0187FEEEC00D4892B /* OfflineDemoMapViewController.m */; };
+		01BBF6F1187FEEEC00D4892B /* OfflineDemoMapViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 01BBF6F0187FEEEC00D4892B /* OfflineDemoMapViewController.mm */; };
 		01BCCDFD1878E4F900FFC74C /* TrajectoryPaoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 01BCCDFC1878E4F900FFC74C /* TrajectoryPaoView.m */; };
 		01BD39FE1878EBDA00B2F513 /* TKLabelLabelCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 01BD39FD1878EBDA00B2F513 /* TKLabelLabelCell.m */; };
 		01BD3A011878ED3F00B2F513 /* TKTrajectoryPaoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 01BD3A001878ED3F00B2F513 /* TKTrajectoryPaoCell.m */; };
@@ -478,7 +478,7 @@
 		01BBF6EC187FC96000D4892B /* RecordView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecordView.h; sourceTree = "<group>"; };
 		01BBF6ED187FC96000D4892B /* RecordView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecordView.m; sourceTree = "<group>"; };
 		01BBF6EF187FEEEC00D4892B /* OfflineDemoMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OfflineDemoMapViewController.h; sourceTree = "<group>"; };
-		01BBF6F0187FEEEC00D4892B /* OfflineDemoMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OfflineDemoMapViewController.m; sourceTree = "<group>"; };
+		01BBF6F0187FEEEC00D4892B /* OfflineDemoMapViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OfflineDemoMapViewController.mm; sourceTree = "<group>"; };
 		01BCCDFB1878E4F900FFC74C /* TrajectoryPaoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrajectoryPaoView.h; sourceTree = "<group>"; };
 		01BCCDFC1878E4F900FFC74C /* TrajectoryPaoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrajectoryPaoView.m; sourceTree = "<group>"; };
 		01BD39FC1878EBDA00B2F513 /* TKLabelLabelCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TKLabelLabelCell.h; sourceTree = "<group>"; };
@@ -1167,7 +1167,6 @@
 		01BE3FCE185EACB6005C25D9 = {
 			isa = PBXGroup;
 			children = (
-				01BD3A22187A49E500B2F513 /* CoreTelephony.framework */,
 				016924CE1862A33C0040E0C9 /* Entitlements.plist */,
 				01BE3FE0185EACB6005C25D9 /* LocationService */,
 				01BE3FD9185EACB6005C25D9 /* Frameworks */,
@@ -1186,6 +1185,7 @@
 		01BE3FD9185EACB6005C25D9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				01BD3A22187A49E500B2F513 /* CoreTelephony.framework */,
 				01C913BB187111BB00D9A926 /* Security.framework */,
 				01C913B9187111A100D9A926 /* OpenGLES.framework */,
 				01FCBE28186AC430000835D4 /* ImageIO.framework */,
@@ -1366,7 +1366,7 @@
 			isa = PBXGroup;
 			children = (
 				01BBF6EF187FEEEC00D4892B /* OfflineDemoMapViewController.h */,
-				01BBF6F0187FEEEC00D4892B /* OfflineDemoMapViewController.m */,
+				01BBF6F0187FEEEC00D4892B /* OfflineDemoMapViewController.mm */,
 				01C913BD18715D6200D9A926 /* UI */,
 				01C0AA1A186D708400F8A250 /* OnlineMapViewController.h */,
 				01C0AA1B186D708400F8A250 /* OnlineMapViewController.m */,
@@ -1789,7 +1789,7 @@
 				01C170F6187AA47A00CE62DD /* TKAreaWeekCell.m in Sources */,
 				01FB5E2D187CECFA0025ADC7 /* AreaTimeSpan.m in Sources */,
 				01BBF6EE187FC96000D4892B /* RecordView.m in Sources */,
-				01BBF6F1187FEEEC00D4892B /* OfflineDemoMapViewController.m in Sources */,
+				01BBF6F1187FEEEC00D4892B /* OfflineDemoMapViewController.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

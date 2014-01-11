@@ -91,6 +91,9 @@
     TKLabelLabelCell *cell1=self.cells[0];
     cell1.showLabel.text=entity.Name;
     
+    TKLabelLabelCell *cell2=self.cells[1];
+    cell2.showLabel.text=entity.PCTime;
+    
     TKLabelLabelCell *cell3=self.cells[2];
     cell3.showLabel.text=entity.Address;
     

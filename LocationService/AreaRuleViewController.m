@@ -46,6 +46,8 @@
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     [self.navBarView setNavBarTitle:@"电子围栏"];
+    
+    [self loadingAreaCars];//队列加载区域关联对象
 }
 - (void)viewDidLoad
 {
@@ -116,9 +118,6 @@
     [self.view addSubview:buttons];
     [buttons release];
     
-    
-    [self loadingAreaCars];//队列加载区域关联对象
-    
 }
 //处理规则
 - (void)handlerRuleResult:(ServiceResult*)result{
@@ -127,7 +126,6 @@
         if (dic!=nil) {
             NSArray *arr=[dic objectForKey:@"AreaLatLngList"];
             if (arr&&[arr count]>0) {
-                NSLog(@"AreaLatLngList===========");
                 NSString *ruleType=@"";
                 NSDictionary *item=[arr objectAtIndex:0];
                 if ([[item objectForKey:@"InLimit"] isEqualToString:@"True"]) {
@@ -145,7 +143,6 @@
                 if ([ruleType length]>0) {
                     [_ruleSelect setIndex:[ruleType intValue]-1];
                 }
-                //[_ruleSelect setDataSourceForArray:saveArr dataTextName:@"key" dataValueName:@"value"];
             }
         }
     }
@@ -200,6 +197,7 @@
     args.methodName=@"GetAreaCar";
     args.soapParams=[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:self.AreaId,@"areaID", nil], nil];
     
+   
     ASIHTTPRequest *request1=[ServiceHelper commonSharedRequest:args];
     [request1 setUserInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"car",@"name", nil]];
     [self.serviceHelper addQueue:request1];
@@ -216,7 +214,7 @@
     
     //取得修改规则
     NSMutableArray *params=[NSMutableArray array];
-    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:self.AreaId,@"AreaID", nil]];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:self.AreaId,@"areaID", nil]];
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"zh-CHS",@"language", nil]];
     
     ServiceArgs *args2=[[[ServiceArgs alloc] init] autorelease];
@@ -235,13 +233,14 @@
         for (ServiceResult *result in results) {
             NSString *name=[result.userInfo objectForKey:@"name"];
             if ([name isEqualToString:@"rule"]) {//规则
-                 NSLog(@"rule xml=%@",result.xmlString);
+                
                 [self handlerRuleResult:result];
             }
             if ([name isEqualToString:@"users"]) {//关联对象
                 [self handlerTrajectoryResult:result];
             }
             if ([name isEqualToString:@"car"]) {//修改时的关联对象
+                 NSLog(@"car xml=%@",result.xmlString);
                 shipResult=result;
             }
         }
@@ -278,8 +277,10 @@
     args.serviceNameSpace=DataNameSpace1;
     args.methodName=@"SaveAreaRuleAndCar";
     args.soapParams=params;
+    NSLog(@"soap=%@",args.soapMessage);
     [self showLoadingAnimatedWithTitle:[NSString stringWithFormat:@"正在%@规则,请稍后...",prefx]];
     [self.serviceHelper asynService:args success:^(ServiceResult *result) {
+        NSLog(@"xml=%@",result.xmlString);
         BOOL boo=NO;
         if(result.hasSuccess)
         {

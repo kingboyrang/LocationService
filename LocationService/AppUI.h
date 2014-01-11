@@ -11,4 +11,5 @@
 @interface AppUI : NSObject
 +(FXLabel*)showLabelTitle:(NSString*)title frame:(CGRect)rect;
 +(FXLabel*)barButtonItemTitle:(NSString*)title frame:(CGRect)rect;
++(UIButton*)createhighlightButtonWithTitle:(NSString*)title frame:(CGRect)frame;
 @end

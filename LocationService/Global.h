@@ -22,12 +22,8 @@
 #define DeviceIsPad UI_USER_INTERFACE_IDIOM()==UIUserInterfaceIdiomPad
 //通知post name
 #define kPushNotificeName @"kPushNotificeNameInfo"
-//推播中心WebService的URL地址
-#define PushWebserviceURL @"http://60.251.51.217/Pushs.Admin/WebServices/Push.asmx"
-#define PushNameSpace @"http://tempuri.org/"
 //webservice
-//#define DataWebserviceURL @"http://192.168.123.134/MiLe.Web/WebServices/Push.asmx"
-#define DataWebserviceURL @"http://ibdcloud.com:8889/WebServices/Push.asmx"
+#define DataWebserviceURL @"http://ibdcloud.com:8083/User_APP.asmx"
 #define DataNameSpace @"http://tempuri.org/"
 
 #define DataWebservice1 @"http://www.ibdcloud.com:8083/Pit_APP.asmx"

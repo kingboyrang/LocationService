@@ -8,6 +8,7 @@
 
 #import "DownloadMapController.h"
 #import "UIImage+TPCategory.h"
+#import "OnlineMapViewController.h"
 @interface DownloadMapController ()<UITableViewDataSource,UITableViewDelegate,UISearchBarDelegate>{
     UITableView *_tableView;
     UITableView *_searchView;

@@ -42,9 +42,9 @@
         
         leftX+=32+2;
         _switchPhone=[[SimpleSwitch alloc] initWithFrame:CGRectMake(leftX, (40-25)/2+topY, 100, 25)];
-        _switchPhone.titleOn = @"亲情";
-        _switchPhone.titleOff = @"监听";
-        _switchPhone.on = YES;
+        _switchPhone.titleOn = @"监听";
+        _switchPhone.titleOff = @"亲情";
+        _switchPhone.on = NO;
         _switchPhone.knobColor = [UIColor colorFromHexRGB:@"bfd5ff"];
         _switchPhone.fillColor = [UIColor colorFromHexRGB:@"3c6eb1"];
         [_switchPhone addTarget:self action:@selector(valueChanged:) forControlEvents:UIControlEventValueChanged];
@@ -86,10 +86,10 @@
     return self;
 }
 - (void)setDataWithShipPhone:(NSString*)phone trajectoryTel:(NSString*)tel{
-    self.shipPhone=phone;
-    self.trajectoryPhone=tel;
+    self.shipPhone=phone;//亲情号码
+    self.trajectoryPhone=tel;//监听号码
     
-    if (_switchPhone.on) {
+    if (!_switchPhone.on) {
         _labPhone.text=phone;
     }else{
        _labPhone.text=tel;
@@ -97,7 +97,7 @@
 }
 -(void)valueChanged:(id)sender
 {
-    if (_switchPhone.on) {
+    if (!_switchPhone.on) {
         _labPhone.text=self.shipPhone;
     }else{
         _labPhone.text=self.trajectoryPhone;
