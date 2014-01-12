@@ -37,7 +37,7 @@
     }
        
     //显示当前某地的离线地图
-    _mapView = [[BMKMapView alloc]init];
+    _mapView = [[BMKMapView alloc] init];
     [self setCurrentMapLevel:_mapView];
     _mapView.frame = CGRectMake(0, 44, self.view.bounds.size.width, self.view.bounds.size.height-44);
     [self.view addSubview:_mapView];
@@ -59,13 +59,13 @@
     [self.navBarView setNavBarTitle:@"查看离线地图"];
     
     [_mapView viewWillAppear];
-    _mapView.delegate = self; // 此处记得不用的时候需要置nil，否则影响内存的释放
+    //_mapView.delegate = self; // 此处记得不用的时候需要置nil，否则影响内存的释放
 }
 
 -(void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [_mapView viewWillDisappear];
-    _mapView.delegate = nil; // 不用时，置nil
+    //_mapView.delegate = nil; // 不用时，置nil
 }
 - (void)didReceiveMemoryWarning
 {

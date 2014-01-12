@@ -93,7 +93,7 @@
     }
     return nil;
 }
--(BOOL)success{
+-(BOOL)hasSuccess{
     if ([[self xmlString] length]>0)return YES;
     return NO;
 }

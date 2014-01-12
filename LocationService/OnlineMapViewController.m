@@ -64,14 +64,8 @@
         [btn addTarget:self action:@selector(buttonAddClick:) forControlEvents:UIControlEventTouchUpInside];
         [self.navBarView addSubview:btn];
     }
-    if (_offlineMap==nil)
-    {
-        NSLog(@"重新alloc====");
-        _offlineMap = [[BMKOfflineMap alloc] init];
-    }
     _offlineMap.delegate = self;
     //_mapView.delegate=self;
-     NSLog(@"viewWillAppear====");
 }
 -(void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
@@ -79,10 +73,6 @@
     //_mapView.delegate=nil;
     
     _offlineMap.delegate = nil; // 不用时，置nil
-    [_offlineMap release];
-    _offlineMap=nil;
-    
-    NSLog(@"viewWillDisappear");
      
 }
 - (void)viewDidLoad
@@ -126,9 +116,6 @@
     _arraylocalDownLoadMapInfo = [[NSMutableArray arrayWithArray:[_offlineMap getAllUpdateInfo]] retain];
     
     currentDownloadCityId=-1;
-    
-    
-    
 }
 #pragma mark 包大小转换工具类（将包大小转换成合适单位）
 -(NSString *)getDataSizeString:(int) nSize
@@ -211,6 +198,8 @@
 }
 //下载地图
 - (void)startDownloadWithCityId:(int)cityId{
+    NSLog(@"为何总是不执行...");
+    [_offlineMap scan:NO];
     currentDownloadCityId=cityId;
     if ([self existslocalSourceByCityId:cityId]) {
         [_offlineMap update:cityId];
@@ -248,7 +237,6 @@
         offlineMapViewCtrl.cityId = entity.cityID;
         //offlineMapViewCtrl.offlineServiceOfMapview = _offlineMap;
         [self.navigationController pushViewController:offlineMapViewCtrl animated:YES];
-        [offlineMapViewCtrl release];
     };
     
     RIButtonItem *pauseBtn=[RIButtonItem item];
@@ -303,7 +291,6 @@
         offlineMapViewCtrl.cityId = entity.cityID;
         //offlineMapViewCtrl.offlineServiceOfMapview = _offlineMap;
         [self.navigationController pushViewController:offlineMapViewCtrl animated:YES];
-        [offlineMapViewCtrl release];
     };
     
     RIButtonItem *delBtn=[RIButtonItem item];
