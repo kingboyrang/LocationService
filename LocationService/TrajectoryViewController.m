@@ -38,7 +38,7 @@
     [super viewWillAppear:animated];
     [self.navBarView setNavBarTitle:[NSString stringWithFormat:@"%@--足迹",self.Entity.Name]];
     
-    FXLabel *label=(FXLabel*)[self.navBarView viewWithTag:200];
+    UILabel *label=(UILabel*)[self.navBarView viewWithTag:200];
     CGRect r=label.frame;
     r.origin.x=33+10;
     label.frame=r;
@@ -144,6 +144,9 @@
 }
 //查询
 - (void)buttonSearchClick{
+    if (![_trajectorySearch compareToDate]) {
+        return;
+    }
     [self loadTrajectory];
 }
 //地图

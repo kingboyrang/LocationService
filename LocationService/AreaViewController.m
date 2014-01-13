@@ -157,7 +157,7 @@
             BOOL boo=NO;
             if (result.hasSuccess) {
                 NSDictionary *dic=(NSDictionary*)[result json];
-                if (dic!=nil&&[[dic objectForKey:@"Result"] isEqualToString:@"1"]) {
+                if (dic!=nil&&![[dic objectForKey:@"Result"] isEqualToString:@"0"]) {
                     boo=YES;
                     btn.enabled=YES;
                     [self.list removeObjectsInArray:delSource];

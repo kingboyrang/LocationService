@@ -94,6 +94,7 @@
     
     TKTextFieldCell *cell4=[[[TKTextFieldCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
     cell4.textField.placeholder=@"请输入IMEI号码";
+    cell4.textField.delegate=self;
     
     TKLabelCell *cell5=[[[TKLabelCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
     cell5.label.text=@"SIM卡号";
@@ -414,7 +415,7 @@
         v=[v superview];
     }
     UITableViewCell *cell=(UITableViewCell*)v;
-    CGRect r=[_tableView convertRect:cell.frame fromView:_tableView];
+    CGRect r=[self.view convertRect:cell.frame fromView:_tableView];
     CGRect r1=[cell convertRect:field.frame fromView:cell];
     r.origin.y+=44+r1.origin.y;
     r.origin.x=r1.origin.x;

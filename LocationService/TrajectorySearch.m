@@ -8,6 +8,7 @@
 
 #import "TrajectorySearch.h"
 #import "NSDate+TPCategory.h"
+#import "AlertHelper.h"
 @interface TrajectorySearch (){
     CGFloat leftX;
    
@@ -45,9 +46,10 @@
         _startCalendar.popoverText.popoverTextField.backgroundColor = [UIColor whiteColor];
         _startCalendar.popoverText.popoverTextField.font = [UIFont fontWithName:DeviceFontName size:DeviceFontSize];
         _startCalendar.popoverText.popoverTextField.placeholder=@"开始时间";
-        [_startCalendar.dateForFormat setDateFormat:@"yyyy/MM/dd HH:mm:ss"];
-        _startCalendar.datePicker.maximumDate=[NSDate date];
-        _startCalendar.popoverText.popoverTextField.text=[[time dateByAddingDays:-2] stringWithFormat:@"yyyy/MM/dd HH:mm:ss"];
+        _startCalendar.datePicker.datePickerMode=UIDatePickerModeDateAndTime;
+        [_startCalendar.dateForFormat setDateFormat:@"yyyy/MM/dd HH:mm"];
+        //_startCalendar.datePicker.maximumDate=[NSDate date];
+        _startCalendar.popoverText.popoverTextField.text=[[time dateByAddingMinutes:-120] stringWithFormat:@"yyyy/MM/dd HH:mm"];
         [self addSubview:_startCalendar];
         
         
@@ -57,9 +59,10 @@
         _endCalendar.popoverText.popoverTextField.backgroundColor = [UIColor whiteColor];
         _endCalendar.popoverText.popoverTextField.font = [UIFont fontWithName:DeviceFontName size:DeviceFontSize];
          _endCalendar.popoverText.popoverTextField.placeholder=@"结束时间";
-        _endCalendar.datePicker.maximumDate=[NSDate date];
-        [_endCalendar.dateForFormat setDateFormat:@"yyyy/MM/dd HH:mm:ss"];
-        _endCalendar.popoverText.popoverTextField.text=[time stringWithFormat:@"yyyy/MM/dd HH:mm:ss"];
+        _endCalendar.datePicker.datePickerMode=UIDatePickerModeDateAndTime;
+        //_endCalendar.datePicker.maximumDate=[NSDate date];
+        [_endCalendar.dateForFormat setDateFormat:@"yyyy/MM/dd HH:mm"];
+        _endCalendar.popoverText.popoverTextField.text=[time stringWithFormat:@"yyyy/MM/dd HH:mm"];
         [self addSubview:_endCalendar];
         
         UIImage *leftImage=[UIImage imageNamed:@"bgbutton01.png"];
@@ -77,6 +80,20 @@
         
     }
     return self;
+}
+- (BOOL)compareToDate{
+    //两个时间的比较
+    if ([_startCalendar.popoverText.popoverTextField.text length]>0&&[_endCalendar.popoverText.popoverTextField.text length]>0) {
+        NSDate *dateA=_startCalendar.datePicker.date;
+        NSDate *dateB=_endCalendar.datePicker.date;
+        NSComparisonResult result = [dateA compare:dateB];
+        if (result == NSOrderedDescending)
+        {
+            [AlertHelper initWithTitle:@"提示" message:[NSString stringWithFormat:@"%@不能大于%@!",_startCalendar.popoverText.popoverTextField.placeholder,_endCalendar.popoverText.popoverTextField.placeholder]];
+            return NO;
+        }
+    }
+    return YES;
 }
 - (void)layoutSubviews{
     [super layoutSubviews];

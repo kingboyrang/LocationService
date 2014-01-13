@@ -57,17 +57,12 @@
     CGRect r=self.view.bounds;
     r.origin.y=44;
     r.size.height-=44;
-    if ([self.navigationController.viewControllers[0] isKindOfClass:[self class]]) {
-        r.size.height-=TabHeight;
-    }
+   
     _mapView= [[BMKMapView alloc]initWithFrame:r];
     [self.view addSubview:_mapView];
     [self setCurrentMapLevel:_mapView];
     
     CGFloat topY=self.view.bounds.size.height;
-    if ([self.navigationController.viewControllers[0] isKindOfClass:[self class]]) {
-        topY-=TabHeight;
-    }
     _phoneView=[[CallPhoneView alloc] initWithFrame:CGRectMake(0, topY, self.view.bounds.size.width, 100)];
     _phoneView.controlers=self;
     [self.view addSubview:_phoneView];

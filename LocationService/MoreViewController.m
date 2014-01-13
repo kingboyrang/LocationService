@@ -40,7 +40,7 @@
     [super viewDidLoad];
     
 	CGRect rect=self.view.bounds;
-    rect.size.height-=TabHeight+44;
+    rect.size.height-=44;
     rect.origin.y=44;
     UICollectionViewFlowLayout *flowlayout=[[UICollectionViewFlowLayout alloc] init];
     CGFloat h=120;
@@ -72,7 +72,6 @@
     }
     self.sourceData=source1;
 }
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

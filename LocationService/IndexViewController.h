@@ -8,8 +8,17 @@
 
 #import <UIKit/UIKit.h>
 #import "BMapKit.h"
-@interface IndexViewController : BasicViewController<BMKMapViewDelegate>{
+#import "SupervisionPerson.h"
+#import "ToolBarView.h"
+@interface IndexViewController : BasicViewController<BMKMapViewDelegate,UINavigationControllerDelegate>{
     BMKMapView* _mapView;
 }
+@property (nonatomic,strong) ToolBarView *toolBarView;
 @property(nonatomic,strong) NSMutableArray *cells;
+@property(nonatomic,retain) SupervisionPerson *selectedSupervision;
+@property(nonatomic,readonly) BOOL canShowTrajectory;
+- (BOOL)selectedTrajectoryIndex:(id)number;
+- (void)setSelectedTabIndex:(id)num;
+- (void)selectedMetaWithEntity:(SupervisionPerson*)entity;//进放仪表画面
+- (void)setSelectedSupervisionCenter:(SupervisionPerson*)entity;//设置监管目标选中
 @end

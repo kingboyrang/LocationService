@@ -9,6 +9,7 @@
 #import "SingleMapShowViewController.h"
 #import "TrajectoryPaoView.h"
 #import "SupervisionPerson.h"
+#import "MeterViewController.h"
 @interface SingleMapShowViewController ()
 -(void)cleanMap;
 @end
@@ -31,7 +32,7 @@
 }
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    [self.navBarView setNavBarTitle:[NSString stringWithFormat:@"%@%@",self.PersonName,self.Entity.pctime]];
+    [self.navBarView setNavBarTitle:[NSString stringWithFormat:@"%@ %@",self.PersonName,self.Entity.formatDateText]];
     
     [_mapView viewWillAppear];
     _mapView.delegate = self; // 此处记得不用的时候需要置nil，否则影响内存的释放
@@ -72,6 +73,12 @@
     NSArray* array = [NSArray arrayWithArray:_mapView.annotations];
     [_mapView removeAnnotations:array];
 }
+- (void)selectedMetaWithEntity:(SupervisionPerson*)entity{
+    MeterViewController *meter=[[MeterViewController alloc] init];
+    meter.Entity=entity;
+    [self.navigationController pushViewController:meter animated:YES];
+    [meter release];
+}
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -95,8 +102,9 @@
         newAnnotation.annotation = annotation;
         
         //自定义气泡
-        TrajectoryPaoView *_areaPaoView=[[[TrajectoryPaoView alloc] initWithFrame:CGRectMake(0, 0, 300, 350)] autorelease];
+        TrajectoryPaoView *_areaPaoView=[[[TrajectoryPaoView alloc] initWithFrame:CGRectMake(0, 0, 290, 350)] autorelease];
         [_areaPaoView setDataSourceHistory:self.Entity name:self.PersonName];
+        _areaPaoView.controls=self;
         BMKActionPaopaoView *paopao=[[BMKActionPaopaoView alloc] initWithCustomView:_areaPaoView];
         newAnnotation.paopaoView=paopao;
         [paopao release];

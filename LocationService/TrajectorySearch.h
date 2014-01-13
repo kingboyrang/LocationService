@@ -12,4 +12,5 @@
 @property (nonatomic,strong) CVUICalendar *startCalendar;
 @property (nonatomic,strong) CVUICalendar *endCalendar;
 @property (nonatomic,strong) UIButton *button;
+- (BOOL)compareToDate;
 @end

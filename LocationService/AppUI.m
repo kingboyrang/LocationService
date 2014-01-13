@@ -9,6 +9,16 @@
 #import "AppUI.h"
 #import "NSString+TPCategory.h"
 @implementation AppUI
++(UILabel*)labelTitle:(NSString*)title frame:(CGRect)rect{
+    CGSize size=[title textSize:[UIFont boldSystemFontOfSize:16] withWidth:rect.size.width];
+    UILabel *label=[[UILabel alloc] initWithFrame:CGRectMake(rect.origin.x, rect.origin.y, size.width,size.height)];
+    label.backgroundColor = [UIColor clearColor];
+    label.font=[UIFont boldSystemFontOfSize:16];
+    label.text=title;
+    label.textColor=[UIColor blackColor];
+    
+    return [label autorelease];
+}
 +(FXLabel*)showLabelTitle:(NSString*)title frame:(CGRect)rect{
     CGSize size=[title textSize:[UIFont fontWithName:@"Helvetica-Bold" size:16] withWidth:rect.size.width];
     FXLabel *secondLabel = [[FXLabel alloc] init];

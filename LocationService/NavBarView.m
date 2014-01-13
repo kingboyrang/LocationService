@@ -24,16 +24,17 @@
     return self;
 }
 - (void)setNavBarTitle:(NSString*)title{
-    if ([[self viewWithTag:200] isKindOfClass:[FXLabel class]]) {
-        FXLabel *label=(FXLabel*)[self viewWithTag:200];
-        CGSize size=[title textSize:[UIFont fontWithName:@"Helvetica-Bold" size:16] withWidth:self.bounds.size.width];
+    if ([[self viewWithTag:200] isKindOfClass:[UILabel class]]) {
+        UILabel *label=(UILabel*)[self viewWithTag:200];
+        //CGSize size=[title textSize:[UIFont fontWithName:@"Helvetica-Bold" size:16] withWidth:self.bounds.size.width];
+        CGSize size=[title textSize:[UIFont boldSystemFontOfSize:16] withWidth:self.bounds.size.width];
         CGRect r=label.frame;
         r.size=size;
         label.frame=r;
         label.text=title;
         return;
     }
-    FXLabel *fx=[AppUI showLabelTitle:title frame:self.bounds];
+    UILabel *fx=[AppUI labelTitle:title frame:self.bounds];
     fx.tag=200;
     CGRect r=fx.frame;
     r.origin.x=(self.bounds.size.width-r.size.width)/2.0;

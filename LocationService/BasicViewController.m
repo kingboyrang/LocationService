@@ -11,6 +11,7 @@
 #import "NetWorkConnection.h"
 #import "WBErrorNoticeView.h"
 #import "WBInfoNoticeView.h"
+#import "IndexViewController.h"
 @interface BasicViewController (){
     AnimateLoadView *_loadView;
     AnimateErrorView *_errorView;
@@ -70,7 +71,22 @@
         }
     }
 }
+- (BOOL)backPrevViewController{
+    if (self.navigationController) {
+        if (self.navigationController.viewControllers.count==2) {
+            id v=self.navigationController.viewControllers[0];
+            if ([v isKindOfClass:[IndexViewController class]]) {
+                IndexViewController *index=(IndexViewController*)v;
+                [index.toolBarView setSelectedItemIndex:0];
+            }
+        }
+    }
+    return YES;
+}
 -(void)buttonBackClick{
+    if (![self backPrevViewController]) {
+        return;
+    }
     [self.navigationController popViewControllerAnimated:YES];
 }
 - (void)viewDidLoad

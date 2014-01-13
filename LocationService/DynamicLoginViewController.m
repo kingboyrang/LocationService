@@ -20,6 +20,8 @@
 #import "Account.h"
 #import "MainViewController.h"
 #import "LoginButtons.h"
+#import "IndexViewController.h"
+#import "BasicNavigationController.h"
 @interface DynamicLoginViewController ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>{
     UITableView *_tableView;
     LoginButtons *_buttons;
@@ -212,9 +214,13 @@
                     //登录
                     [Account loginDynamicWithUserId:[cell1.textField.text Trim] password:[cell2.textField.text Trim] rememberPassword:cell3.check.hasRemember withData:dic];
                     
-                    MainViewController *main=[[MainViewController alloc] init];
-                    [self presentViewController:main animated:YES completion:nil];
-                    [main release];
+                    IndexViewController *indexController=[[[IndexViewController alloc] init] autorelease];
+                    BasicNavigationController *nav=[[[BasicNavigationController alloc] initWithRootViewController:indexController] autorelease];
+                    [self presentViewController:nav animated:YES completion:nil];
+                    
+                   // MainViewController *main=[[MainViewController alloc] init];
+                   // [self presentViewController:main animated:YES completion:nil];
+                   // [main release];
                 }];
                 
             }else{

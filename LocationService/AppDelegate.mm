@@ -12,7 +12,7 @@
 #import "BasicNavigationController.h"
 #import "MainViewController.h"
 #import "Account.h"
-
+#import "IndexViewController.h"
 @implementation AppDelegate
 
 - (void)dealloc
@@ -45,8 +45,9 @@
     if (acc.isRememberPwd) {//记住密码
         acc.isLogin=YES;
         [acc save];
-        MainViewController *main=[[[MainViewController alloc] init] autorelease];
-         self.window.rootViewController=main;
+        IndexViewController *controler=[[[IndexViewController alloc] init] autorelease];
+        BasicNavigationController *basic=[[[BasicNavigationController alloc] initWithRootViewController:controler] autorelease];
+         self.window.rootViewController=basic;
     }else{
         [Account closed];
         LoginViewController *login=[[[LoginViewController alloc] init] autorelease];

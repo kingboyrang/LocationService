@@ -18,7 +18,7 @@
         //文本框显示日期
         self.popoverTextField=[[UITextField alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
         self.popoverTextField.borderStyle=UITextBorderStyleRoundedRect;
-        self.popoverTextField.placeholder=@"請選擇";
+        self.popoverTextField.placeholder=@"请选择";
         self.popoverTextField.contentVerticalAlignment=UIControlContentVerticalAlignmentCenter;//設定本文垂直置中
         self.popoverTextField.enabled=NO;//设置不可以编辑
         self.popoverTextField.font=[UIFont systemFontOfSize:14];

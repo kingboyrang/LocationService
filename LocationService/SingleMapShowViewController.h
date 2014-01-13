@@ -9,9 +9,11 @@
 #import <UIKit/UIKit.h>
 #import "TrajectoryHistory.h"
 #import "BMapKit.h"
+#import "SupervisionPerson.h"
 @interface SingleMapShowViewController : BasicViewController<BMKMapViewDelegate>{
    BMKMapView* _mapView;
 }
 @property (nonatomic,retain) TrajectoryHistory *Entity;
 @property (nonatomic,copy) NSString *PersonName;
+- (void)selectedMetaWithEntity:(SupervisionPerson*)entity;//进放仪表画面
 @end

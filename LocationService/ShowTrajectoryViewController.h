@@ -16,5 +16,5 @@
 @property(nonatomic,strong) TrajectorySearch *trajectorySearch;
 @property (nonatomic,retain) NSArray *list;
 @property (nonatomic,retain) SupervisionPerson *Entity;
-
+- (void)selectedMetaWithEntity:(SupervisionPerson*)entity;//进放仪表画面
 @end

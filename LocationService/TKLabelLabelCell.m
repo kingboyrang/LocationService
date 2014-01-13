@@ -34,8 +34,13 @@
 - (void) layoutSubviews {
     [super layoutSubviews];
     CGRect r=self.label.frame;
+    r.origin.y=5;
+    self.label.frame=r;
+    
     r.origin.x=self.label.frame.origin.x+self.label.frame.size.width+2;
     r.size.width=self.frame.size.width-5-r.origin.x;
+    CGSize size=[_showLabel.text textSize:[UIFont fontWithName:DeviceFontName size:DeviceFontSize] withWidth:r.size.width];
+    r.size=size;
     _showLabel.frame=r;
 }
 @end

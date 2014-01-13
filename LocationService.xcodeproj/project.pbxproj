@@ -212,6 +212,12 @@
 		01C913C018715DD000D9A926 /* TKMapCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 01C913BF18715DD000D9A926 /* TKMapCell.m */; };
 		01E9CBA5187566A3005F330A /* CVUISelect.m in Sources */ = {isa = PBXBuildFile; fileRef = 01E9CBA4187566A3005F330A /* CVUISelect.m */; };
 		01E9CBA818756B44005F330A /* AreaCar.m in Sources */ = {isa = PBXBuildFile; fileRef = 01E9CBA718756B44005F330A /* AreaCar.m */; };
+		01F859581883729300189051 /* ToolBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 01F859571883729300189051 /* ToolBarView.m */; };
+		01F8595B188394B500189051 /* MeterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01F8595A188394B200189051 /* MeterViewController.m */; };
+		01F8595D188395DF00189051 /* meta.png in Resources */ = {isa = PBXBuildFile; fileRef = 01F8595C188395DF00189051 /* meta.png */; };
+		01F859601883B37C00189051 /* MonitorPersonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01F8595F1883B37800189051 /* MonitorPersonViewController.m */; };
+		01F859631883E8D800189051 /* ReadMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01F859621883E8D400189051 /* ReadMessageViewController.m */; };
+		01F859691883F2C200189051 /* NSTimer+TPCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 01F859681883F2C200189051 /* NSTimer+TPCategory.m */; };
 		01F994C21867E76400FEC0F2 /* MoreCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 01F994C01867E76400FEC0F2 /* MoreCell.m */; };
 		01F994C31867E76400FEC0F2 /* MoreCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 01F994C11867E76400FEC0F2 /* MoreCell.xib */; };
 		01F994C61867E89300FEC0F2 /* MoreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01F994C51867E89300FEC0F2 /* MoreViewController.m */; };
@@ -619,6 +625,17 @@
 		01E9CBA4187566A3005F330A /* CVUISelect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CVUISelect.m; sourceTree = "<group>"; };
 		01E9CBA618756B44005F330A /* AreaCar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AreaCar.h; sourceTree = "<group>"; };
 		01E9CBA718756B44005F330A /* AreaCar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AreaCar.m; sourceTree = "<group>"; };
+		01F859561883729300189051 /* ToolBarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolBarView.h; sourceTree = "<group>"; };
+		01F859571883729300189051 /* ToolBarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolBarView.m; sourceTree = "<group>"; };
+		01F85959188394AF00189051 /* MeterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeterViewController.h; sourceTree = "<group>"; };
+		01F8595A188394B200189051 /* MeterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MeterViewController.m; sourceTree = "<group>"; };
+		01F8595C188395DF00189051 /* meta.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = meta.png; sourceTree = "<group>"; };
+		01F8595E1883B37600189051 /* MonitorPersonViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MonitorPersonViewController.h; sourceTree = "<group>"; };
+		01F8595F1883B37800189051 /* MonitorPersonViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MonitorPersonViewController.m; sourceTree = "<group>"; };
+		01F859611883E8D100189051 /* ReadMessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReadMessageViewController.h; sourceTree = "<group>"; };
+		01F859621883E8D400189051 /* ReadMessageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReadMessageViewController.m; sourceTree = "<group>"; };
+		01F859671883F2C100189051 /* NSTimer+TPCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSTimer+TPCategory.h"; sourceTree = "<group>"; };
+		01F859681883F2C200189051 /* NSTimer+TPCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSTimer+TPCategory.m"; sourceTree = "<group>"; };
 		01F994BF1867E76400FEC0F2 /* MoreCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MoreCell.h; sourceTree = "<group>"; };
 		01F994C01867E76400FEC0F2 /* MoreCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MoreCell.m; sourceTree = "<group>"; };
 		01F994C11867E76400FEC0F2 /* MoreCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MoreCell.xib; sourceTree = "<group>"; };
@@ -745,6 +762,10 @@
 				012097DD185ED05E00437EA3 /* LoginRegister */,
 				01B65CF51867DB9A001F11BA /* IndexViewController.h */,
 				01B65CF61867DB9A001F11BA /* IndexViewController.mm */,
+				01F85959188394AF00189051 /* MeterViewController.h */,
+				01F8595A188394B200189051 /* MeterViewController.m */,
+				01F8595E1883B37600189051 /* MonitorPersonViewController.h */,
+				01F8595F1883B37800189051 /* MonitorPersonViewController.m */,
 			);
 			name = Index;
 			sourceTree = "<group>";
@@ -795,6 +816,8 @@
 				01BD3A0D18795C7C00B2F513 /* CallTrajectoryViewController.mm */,
 				01BD3A1F187A41D100B2F513 /* TelephoneViewController.h */,
 				01BD3A20187A41D300B2F513 /* TelephoneViewController.m */,
+				01F859611883E8D100189051 /* ReadMessageViewController.h */,
+				01F859621883E8D400189051 /* ReadMessageViewController.m */,
 			);
 			name = Target;
 			sourceTree = "<group>";
@@ -1132,6 +1155,8 @@
 				01BD39FD1878EBDA00B2F513 /* TKLabelLabelCell.m */,
 				01BD39FF1878ED3F00B2F513 /* TKTrajectoryPaoCell.h */,
 				01BD3A001878ED3F00B2F513 /* TKTrajectoryPaoCell.m */,
+				01F859561883729300189051 /* ToolBarView.h */,
+				01F859571883729300189051 /* ToolBarView.m */,
 			);
 			name = UI;
 			sourceTree = "<group>";
@@ -1261,6 +1286,7 @@
 		01BE4002185EAFD2005C25D9 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				01F8595C188395DF00189051 /* meta.png */,
 				01BBF6EA187FC94600D4892B /* record.png */,
 				01A4C77D187BE54E00B3963D /* ico01.png */,
 				01A4C77E187BE54E00B3963D /* ico01f.png */,
@@ -1341,6 +1367,8 @@
 				01BE4017185EB0B8005C25D9 /* UITextField+TPCategory.m */,
 				0189891818612F3A0073B253 /* UIButton+TPCategory.h */,
 				0189891918612F3A0073B253 /* UIButton+TPCategory.m */,
+				01F859671883F2C100189051 /* NSTimer+TPCategory.h */,
+				01F859681883F2C200189051 /* NSTimer+TPCategory.m */,
 			);
 			name = Category;
 			sourceTree = "<group>";
@@ -1636,6 +1664,7 @@
 				01B340ED187B91E0008D5EE5 /* Icon-Small-50.png in Resources */,
 				01A4C790187BE54E00B3963D /* ico05f.png in Resources */,
 				01BBF6EB187FC94700D4892B /* record.png in Resources */,
+				01F8595D188395DF00189051 /* meta.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1790,6 +1819,11 @@
 				01FB5E2D187CECFA0025ADC7 /* AreaTimeSpan.m in Sources */,
 				01BBF6EE187FC96000D4892B /* RecordView.m in Sources */,
 				01BBF6F1187FEEEC00D4892B /* OfflineDemoMapViewController.mm in Sources */,
+				01F859581883729300189051 /* ToolBarView.m in Sources */,
+				01F8595B188394B500189051 /* MeterViewController.m in Sources */,
+				01F859601883B37C00189051 /* MonitorPersonViewController.m in Sources */,
+				01F859631883E8D800189051 /* ReadMessageViewController.m in Sources */,
+				01F859691883F2C200189051 /* NSTimer+TPCategory.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

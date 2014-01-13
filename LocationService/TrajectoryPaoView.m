@@ -86,8 +86,8 @@
     }
     return self;
 }
-
 - (void)setDataSource:(SupervisionPerson*)entity{
+    self.Entity=entity;
     TKLabelLabelCell *cell1=self.cells[0];
     cell1.showLabel.text=entity.Name;
     
@@ -115,8 +115,23 @@
     
 }
 - (void)setDataSourceHistory:(TrajectoryHistory*)entity name:(NSString*)name{
+    SupervisionPerson *elem=[[[SupervisionPerson alloc] init] autorelease];
+    elem.Name=name;
+    elem.Address=entity.address;
+    elem.angle=entity.angle;
+    elem.speed=entity.speed;
+    elem.extend=entity.extend;
+    elem.oil=entity.oil;
+    elem.PCTime=entity.pctime;
+    elem.temper=entity.temper;
+    self.Entity=elem;
+    
+    
     TKLabelLabelCell *cell1=self.cells[0];
     cell1.showLabel.text=name;
+    
+    TKLabelLabelCell *cell2=self.cells[1];
+    cell2.showLabel.text=[entity formatDateText];
     
     TKLabelLabelCell *cell3=self.cells[2];
     cell3.showLabel.text=entity.address;
@@ -130,7 +145,7 @@
     cell5.showLabel2.text=[NSString stringWithFormat:@"%@升",entity.oil];
     
     TKLabelLabelCell *cell6=self.cells[5];
-    cell6.showLabel.text=[NSString stringWithFormat:@"%@度",@"0"];
+    cell6.showLabel.text=[NSString stringWithFormat:@"%@度",entity.temper];
     
     [_tableView reloadData];
     //重设大小
@@ -151,7 +166,7 @@
     _tableView.frame=r;
     
     r=self.frame;
-    r.size.height=_tableView.frame.size.height+5+6;
+    r.size.height=_tableView.frame.size.height+5+13;
     self.frame=r;
     
     UIImageView *leftBgd=(UIImageView*)[self viewWithTag:11];
@@ -180,21 +195,24 @@
     if ([self.cells[indexPath.row] isKindOfClass:[TKLabelLabelCell class]]) {
         TKLabelLabelCell *cell=self.cells[indexPath.row];
         CGSize size=[cell.showLabel.text textSize:[UIFont fontWithName:DeviceFontName size:DeviceFontSize] withWidth:self.frame.size.width-(10+38+2+5)];
-        if (size.height+10+5>35) {
-            return size.height+10+5;
+        if (size.height+5>25) {
+            return size.height+5;
         }
-        return 35;
+        return 25;
     }
     TKTrajectoryPaoCell *cell=self.cells[indexPath.row];
     CGSize size1=[cell.showLabel1.text textSize:[UIFont fontWithName:DeviceFontName size:DeviceFontSize] withWidth:self.frame.size.width/2-(4+10+38)];
     CGSize size2=[cell.showLabel2.text textSize:[UIFont fontWithName:DeviceFontName size:DeviceFontSize] withWidth:self.frame.size.width-(self.frame.size.width/2+38+10)-7];
     CGFloat w=size1.height>size2.height?size1.height:size2.height;
-    if (w+10+5>35) {
-        return w+10+5;
+    if (w+5>25) {
+        return w+5;
     }
-    return 35;
+    return 25;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    if (self.controls&&[self.controls respondsToSelector:@selector(selectedMetaWithEntity:)]) {
+        [self.controls performSelector:@selector(selectedMetaWithEntity:) withObject:self.Entity];
+    }
 }
 @end

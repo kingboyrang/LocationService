@@ -87,7 +87,7 @@
     
     CGRect r=self.view.bounds;
     r.origin.y=44;
-    r.size.height-=44*2;
+    r.size.height-=44;
     _tableView=[[UITableView alloc] initWithFrame:r style:UITableViewStylePlain];
     _tableView.delegate=self;
     _tableView.dataSource=self;
@@ -118,6 +118,9 @@
 }
 //查询
 - (void)buttonSearchClick{
+    if (![_trajectorySearch compareToDate]) {
+        return;
+    }
     [self loadingHistory];
 }
 //查询
@@ -129,7 +132,7 @@
         
         CGRect r1=_tableView.frame;
         r1.origin.y=44;
-        r1.size.height=self.view.bounds.size.height-r1.origin.y-TabHeight;
+        r1.size.height=self.view.bounds.size.height-r1.origin.y;
         
         [UIView animateWithDuration:0.5f animations:^{
             self.trajectorySearch.frame=r;
@@ -145,7 +148,7 @@
         
         CGRect r1=_tableView.frame;
         r1.origin.y=44+r.size.height;
-        r1.size.height=self.view.bounds.size.height-r1.origin.y-TabHeight;
+        r1.size.height=self.view.bounds.size.height-r1.origin.y;
         
         [UIView animateWithDuration:0.5f animations:^{
             self.trajectorySearch.frame=r;
@@ -216,7 +219,9 @@
     }
     TrajectoryHistory *entity=self.cells[indexPath.row];
     cell.label.text=entity.formatDateText;
+    cell.label.textColor=[UIColor grayColor];
     cell.address.text=entity.address;
+    cell.address.textColor=[UIColor grayColor];
     return cell;
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{

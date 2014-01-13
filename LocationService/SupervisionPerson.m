@@ -7,7 +7,7 @@
 //
 
 #import "SupervisionPerson.h"
-
+#import "NSDate+TPCategory.h"
 @implementation SupervisionPerson
 -(id)copyWithZone:(NSZone *)zone
 {
@@ -80,6 +80,13 @@
         if (pos!=-1) {
             return [_Photo substringFromIndex:pos+1];
         }
+    }
+    return @"";
+}
+- (NSString*)formatDateText{
+    if (_PCTime&&[_PCTime length]>0) {
+        NSDate *date=[NSDate dateFromString:_PCTime withFormat:@"yyyy/MM/dd HH:mm:ss"];
+        return [date stringWithFormat:@"yyyy/MM/dd HH:mm"];
     }
     return @"";
 }

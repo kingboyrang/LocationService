@@ -11,7 +11,7 @@
 #import "KYPointAnnotation.h"
 #import "Account.h"
 #import "AppHelper.h"
-
+#import "MeterViewController.h"
 @interface ShowTrajectoryViewController ()
 - (void)cleanMap;
 - (void)loadingHistory;
@@ -81,8 +81,17 @@
     _mapView.delegate = nil; // 不用时，置nil
     
 }
+- (void)selectedMetaWithEntity:(SupervisionPerson*)entity{
+    MeterViewController *meter=[[MeterViewController alloc] init];
+    meter.Entity=entity;
+    [self.navigationController pushViewController:meter animated:YES];
+    [meter release];
+}
 //查询
 - (void)buttonSearchClick{
+    if (![_trajectorySearch compareToDate]) {
+        return;
+    }
     [self loadingHistory];
 }
 //查询
@@ -213,8 +222,9 @@
         
         
         //自定义气泡
-        TrajectoryPaoView *_areaPaoView=[[[TrajectoryPaoView alloc] initWithFrame:CGRectMake(0, 0, 300, 350)] autorelease];
+        TrajectoryPaoView *_areaPaoView=[[[TrajectoryPaoView alloc] initWithFrame:CGRectMake(0, 0, 290, 350)] autorelease];
         [_areaPaoView setDataSourceHistory:self.list[index] name:self.Entity.Name];
+        _areaPaoView.controls=self;
         BMKActionPaopaoView *paopao=[[BMKActionPaopaoView alloc] initWithCustomView:_areaPaoView];
         view.paopaoView=paopao;
         [paopao release];

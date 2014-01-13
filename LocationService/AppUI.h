@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "FXLabel.h"
 @interface AppUI : NSObject
++(UILabel*)labelTitle:(NSString*)title frame:(CGRect)rect;
 +(FXLabel*)showLabelTitle:(NSString*)title frame:(CGRect)rect;
 +(FXLabel*)barButtonItemTitle:(NSString*)title frame:(CGRect)rect;
 +(UIButton*)createhighlightButtonWithTitle:(NSString*)title frame:(CGRect)frame;

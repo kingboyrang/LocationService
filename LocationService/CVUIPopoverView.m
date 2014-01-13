@@ -194,7 +194,7 @@
         UIBarButtonItem *midleButton=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
         
         UILabel *labTitle=[[UILabel alloc] initWithFrame:CGRectMake(0, 0, 230, 44)];
-        labTitle.text=@"請選擇";
+        labTitle.text=@"请选择";
         labTitle.font=[UIFont boldSystemFontOfSize:14];
         labTitle.textColor=[UIColor whiteColor];
         labTitle.backgroundColor=[UIColor clearColor];
@@ -205,7 +205,7 @@
         UIBarButtonItem *fixButton=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
         
         
-        UIBarButtonItem *rightButton=[[UIBarButtonItem alloc] initWithTitle:@"確定" style:UIBarButtonItemStyleBordered target:self action:@selector(buttonDoneClick)];
+        UIBarButtonItem *rightButton=[[UIBarButtonItem alloc] initWithTitle:@"确定" style:UIBarButtonItemStyleBordered target:self action:@selector(buttonDoneClick)];
         
         [self.toolBar setItems:[NSArray arrayWithObjects:leftButton,midleButton,customBtn,fixButton,rightButton, nil]];
         [self addSubview:self.toolBar];

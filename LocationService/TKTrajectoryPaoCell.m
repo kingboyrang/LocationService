@@ -54,6 +54,9 @@
 - (void) layoutSubviews {
     [super layoutSubviews];
     CGRect r=self.label.frame;
+    r.origin.y=5;
+    self.label.frame=r;
+    
     r.origin.x=self.frame.size.width/2+self.label.frame.origin.x;
     _label2.frame=r;
     

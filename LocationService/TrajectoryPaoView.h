@@ -11,6 +11,8 @@
 #import "TrajectoryHistory.h"
 @interface TrajectoryPaoView : UIView
 @property (nonatomic,retain) NSMutableArray *cells;
+@property (nonatomic,retain) SupervisionPerson *Entity;
+@property (nonatomic,assign) id controls;
 - (void)setDataSource:(SupervisionPerson*)entity;
 - (void)setDataSourceHistory:(TrajectoryHistory*)entity name:(NSString*)name;
 @end

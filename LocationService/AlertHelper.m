@@ -16,7 +16,7 @@
 }
 +(void)initWithTitle:(NSString *)inTitle message:(NSString *)inMessage{
     RIButtonItem *button=[RIButtonItem item];
-    button.label=@"確認";
+    button.label=@"确认";
     button.action=nil;
     [self initWithTitle:inTitle message:inMessage cancelButtonItem:nil otherButtonItems:button];
 }

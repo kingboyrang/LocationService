@@ -46,4 +46,5 @@
 - (CATransition *)getAnimation:(NSInteger)type subtype:(NSInteger)subtype;
 
 - (void)setCurrentMapLevel:(BMKMapView*)map;//设置地图等级
+- (BOOL)backPrevViewController;
 @end

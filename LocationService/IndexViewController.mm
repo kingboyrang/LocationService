@@ -11,7 +11,6 @@
 #import "AddSupervision.h"
 #import "Account.h"
 #import "AppHelper.h"
-#import "SupervisionPerson.h"
 #import "KYPointAnnotation.h"
 #import "TrajectoryPaoView.h"
 #import "MainViewController.h"
@@ -20,7 +19,15 @@
 #import "CallTrajectoryViewController.h"
 #import "TrajectoryMessageController.h"
 #import "AlertHelper.h"
-@interface IndexViewController ()
+#import "RecordView.h"
+#import "MoreViewController.h"
+#import "MeterViewController.h"
+#import "MonitorPersonViewController.h"
+@interface IndexViewController (){
+    RecordView *_recordView;
+    BOOL isTimer;
+    NSTimer *_updateTimer;
+}
 - (void)buttonCompassClick;
 - (void)buttonTargetClick;
 - (void)buttonMonitorClick;
@@ -30,6 +37,8 @@
 - (SupervisionPerson*)findByGuidEntity:(NSString*)guid;
 - (void)setOrginTrajectorySupersion;
 - (void)changedAdTimer:(NSTimer *)timer;
+- (void)loadingReadCountWithId:(NSString*)personId;//加载未读总数
+- (void)updateInfoUI:(int)total;//
 @end
 
 @implementation IndexViewController
@@ -38,6 +47,11 @@
     if (_mapView) {
         [_mapView release];
         _mapView = nil;
+    }
+    if(_recordView)
+    {
+        [_recordView release];
+        _recordView = nil;
     }
     
 }
@@ -49,10 +63,11 @@
     }
     return self;
 }
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.navigationController.delegate=self;
+    
     CGRect r=self.view.bounds;
     r.origin.y=44;
     r.size.height-=TabHeight+44;
@@ -61,6 +76,14 @@
 
     [self setCurrentMapLevel:_mapView];
     
+    _toolBarView=[[ToolBarView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height-TabHeight, self.view.bounds.size.width, TabHeight)];
+    _toolBarView.controls=self;
+    [self.view addSubview:_toolBarView];
+    
+    _recordView=[[RecordView alloc] initWithFrame:CGRectMake(DeviceWidth*4/5-DeviceWidth/10, self.view.bounds.size.height-27-20, 27, 27)];
+    
+    //先执行一次
+    [self loadSupervision];
     /***
     //先执行一次
     [self loadSupervision];
@@ -69,21 +92,102 @@
     ***/
    // [_mapView addObserver:self forKeyPath:@"zoomLevel" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:nil];
 }
+- (void)selectedMetaWithEntity:(SupervisionPerson*)entity{
+    MeterViewController *meter=[[MeterViewController alloc] init];
+    meter.Entity=entity;
+    [self.navigationController pushViewController:meter animated:YES];
+    [meter release];
+}
+- (void)setSelectedSupervisionCenter:(SupervisionPerson*)entity{
+    if ([[entity.Latitude Trim] length]>0&&[[entity.Longitude Trim] length]>0) {
+        CLLocationCoordinate2D coor;
+        coor.latitude=[entity.Latitude floatValue];
+        coor.longitude=[entity.Longitude floatValue];
+        [_mapView setCenterCoordinate:coor];
+        
+        //选中监管目标
+        if(_mapView.annotations&&[_mapView.annotations count]>0)
+        {
+            for (id  v in _mapView.annotations) {
+                if ([v isKindOfClass:[KYPointAnnotation class]]) {
+                    KYPointAnnotation *point=(KYPointAnnotation*)v;
+                    if (point.coordinate.latitude==coor.latitude&&point.coordinate.longitude==coor.longitude) {
+                        [_mapView selectAnnotation:point animated:YES];
+                        break;
+                    }
+                }
+            }
+        }
+    }
+}
+#pragma mark - UINavigationController delegate
+- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
+    viewController.hidesBottomBarWhenPushed=YES;
+       
+    if ( viewController == [navigationController.viewControllers objectAtIndex:0]) {
+        [navigationController setNavigationBarHidden:YES animated:animated];
+    } else if ( [navigationController isNavigationBarHidden] ) {
+        // [navigationController setNavigationBarHidden:NO animated:animated];
+    }
+}
+- (BOOL)canShowTrajectory{
+    if (self.selectedSupervision&&self.selectedSupervision.ID&&[self.selectedSupervision.ID length]>0) {
+        return YES;
+    }
+    return NO;
+}
+- (BOOL)selectedTrajectoryIndex:(id)number{
+    NSNumber *pos=(NSNumber*)number;
+    int index=[pos intValue];
+    if (index>=1&&index<4) {
+        if (![self canShowTrajectory]) {
+            return NO;
+        }
+    }
+    return YES;
+}
+//获取设置的Tab选中项
+- (void)setSelectedTabIndex:(id)num{
+    NSNumber *number=(NSNumber*)num;
+    int index=[number intValue];
+    if (index==1) {//轨迹
+        PersonTrajectoryViewController *viewController2=[[PersonTrajectoryViewController alloc] init];
+        viewController2.Entity=self.selectedSupervision;
+        [self.navigationController pushViewController:viewController2 animated:YES];
+        [viewController2 release];
+    }
+    if (index==2) {//电话
+        CallTrajectoryViewController *viewController2=[[CallTrajectoryViewController alloc] init];
+        viewController2.Entity=self.selectedSupervision;
+        [self.navigationController pushViewController:viewController2 animated:YES];
+        [viewController2 release];
+    }
+    if (index==3) {//信息
+        TrajectoryMessageController *viewController2=[[TrajectoryMessageController alloc] init];
+        viewController2.Entity=self.selectedSupervision;
+        [self.navigationController pushViewController:viewController2 animated:YES];
+        [viewController2 release];
+    }
+    if (index==4) {//应用中心
+        MoreViewController *viewController2=[[MoreViewController alloc] init];
+        [self.navigationController pushViewController:viewController2 animated:YES];
+        [viewController2 release];
+    }
+}
 //更新一次
 - (void)changedAdTimer:(NSTimer *)timer
 {
+    if (!isTimer) {
+        [timer invalidate];//停止计时器
+        return;
+    }
     [self loadSupervision];
-    [self setOrginTrajectorySupersion];//重设
 }
 - (void)setOrginTrajectorySupersion{
     if(self.cells&&[self.cells count]>0)
     {
-        MainViewController *main=(MainViewController*)self.tabBarController;
-        //轨迹
-        BasicNavigationController *nav1=[main.viewControllers objectAtIndex:1];
-        PersonTrajectoryViewController *person=[nav1.viewControllers objectAtIndex:0];
-        if (person.canShowTrajectory) {
-            SupervisionPerson *entity=[self findByGuidEntity:person.Entity.ID];
+        if ([self canShowTrajectory]) {
+            SupervisionPerson *entity=[self findByGuidEntity:self.selectedSupervision.ID];
             [self setRecetiveSupersion:entity];
             return;
         }
@@ -103,22 +207,64 @@
     return nil;
 }
 - (void)setRecetiveSupersion:(SupervisionPerson*)entity{
-    //记录总数
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"trajectTarget" object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:entity==nil?[NSNull null]:entity,@"Entity", nil]];
+    self.selectedSupervision=entity;
+    if (entity&&entity.ID&&[entity.ID length]>0) {
+        [self loadingReadCountWithId:entity.ID];//加载记录总数
+    }else{
+        [self updateInfoUI:0];
+    }
+}
+- (void)loadingReadCountWithId:(NSString*)personId{
+    Account *acc=[Account unarchiverAccount];
+    NSMutableArray *params=[NSMutableArray array];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:acc.WorkNo,@"workno", nil]];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:personId,@"personid", nil]];
     
-    MainViewController *main=(MainViewController*)self.tabBarController;
-    //轨迹
-    BasicNavigationController *nav1=[main.viewControllers objectAtIndex:1];
-    PersonTrajectoryViewController *person=[nav1.viewControllers objectAtIndex:0];
-    person.Entity=entity;
-    //电话
-    BasicNavigationController *nav2=[main.viewControllers objectAtIndex:2];
-    CallTrajectoryViewController *call=[nav2.viewControllers objectAtIndex:0];
-    call.Entity=entity;
-    //信息
-    BasicNavigationController *nav3=[main.viewControllers objectAtIndex:3];
-    TrajectoryMessageController *message=[nav3.viewControllers objectAtIndex:0];
-    [message receiveParams:entity];
+    ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
+    args.methodName=@"GetNotReadCounts";
+    args.serviceURL=DataWebservice1;
+    args.serviceNameSpace=DataNameSpace1;
+    args.soapParams=params;
+    
+    [ServiceHelper asynService:args success:^(ServiceResult *result) {
+        BOOL boo=NO;
+        if (result.hasSuccess) {
+            NSDictionary *dic=[result json];
+            int total=[[dic objectForKey:@"Result"] intValue];
+            if (total>0) {
+                boo=YES;
+                [self updateInfoUI:total];
+            }
+        }
+        if (!boo) {
+            [self updateInfoUI:0];
+        }
+        
+    } failed:^(NSError *error, NSDictionary *userInfo) {
+        [self updateInfoUI:0];
+    }];
+}
+- (void)updateInfoUI:(int)total{
+    
+    [_recordView setRecordCount:total];
+    if (_recordView.hasValue) {
+        
+        if (![self.view.subviews containsObject:_recordView]) {
+            CGRect r=_recordView.frame;
+            CGFloat w=DeviceWidth/5;
+            if (r.size.width>w/2) {
+                r.origin.x=DeviceWidth/3+(w-r.size.width)/2+5;
+            }else{
+                r.origin.x=DeviceWidth*4/5-DeviceWidth/10;
+            }
+            _recordView.frame=r;
+            [self.view addSubview:_recordView];
+        }
+    }else{
+        if ([self.view.subviews containsObject:_recordView]) {
+            [_recordView removeFromSuperview];
+        }
+    }
 }
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
@@ -128,15 +274,20 @@
     
     [_mapView viewWillAppear];
     _mapView.delegate = self; // 此处记得不用的时候需要置nil，否则影响内存的释放
-    [self changedAdTimer:nil];
+    
+    
+    //30秒刷新一次
+    isTimer=YES;
+    _updateTimer=[NSTimer scheduledTimerWithTimeInterval:30.0f target:self selector:@selector(changedAdTimer:) userInfo:nil repeats:YES];
 }
-
 -(void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     
     [_mapView viewWillDisappear];
     _mapView.delegate = nil; // 不用时，置nil
- 
+    
+    isTimer=NO;//停止计时器更新
+    [self changedAdTimer:_updateTimer];
 }
 //当前定位
 - (void)startUserLocation{
@@ -178,12 +329,15 @@
                     [_mapView setCenterCoordinate:coor];
                 }
             }
+           
         }
         if (!boo) {
             [self startUserLocation];
         }
+      [self setOrginTrajectorySupersion];//重设
     } failed:^(NSError *error, NSDictionary *userInfo) {
         [self startUserLocation];
+        [self setOrginTrajectorySupersion];//重设
     }];
 }
 -(void)cleanMap
@@ -209,7 +363,7 @@
 }
 //监管列表
 - (void)buttonMonitorClick{
-    SupervisionViewController *supervision=[[SupervisionViewController alloc] init];
+    MonitorPersonViewController *supervision=[[MonitorPersonViewController alloc] init];
     [self.navigationController pushViewController:supervision animated:YES];
     [supervision release];
 }
@@ -241,7 +395,8 @@
              newAnnotation.centerOffset = CGPointMake(0, -(newAnnotation.frame.size.height * 0.5));
              newAnnotation.annotation = annotation;
              //自定义气泡
-             TrajectoryPaoView *_areaPaoView=[[[TrajectoryPaoView alloc] initWithFrame:CGRectMake(0, 0, 300, 350)] autorelease];
+             TrajectoryPaoView *_areaPaoView=[[[TrajectoryPaoView alloc] initWithFrame:CGRectMake(0, 0, 290, 350)] autorelease];
+             _areaPaoView.controls=self;
              [_areaPaoView setDataSource:self.cells[pos]];
              BMKActionPaopaoView *paopao=[[BMKActionPaopaoView alloc] initWithCustomView:_areaPaoView];
              newAnnotation.paopaoView=paopao;

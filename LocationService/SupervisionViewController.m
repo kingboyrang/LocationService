@@ -18,6 +18,7 @@
 #import "EditSupervisionViewController.h"
 #import "CallTrajectoryViewController.h"
 #import "AppUI.h"
+#import "PersonTrajectoryViewController.h"
 @interface SupervisionViewController ()<UITableViewDataSource,UITableViewDelegate>{
     UITableView *_tableView;
     LoginButtons *_toolBar;
@@ -146,10 +147,16 @@
     [message release];
 }
 -(void)supervisionTrajectoryWithEntity:(SupervisionPerson*)entity{
+    PersonTrajectoryViewController *trajectory=[[PersonTrajectoryViewController alloc] init];
+    trajectory.Entity=entity;
+    [self.navigationController pushViewController:trajectory animated:YES];
+    [trajectory release];
+    /***
     TrajectoryViewController *trajectory=[[TrajectoryViewController alloc] init];
     trajectory.Entity=entity;
     [self.navigationController pushViewController:trajectory animated:YES];
     [trajectory release];
+     ***/
 }
 -(void)supervisionCallWithEntity:(SupervisionPerson*)entity{
     CallTrajectoryViewController *controler=[[CallTrajectoryViewController alloc] init];

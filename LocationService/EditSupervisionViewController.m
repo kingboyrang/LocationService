@@ -89,6 +89,7 @@
     TKTextFieldCell *cell4=[[[TKTextFieldCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
     cell4.textField.placeholder=@"请输入IMEI号码";
     cell4.textField.text=self.Entity.IMEI;
+    cell4.textField.delegate=self;
     
     TKLabelCell *cell5=[[[TKLabelCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
     cell5.label.text=@"SIM卡号";
