@@ -23,9 +23,9 @@
 #import "MoreViewController.h"
 #import "MeterViewController.h"
 #import "MonitorPersonViewController.h"
+#import "NSTimer+TPCategory.h"
 @interface IndexViewController (){
     RecordView *_recordView;
-    BOOL isTimer;
     NSTimer *_updateTimer;
 }
 - (void)buttonCompassClick;
@@ -84,6 +84,8 @@
     
     //先执行一次
     [self loadSupervision];
+    //30秒刷新一次
+     _updateTimer=[NSTimer scheduledTimerWithTimeInterval:30.0f target:self selector:@selector(changedAdTimer:) userInfo:nil repeats:YES];
     /***
     //先执行一次
     [self loadSupervision];
@@ -177,10 +179,6 @@
 //更新一次
 - (void)changedAdTimer:(NSTimer *)timer
 {
-    if (!isTimer) {
-        [timer invalidate];//停止计时器
-        return;
-    }
     [self loadSupervision];
 }
 - (void)setOrginTrajectorySupersion{
@@ -276,9 +274,9 @@
     _mapView.delegate = self; // 此处记得不用的时候需要置nil，否则影响内存的释放
     
     
-    //30秒刷新一次
-    isTimer=YES;
-    _updateTimer=[NSTimer scheduledTimerWithTimeInterval:30.0f target:self selector:@selector(changedAdTimer:) userInfo:nil repeats:YES];
+    //恢复计时器
+    [_updateTimer resumeTimer];
+   
 }
 -(void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
@@ -286,8 +284,8 @@
     [_mapView viewWillDisappear];
     _mapView.delegate = nil; // 不用时，置nil
     
-    isTimer=NO;//停止计时器更新
-    [self changedAdTimer:_updateTimer];
+    //暂停计时器
+    [_updateTimer pauseTimer];
 }
 //当前定位
 - (void)startUserLocation{
@@ -438,7 +436,6 @@
     item.title=@"当前位置";
     [_mapView addAnnotation:item];
     [item release];
-   
     /*
      //标记我的位置
      BMKUserLocation *userLocation = mapView.userLocation;
@@ -454,7 +451,7 @@
         KYPointAnnotation *elem=(KYPointAnnotation*)view.annotation;
         int index=elem.tag-100;
         SupervisionPerson *entity=self.cells[index];
-        
+        //NSLog(@"id=%@",entity.ID);
         [self setRecetiveSupersion:entity];
        
     }
