@@ -30,10 +30,12 @@
         [_offlineMap release];
         _offlineMap = nil;
     }
+    /**
     if (_mapView) {
         [_mapView release];
         _mapView = nil;
     }
+     ***/
     if (_arraySearchCityData) {
         [_arraySearchCityData release];
         _arraySearchCityData = nil;
@@ -50,12 +52,12 @@
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     [self.navBarView setNavBarTitle:@"添加城市"];
-     _mapView.delegate = self;
+    // _mapView.delegate = self;
      _offlineMap.delegate = self; // 此处记得不用的时候需要置nil，否则影响内存的释放
 }
 -(void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-     _mapView.delegate = nil; // 不用时，置nil
+    // _mapView.delegate = nil; // 不用时，置nil
     _offlineMap.delegate = nil; // 不用时，置nil
 }
 - (void)viewDidLoad
@@ -84,8 +86,8 @@
     r.size.height-=44*2;
     r.origin.y=44*2;
     
-    _mapView=[[BMKMapView alloc] initWithFrame:r];
-    [self.view addSubview:_mapView];
+   // _mapView=[[BMKMapView alloc] initWithFrame:r];
+   // [self.view addSubview:_mapView];
     
     _searchView=[[UITableView alloc] initWithFrame:r style:UITableViewStylePlain];
     _searchView.delegate=self;

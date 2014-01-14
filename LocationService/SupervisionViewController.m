@@ -30,6 +30,7 @@
 - (void)buttonSubmitRemoveClick;
 - (void)buttonCancelRemoveClick;
 - (SupervisionPerson*)FindById:(NSString*)guid;
+- (void)deleteSupervisons;
 @end
 
 @implementation SupervisionViewController
@@ -77,6 +78,8 @@
     [self.view addSubview:_tableView];
     
     _toolBar=[[LoginButtons alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height+44, self.view.bounds.size.width, 44)];
+    _toolBar.cancel.hidden=YES;
+    _toolBar.submit.frame=CGRectMake(0, 0, self.view.bounds.size.width, 44);
     [_toolBar.submit setTitle:@"删除(0)" forState:UIControlStateNormal];
     [_toolBar.cancel setTitle:@"清空" forState:UIControlStateNormal];
     [_toolBar.cancel addTarget:self action:@selector(buttonCancelRemoveClick) forControlEvents:UIControlEventTouchUpInside];
@@ -192,47 +195,51 @@
     return nil;
 
 }
+//删除
+- (void)deleteSupervisons{
+    [self showLoadingAnimatedWithTitle:@"正在删除,请稍后..."];
+    NSMutableArray *delSource=[NSMutableArray array];
+    NSMutableArray *indexPaths=[NSMutableArray array];
+    for (NSString *item in self.removeList.allKeys) {
+        NSString *row=[self.removeList objectForKey:item];
+        [indexPaths addObject:[NSIndexPath indexPathForRow:[row intValue] inSection:0]];
+        [delSource addObject:self.cells[[row intValue]]];
+    }
+    NSString *ids=[NSString stringWithFormat:@"'%@'",[self.removeList.allKeys componentsJoinedByString:@"','"]];
+    ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
+    args.serviceURL=DataWebservice1;
+    args.serviceNameSpace=DataNameSpace1;
+    args.methodName=@"DeletePerson";
+    args.soapParams=[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:ids,@"personID", nil], nil];
+    [self.serviceHelper asynService:args success:^(ServiceResult *result) {
+        BOOL boo=NO;
+        if (result.hasSuccess) {
+            XmlNode *node=[result methodNode];
+            NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:[node.InnerText dataUsingEncoding:NSUTF8StringEncoding] options:1 error:nil];
+            if ([[dic objectForKey:@"Result"] isEqualToString:@"1"]) {
+                boo=YES;
+                [self hideLoadingSuccessWithTitle:@"删除成功!" completed:^(AnimateErrorView *successView) {
+                    [self.cells removeObjectsInArray:delSource];
+                    [_tableView beginUpdates];
+                    [_tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationFade];
+                    [_tableView endUpdates];
+                    [self.removeList removeAllObjects];
+                }];
+            }
+        }
+        if (!boo) {
+            [self hideLoadingFailedWithTitle:@"删除失败!" completed:nil];
+        }
+    } failed:^(NSError *error, NSDictionary *userInfo) {
+        [self hideLoadingFailedWithTitle:@"删除失败!" completed:nil];
+    }];
+}
 //确认删除
 - (void)buttonSubmitRemoveClick{
     if (self.removeList&&[self.removeList count]>0) {
-        [self showLoadingAnimatedWithTitle:@"正在删除,请稍后..."];
-        NSMutableArray *delSource=[NSMutableArray array];
-        NSMutableArray *indexPaths=[NSMutableArray array];
-        for (NSString *item in self.removeList.allKeys) {
-            NSString *row=[self.removeList objectForKey:item];
-            [indexPaths addObject:[NSIndexPath indexPathForRow:[row intValue] inSection:0]];
-            [delSource addObject:self.cells[[row intValue]]];
-        }
-        NSString *ids=[NSString stringWithFormat:@"'%@'",[self.removeList.allKeys componentsJoinedByString:@"','"]];
-        ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
-        args.serviceURL=DataWebservice1;
-        args.serviceNameSpace=DataNameSpace1;
-        args.methodName=@"DeletePerson";
-        args.soapParams=[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:ids,@"personID", nil], nil];
-        [self.serviceHelper asynService:args success:^(ServiceResult *result) {
-            BOOL boo=NO;
-            if (result.hasSuccess) {
-                XmlNode *node=[result methodNode];
-                NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:[node.InnerText dataUsingEncoding:NSUTF8StringEncoding] options:1 error:nil];
-                if ([[dic objectForKey:@"Result"] isEqualToString:@"1"]) {
-                    boo=YES;
-                    [self hideLoadingSuccessWithTitle:@"删除成功!" completed:^(AnimateErrorView *successView) {
-                        [self.cells removeObjectsInArray:delSource];
-                        [_tableView beginUpdates];
-                        [_tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationFade];
-                        [_tableView endUpdates];
-                        [self.removeList removeAllObjects];
-                    }];
-                }
-            }
-            if (!boo) {
-                [self hideLoadingFailedWithTitle:@"删除失败!" completed:nil];
-            }
-        } failed:^(NSError *error, NSDictionary *userInfo) {
-            [self hideLoadingFailedWithTitle:@"删除失败!" completed:nil];
-        }];
-    }else{
-    
+        [AlertHelper confirmWithTitle:@"删除" confirm:^{
+            [self deleteSupervisons];
+        } innnerView:self.view];
     }
 }
 //新增
@@ -260,7 +267,12 @@
         }];
     }
 	else {
-        [self buttonCancelRemoveClick];
+        //[self buttonCancelRemoveClick];
+        if (self.removeList&&[self.removeList count]>0) {
+            [self.removeList removeAllObjects];
+        }
+        [_toolBar.submit setTitle:@"删除(0)" forState:UIControlStateNormal];
+        
         [btn setTitle:@"编辑" forState:UIControlStateNormal];
         CGRect r=_toolBar.frame;
         r.origin.y=self.view.bounds.size.height+44;

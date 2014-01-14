@@ -38,11 +38,12 @@
     [super viewWillAppear:animated];
     if (self.Entity&&self.Entity.Name&&[self.Entity.Name length]>0) {
         [self.navBarView setNavBarTitle:[NSString stringWithFormat:@"%@--足迹",self.Entity.Name]];
-        
+        /***
         FXLabel *label=(FXLabel*)[self.navBarView viewWithTag:200];
         CGRect r=label.frame;
         r.origin.x=33+10;
         label.frame=r;
+         ***/
     }
     if ([self.view.subviews containsObject:self.navBarView]) {
         if (![self.navBarView viewWithTag:300]) {
@@ -215,19 +216,19 @@
     TKTrajectoryCell *cell=[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     if (cell==nil) {
         cell=[[[TKTrajectoryCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier] autorelease];
-        
+        cell.label.font=[UIFont fontWithName:DeviceFontName size:14];
+        cell.label.textColor=[UIColor grayColor];
+        cell.address.textColor=[UIColor grayColor];
     }
     TrajectoryHistory *entity=self.cells[indexPath.row];
     cell.label.text=entity.formatDateText;
-    cell.label.textColor=[UIColor grayColor];
     cell.address.text=entity.address;
-    cell.address.textColor=[UIColor grayColor];
     return cell;
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     TrajectoryHistory *entity=self.cells[indexPath.row];
     CGFloat w=self.view.bounds.size.width/2-5;
-    CGSize size=[entity.address textSize:[UIFont fontWithName:DeviceFontName size:DeviceFontSize] withWidth:w];
+    CGSize size=[entity.address textSize:[UIFont fontWithName:DeviceFontName size:14] withWidth:w];
     if (size.height+10>44) {
         return size.height+10+2;
     }

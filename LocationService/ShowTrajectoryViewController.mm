@@ -38,6 +38,18 @@
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     [self.navBarView setNavBarTitle:[NSString stringWithFormat:@"%@--足迹",self.Entity.Name]];
+    if (![self.navBarView viewWithTag:300]) {
+        UIButton *btn=[UIButton buttonWithType:UIButtonTypeCustom];
+        btn.frame=CGRectMake(self.view.bounds.size.width-90, (44-35)/2, 50, 35);
+        btn.tag=300;
+        [btn setTitle:@"列表" forState:UIControlStateNormal];
+        [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        btn.titleLabel.font=[UIFont fontWithName:DeviceFontName size:DeviceFontSize];
+        btn.showsTouchWhenHighlighted = YES;  //指定按钮被按下时发光
+        [btn setTitleColor:[UIColor colorFromHexRGB:@"4a7ebb"] forState:UIControlStateHighlighted];
+        [btn addTarget:self action:@selector(buttonListClick) forControlEvents:UIControlEventTouchUpInside];
+        [self.navBarView addSubview:btn];
+    }
     if (![self.navBarView viewWithTag:301]) {
         
         UIImage *image=[UIImage imageNamed:@"bottomico.png"];
@@ -87,6 +99,10 @@
     [self.navigationController pushViewController:meter animated:YES];
     [meter release];
 }
+//列表
+- (void)buttonListClick{
+    [self.navigationController popViewControllerAnimated:YES];
+}
 //查询
 - (void)buttonSearchClick{
     if (![_trajectorySearch compareToDate]) {
@@ -100,9 +116,6 @@
     if (btn.selected) {//隐藏
         CGRect r=self.trajectorySearch.frame;
         r.origin.y=44-r.size.height;
-        
-       
-        
         [UIView animateWithDuration:0.5f animations:^{
             self.trajectorySearch.frame=r;
             btn.selected=NO;
@@ -148,11 +161,12 @@
             NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:[node.InnerText dataUsingEncoding:NSUTF8StringEncoding] options:1 error:nil];
             if ([dic.allKeys containsObject:@"Person"]) {
                 boo=YES;
+                NSArray *source=[dic objectForKey:@"Person"];
+                self.list=[AppHelper arrayWithSource:source className:@"TrajectoryHistory"];
+                //重新加载地图
+                [self loadingPointAnnotations];
                 [self hideLoadingViewAnimated:^(AnimateLoadView *hideView) {
-                    NSArray *source=[dic objectForKey:@"Person"];
-                    self.list=[AppHelper arrayWithSource:source className:@"TrajectoryHistory"];
-                   //重新加载地图
-                    [self loadingPointAnnotations];
+                  
                 }];
             }
         }
@@ -228,9 +242,24 @@
         BMKActionPaopaoView *paopao=[[BMKActionPaopaoView alloc] initWithCustomView:_areaPaoView];
         view.paopaoView=paopao;
         [paopao release];
-        
-        
     }
    	return view;
+}
+//点击空白处调用此接口
+- (void)mapView:(BMKMapView *)mapView onClickedMapBlank:(CLLocationCoordinate2D)coordinate{
+   //隐藏搜索按钮
+    
+    CGRect r=self.trajectorySearch.frame;
+    if (r.origin.y>0) {
+        r.origin.y=44-r.size.height;
+        [UIView animateWithDuration:0.5f animations:^{
+            self.trajectorySearch.frame=r;
+        } completion:^(BOOL finished) {
+            if (finished) {
+                [self.view sendSubviewToBack:self.trajectorySearch];
+            }
+        }];
+    }
+    
 }
 @end

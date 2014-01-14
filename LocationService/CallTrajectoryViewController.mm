@@ -45,8 +45,10 @@
     item.coordinate = coor;
     item.title=self.Entity.Address;
     [_mapView addAnnotation:item];
-    [item release];
     [_mapView setCenterCoordinate:coor];
+    [_mapView selectAnnotation:item animated:YES];
+    [item release];
+    
     
     [self loadingPhones];//加载电话
     
@@ -63,7 +65,7 @@
     [self setCurrentMapLevel:_mapView];
     
     CGFloat topY=self.view.bounds.size.height;
-    _phoneView=[[CallPhoneView alloc] initWithFrame:CGRectMake(0, topY, self.view.bounds.size.width, 100)];
+    _phoneView=[[CallPhoneView alloc] initWithFrame:CGRectMake(0, topY, self.view.bounds.size.width, 119)];
     _phoneView.controlers=self;
     [self.view addSubview:_phoneView];
     
@@ -150,9 +152,6 @@
 - (void)mapView:(BMKMapView *)mapView didSelectAnnotationView:(BMKAnnotationView *)view{
     CGRect r=_phoneView.frame;
     r.origin.y=self.view.bounds.size.height-r.size.height;
-    if ([self.navigationController.viewControllers[0] isKindOfClass:[self class]]) {
-        r.origin.y-=TabHeight;
-    }
     [UIView animateWithDuration:0.5f animations:^{
         _phoneView.frame=r;
     }];
@@ -160,9 +159,6 @@
 - (void)mapView:(BMKMapView *)mapView didDeselectAnnotationView:(BMKAnnotationView *)view{
     CGRect r=_phoneView.frame;
     r.origin.y=self.view.bounds.size.height;
-    if ([self.navigationController.viewControllers[0] isKindOfClass:[self class]]) {
-        r.origin.y-=TabHeight;
-    }
     [UIView animateWithDuration:0.5f animations:^{
         _phoneView.frame=r;
     }];

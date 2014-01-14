@@ -22,6 +22,7 @@
 - (void)buttonRemoveClick:(id)sender;
 - (void)buttonReadClick:(id)sender;
 - (BOOL)existsFindyById:(NSString*)msgId;
+- (NSString*)findByMessageId:(NSString*)msgId;
 @end
 
 @implementation TrajectoryMessageController
@@ -120,6 +121,18 @@
     }
     return NO;
 }
+- (NSString*)findByMessageId:(NSString*)msgId{
+    if (self.cells&&[self.cells count]>0) {
+        NSString *match=[NSString stringWithFormat:@"SELF.ID =='%@'",msgId];
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:match];
+        NSArray *results = [self.cells filteredArrayUsingPredicate:predicate];
+        if (results&&[results count]>0) {
+            TrajectoryMessage *item=[results objectAtIndex:0];
+            return item.PCTime;
+        }
+    }
+    return @"";
+}
 //删除
 - (void)buttonRemoveClick:(id)sender{
     if (self.removeList&&[self.removeList count]>0) {
@@ -128,8 +141,14 @@
         for (NSIndexPath *item in [self.removeList allValues]) {
             [delSource addObject:self.cells[item.row]];
         }
+        
+        NSMutableArray *ids=[NSMutableArray array];
+        for (NSString *msgid in self.removeList.allKeys) {
+            [ids addObject:[NSString stringWithFormat:@"%@,%@",msgid,[self findByMessageId:msgid]]];
+        }
+        
         NSMutableArray *params=[NSMutableArray array];
-        [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[self.removeList.allKeys componentsJoinedByString:@","],@"id", nil]];
+        [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[ids componentsJoinedByString:@"$"],@"idAndTime", nil]];
         [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"1",@"type", nil]];
         //[params addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"",@"time", nil]];
         

@@ -14,6 +14,7 @@
 #import "ModifyAreaViewController.h"
 #import "AreaRangeViewController.h"
 #import "AppUI.h"
+#import "AlertHelper.h"
 @interface AreaViewController ()<UITableViewDataSource,UITableViewDelegate>{
     UITableView *_tableView;
     LoginButtons *_toolBar;
@@ -22,6 +23,7 @@
 - (void)buttonAddClick;
 - (void)buttonEditClick:(id)sender;
 - (AreaCrawl*)FindById:(NSString*)guid;
+- (void)deleteAreaWithButton:(UIButton*)btn;
 @end
 
 @implementation AreaViewController
@@ -65,12 +67,12 @@
     _tableView=[[UITableView alloc] initWithFrame:r style:UITableViewStylePlain];
     _tableView.delegate=self;
     _tableView.dataSource=self;
-    //_tableView.separatorStyle=UITableViewCellSeparatorStyleNone;
-    //_tableView.separatorColor=[UIColor clearColor];
     _tableView.bounces=NO;
     [self.view addSubview:_tableView];
     
     _toolBar=[[LoginButtons alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height+44, self.view.bounds.size.width, 44)];
+    _toolBar.cancel.hidden=YES;
+    _toolBar.submit.frame=CGRectMake(0, 0, self.view.bounds.size.width, 44);
     [_toolBar.submit setTitle:@"删除(0)" forState:UIControlStateNormal];
     [_toolBar.cancel setTitle:@"清空" forState:UIControlStateNormal];
     [_toolBar.cancel addTarget:self action:@selector(buttonCancelRemoveClick) forControlEvents:UIControlEventTouchUpInside];
@@ -133,51 +135,58 @@
         [_toolBar.submit setTitle:@"删除(0)" forState:UIControlStateNormal];
     }
 
-}//删除
-- (void)buttonSubmitRemoveClick:(id)sender{
-    if (self.removeList&&[self.removeList count]>0) {
-        
-        UIButton *btn=(UIButton*)sender;
-        btn.enabled=NO;
-        
-        NSMutableArray *delSource=[NSMutableArray array];
-        for (NSString *sysid in self.removeList.allKeys) {
-            AreaCrawl *entity=[self FindById:sysid];
-            if (entity!=nil) {
-                [delSource addObject:entity];
+}
+- (void)deleteAreaWithButton:(UIButton*)btn{
+    btn.enabled=NO;
+    
+    NSMutableArray *delSource=[NSMutableArray array];
+    for (NSString *sysid in self.removeList.allKeys) {
+        AreaCrawl *entity=[self FindById:sysid];
+        if (entity!=nil) {
+            [delSource addObject:entity];
+        }
+    }
+    [self showLoadingAnimatedWithTitle:@"正在删除,请稍后..."];
+    ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
+    args.serviceURL=DataWebservice1;
+    args.serviceNameSpace=DataNameSpace1;
+    args.methodName=@"DelArea";
+    args.soapParams=[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:[self.removeList.allKeys componentsJoinedByString:@","],@"areaID", nil], nil];
+    [self.serviceHelper asynService:args success:^(ServiceResult *result) {
+        BOOL boo=NO;
+        if (result.hasSuccess) {
+            NSDictionary *dic=(NSDictionary*)[result json];
+            if (dic!=nil&&![[dic objectForKey:@"Result"] isEqualToString:@"0"]) {
+                boo=YES;
+                btn.enabled=YES;
+                [self.list removeObjectsInArray:delSource];
+                [_tableView beginUpdates];
+                [_tableView deleteRowsAtIndexPaths:[NSArray arrayWithArray:[self.removeList allValues]] withRowAnimation:UITableViewRowAnimationFade];
+                [_tableView endUpdates];
+                [self.removeList removeAllObjects];
+                [_toolBar.submit setTitle:@"删除(0)" forState:UIControlStateNormal];
+                
+                [self hideLoadingSuccessWithTitle:@"删除成功!" completed:nil];
             }
         }
-        [self showLoadingAnimatedWithTitle:@"正在删除,请稍后..."];
-        ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
-        args.serviceURL=DataWebservice1;
-        args.serviceNameSpace=DataNameSpace1;
-        args.methodName=@"DelArea";
-        args.soapParams=[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:[self.removeList.allKeys componentsJoinedByString:@","],@"areaID", nil], nil];
-        [self.serviceHelper asynService:args success:^(ServiceResult *result) {
-            BOOL boo=NO;
-            if (result.hasSuccess) {
-                NSDictionary *dic=(NSDictionary*)[result json];
-                if (dic!=nil&&![[dic objectForKey:@"Result"] isEqualToString:@"0"]) {
-                    boo=YES;
-                    btn.enabled=YES;
-                    [self.list removeObjectsInArray:delSource];
-                    [_tableView beginUpdates];
-                    [_tableView deleteRowsAtIndexPaths:[NSArray arrayWithArray:[self.removeList allValues]] withRowAnimation:UITableViewRowAnimationFade];
-                    [_tableView endUpdates];
-                    [self.removeList removeAllObjects];
-                    [_toolBar.submit setTitle:@"删除(0)" forState:UIControlStateNormal];
-                    
-                    [self hideLoadingSuccessWithTitle:@"删除成功!" completed:nil];
-                }
-            }
-            if (!boo) {
-                btn.enabled=YES;
-                [self hideLoadingFailedWithTitle:@"删除失败!" completed:nil];
-            }
-        } failed:^(NSError *error, NSDictionary *userInfo) {
+        if (!boo) {
             btn.enabled=YES;
             [self hideLoadingFailedWithTitle:@"删除失败!" completed:nil];
-        }];
+        }
+    } failed:^(NSError *error, NSDictionary *userInfo) {
+        btn.enabled=YES;
+        [self hideLoadingFailedWithTitle:@"删除失败!" completed:nil];
+    }];
+
+}
+//删除
+- (void)buttonSubmitRemoveClick:(id)sender{
+    if (self.removeList&&[self.removeList count]>0) {
+        [AlertHelper confirmWithTitle:@"删除" confirm:^{
+            UIButton *btn=(UIButton*)sender;
+            [self deleteAreaWithButton:btn];
+        } innnerView:self.view];
+        
     }
 }
 //新增

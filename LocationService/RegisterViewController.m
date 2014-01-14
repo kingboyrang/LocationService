@@ -144,32 +144,6 @@
     _phoneImageView.hidden=YES;
 
 }
--(void) showErrorViewAnimated:(void (^)(AnimateErrorView *errorView))process{
-    AnimateErrorView *errorView = [self errorView];
-    if (process) {
-        process(errorView);
-    }
-    [self.view addSubview:errorView];
-    [self.view bringSubviewToFront:errorView];
-    CGRect r=errorView.frame;
-    r.origin.y=46;
-    [UIView animateWithDuration:0.5f animations:^{
-        errorView.frame=r;
-    }];
-}
--(void) showLoadingAnimated:(void (^)(AnimateLoadView *errorView))process{
-    AnimateLoadView *loadingView = [self loadingView];
-    if (process) {
-        process(loadingView);
-    }
-    [self.view addSubview:loadingView];
-    [loadingView.activityIndicatorView startAnimating];
-    CGRect r=loadingView.frame;
-    r.origin.y=46;
-    [UIView animateWithDuration:0.5f animations:^{
-        loadingView.frame=r;
-    }];
-}
 //注册
 - (void)buttonSubmit{
     
@@ -224,9 +198,15 @@
     args.soapParams=params;
     [self showLoadingAnimatedWithTitle:@"注册中,请稍后..."];
     [self.serviceHelper asynService:args success:^(ServiceResult *result) {
+        NSString *msg=@"注册失败!";
+        NSString *status=@"";
+        BOOL boo=NO;
         if(result.hasSuccess){
             XmlNode *node=[result methodNode];
-            if([node.Value isEqualToString:@"complete"]){
+            status=node.Value;
+            if (![status isEqualToString:@"Fail"]&&![status isEqualToString:@"Exists"]) {
+                [self hideLoadingViewAnimated:nil];
+                boo=YES;
                 Account *acc=[[[Account alloc] init] autorelease];
                 acc.UserId=[cell1.textField.text Trim];
                 acc.Password=[cell4.textField.text Trim];
@@ -237,15 +217,17 @@
                 registerSuccess.Entity=acc;
                 [self.navigationController pushViewController:registerSuccess animated:YES];
                 [registerSuccess release];
-            }else{
-               [self hideLoadingFailedWithTitle:@"网络不稳定,稍后再试!" completed:nil];
             }
-            
-        }else{
-           [self hideLoadingFailedWithTitle:@"网络不稳定,稍后再试!" completed:nil];
+        }
+        if(!boo)
+        {
+            if ([status isEqualToString:@"Exists"]) {
+                msg=@"账号已存在!";
+            }
+            [self hideLoadingFailedWithTitle:msg completed:nil];
         }
     } failed:^(NSError *error, NSDictionary *userInfo) {
-        [self hideLoadingFailedWithTitle:@"网络不稳定,稍后再试!" completed:nil];
+        [self hideLoadingFailedWithTitle:@"注册失败!" completed:nil];
     }];
 }
 //取消 

@@ -19,6 +19,7 @@
 #import "UIImage+TPCategory.h"
 #import "SupervisionPerson.h"
 #import "AppHelper.h"
+#import "AppUI.h"
 @interface AreaRuleViewController ()<UITableViewDataSource,UITableViewDelegate>{
     CVUISelect *_ruleSelect;
     UITableView *_tableView;
@@ -46,8 +47,23 @@
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     [self.navBarView setNavBarTitle:@"电子围栏"];
+    if (![self.navBarView viewWithTag:300]) {
+        UIButton *btn=[AppUI createhighlightButtonWithTitle:@"2/3" frame:CGRectMake(self.view.bounds.size.width-90, (44-35)/2, 50, 35)];
+        btn.tag=300;
+        [self.navBarView addSubview:btn];
+    }
+    if (![self.navBarView viewWithTag:301]) {
+        UIButton *btn=[AppUI createhighlightButtonWithTitle:@"列表" frame:CGRectMake(self.view.bounds.size.width-50, (44-35)/2, 50, 35)];
+        btn.tag=301;
+        [btn addTarget:self action:@selector(buttonListClick) forControlEvents:UIControlEventTouchUpInside];
+        [self.navBarView addSubview:btn];
+    }
     
     [self loadingAreaCars];//队列加载区域关联对象
+}
+//返回列表
+- (void)buttonListClick{
+    [self.navigationController popToViewController:[[self.navigationController viewControllers] objectAtIndex:2] animated:YES];
 }
 - (void)viewDidLoad
 {
@@ -111,6 +127,13 @@
     
     
     LoginButtons *buttons=[[LoginButtons alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height-44, self.view.bounds.size.width, 44)];
+    UIButton *btnPrev=[AppUI createhighlightButtonWithTitle:@"上一步" frame:CGRectMake(0,0,self.view.bounds.size.width/3,44)];
+    [btnPrev setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [btnPrev addTarget:self action:@selector(buttonPrevClick) forControlEvents:UIControlEventTouchUpInside];
+    [buttons addSubview:btnPrev];
+    
+    buttons.cancel.frame=CGRectMake(self.view.bounds.size.width*2/3, 0, self.view.bounds.size.width/3, 44);
+    buttons.submit.frame=CGRectMake(self.view.bounds.size.width/3, 0, self.view.bounds.size.width/3, 44);
     [buttons.cancel setTitle:@"下一步" forState:UIControlStateNormal];
     [buttons.cancel addTarget:self action:@selector(buttonNextClick:) forControlEvents:UIControlEventTouchUpInside];
     [buttons.submit setTitle:@"完成" forState:UIControlStateNormal];
@@ -118,6 +141,9 @@
     [self.view addSubview:buttons];
     [buttons release];
     
+}
+- (void)buttonPrevClick{
+    [self.navigationController popViewControllerAnimated:YES];
 }
 //处理规则
 - (void)handlerRuleResult:(ServiceResult*)result{
@@ -316,7 +342,7 @@
 //完成
 - (void)buttonFinishedClick:(id)sender{
     [self addRuleCompleted:^(NSString *ruleId) {
-        [self.navigationController popToViewController:[[self.navigationController viewControllers] objectAtIndex:1] animated:YES];
+        [self.navigationController popToViewController:[[self.navigationController viewControllers] objectAtIndex:2] animated:YES];
     }];
 }
 - (void)didReceiveMemoryWarning

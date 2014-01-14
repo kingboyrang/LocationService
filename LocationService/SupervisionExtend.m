@@ -15,6 +15,9 @@
 #import "AlertHelper.h"
 #import "EditSupervisionViewController.h"
 #import "IndexViewController.h"
+#import "AddSupervision.h"
+#import "SupervisionViewController.h"
+#import "AppUI.h"
 @interface SupervisionExtend ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>{
     UITableView *_tableView;
 }
@@ -39,10 +42,26 @@
     [super viewWillAppear:animated];
     [self.navBarView setNavBarTitle:@"监管目标"];
     
+    if (self.navigationController.viewControllers.count>=3) {
+        if ([self.navigationController.viewControllers[2] isKindOfClass:[SupervisionViewController class]]) {
+            if (![self.navBarView viewWithTag:301]) {
+                UIButton *btn=[AppUI createhighlightButtonWithTitle:@"列表" frame:CGRectMake(self.view.bounds.size.width-50, (44-35)/2, 50, 35)];
+                btn.tag=301;
+                [btn addTarget:self action:@selector(buttonListClick) forControlEvents:UIControlEventTouchUpInside];
+                [self.navBarView addSubview:btn];
+            }
+        }
+    }
+
+    
     if (self.operateType==2) {//修改
         //加载修改信息
         [self loadingEditInfo];
     }
+}
+//回列表
+- (void)buttonListClick{
+    [self.navigationController popToViewController:[[self.navigationController viewControllers] objectAtIndex:2] animated:YES];
 }
 - (void)viewDidLoad
 {
@@ -65,6 +84,8 @@
     [self.view addSubview:_tableView];
     
     LoginButtons *buttons=[[LoginButtons alloc] initWithFrame:CGRectMake(0,self.view.bounds.size.height-44, self.view.bounds.size.width, 44)];
+    buttons.cancel.frame=CGRectMake(0, 0, self.view.bounds.size.width/3, 44);
+     buttons.submit.frame=CGRectMake(self.view.bounds.size.width/3, 0, self.view.bounds.size.width/3, 44);
     [buttons.submit setTitle:@"完成" forState:UIControlStateNormal];
     [buttons.cancel setTitle:@"上一步" forState:UIControlStateNormal];
     [buttons.submit addTarget:self action:@selector(buttonSubmit) forControlEvents:UIControlEventTouchUpInside];
@@ -266,8 +287,8 @@
             if (dic!=nil&&[[dic objectForKey:@"Result"] isEqualToString:@"1"]) {
                 boo=YES;
                 [self hideLoadingViewAnimated:^(AnimateLoadView *hideView) {
-                    int row=1;
-                    if ([self.navigationController.viewControllers[0] isKindOfClass:[IndexViewController class]]) {
+                    int row=2;
+                    if ([self.navigationController.viewControllers[1] isKindOfClass:[AddSupervision class]]) {
                         row=0;
                     }
                     [self.navigationController popToViewController:[[self.navigationController viewControllers] objectAtIndex:row] animated:YES];

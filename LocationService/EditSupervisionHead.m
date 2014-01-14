@@ -12,6 +12,8 @@
 #import "CaseCameraImage.h"
 #import "UIImage+TPCategory.h"
 #import "AlertHelper.h"
+#import "SupervisionViewController.h"
+#import "AppUI.h"
 @interface EditSupervisionHead (){
 }
 @property (nonatomic, strong) CaseCameraImage *cameraImage;
@@ -40,6 +42,22 @@
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     [self.navBarView setNavBarTitle:self.Entity.Name];
+    
+    if (self.navigationController.viewControllers.count>=3) {
+        if ([self.navigationController.viewControllers[2] isKindOfClass:[SupervisionViewController class]]) {
+            if (![self.navBarView viewWithTag:301]) {
+                UIButton *btn=[AppUI createhighlightButtonWithTitle:@"列表" frame:CGRectMake(self.view.bounds.size.width-50, (44-35)/2, 50, 35)];
+                btn.tag=301;
+                [btn addTarget:self action:@selector(buttonListClick) forControlEvents:UIControlEventTouchUpInside];
+                [self.navBarView addSubview:btn];
+            }
+        }
+    }
+
+}
+//回列表
+- (void)buttonListClick{
+    [self.navigationController popToViewController:[[self.navigationController viewControllers] objectAtIndex:2] animated:YES];
 }
 - (void)viewDidLoad
 {
@@ -84,8 +102,10 @@
     [self.view addSubview:btn];
     
     LoginButtons *buttons=[[LoginButtons alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height-40, self.view.bounds.size.width, 44)];
-    buttons.cancel.hidden=YES;
-    buttons.submit.frame=CGRectMake(0, 0, buttons.frame.size.width, buttons.frame.size.height);
+    
+    [buttons.cancel setTitle:@"上一步" forState:UIControlStateNormal];
+    [buttons.cancel addTarget:self action:@selector(buttonPrevClick) forControlEvents:UIControlEventTouchUpInside];
+    buttons.submit.frame=CGRectMake(self.view.bounds.size.width/3, 0, self.view.bounds.size.width/3, buttons.frame.size.height);
     [buttons.submit setTitle:@"完成" forState:UIControlStateNormal];
     [buttons.submit addTarget:self action:@selector(buttonSubmitClick) forControlEvents:UIControlEventTouchUpInside];
     /***
@@ -104,6 +124,10 @@
     [self.view addSubview:buttons];
     [buttons release];
     
+}
+//上一步
+- (void)buttonPrevClick{
+    [self.navigationController popViewControllerAnimated:YES];
 }
 - (void)finishedImage:(UIImage*)image{
     

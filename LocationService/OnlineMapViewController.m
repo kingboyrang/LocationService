@@ -11,7 +11,7 @@
 #import "DownloadMapController.h"
 #import "TKMapCell.h"
 #import "UIActionSheet+Blocks.h"
-#import "UIDevice+TPCategory.h"
+//#import "UIDevice+TPCategory.h"
 #import "OfflineDemoMapViewController.h"
 #import "AppUI.h"
 @interface OnlineMapViewController ()<UITableViewDataSource,UITableViewDelegate>{
@@ -39,12 +39,12 @@
         [_offlineMap release];
         _offlineMap = nil;
     }
-    /***
+   
     if (_mapView) {
         [_mapView release];
         _mapView = nil;
     }
-     **/
+     
     [_tableView release];
 }
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -65,12 +65,12 @@
         [self.navBarView addSubview:btn];
     }
     _offlineMap.delegate = self;
-    //_mapView.delegate=self;
+    _mapView.delegate=self;
 }
 -(void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-     //[_mapView viewWillDisappear];
-    //_mapView.delegate=nil;
+     [_mapView viewWillDisappear];
+    _mapView.delegate=nil;
     
     _offlineMap.delegate = nil; // 不用时，置nil
      
@@ -82,7 +82,8 @@
     r.size.height-=44*2;
     r.origin.y=44;
         
-    //_mapView=[[BMKMapView alloc] init];
+    _mapView=[[BMKMapView alloc] initWithFrame:r];
+    [self.view addSubview:_mapView];
     
     _tableView=[[UITableView alloc] initWithFrame:r style:UITableViewStylePlain];
     _tableView.delegate=self;

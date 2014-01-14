@@ -16,6 +16,8 @@
 #import "SupervisionPerson.h"
 #import "SupervisionExtend.h"
 #import "AlertHelper.h"
+#import "AppUI.h"
+#import "SupervisionViewController.h"
 @interface AddSupervision ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>{
     UITableView *_tableView;
     UIImageView *_imageHead;
@@ -51,7 +53,24 @@
     [super viewWillAppear:animated];
     [self.navBarView setNavBarTitle:@"监管目标"];
     
+    if (self.navigationController.viewControllers.count>=3) {
+        if ([self.navigationController.viewControllers[2] isKindOfClass:[SupervisionViewController class]]) {
+            if (![self.navBarView viewWithTag:301]) {
+                UIButton *btn=[AppUI createhighlightButtonWithTitle:@"列表" frame:CGRectMake(self.view.bounds.size.width-50, (44-35)/2, 50, 35)];
+                btn.tag=301;
+                [btn addTarget:self action:@selector(buttonListClick) forControlEvents:UIControlEventTouchUpInside];
+                [self.navBarView addSubview:btn];
+            }
+        }
+    }
+   
+
+    
     [self loadingPersonInfo];//修改时，加载信息
+}
+//回列表
+- (void)buttonListClick{
+   [self.navigationController popToViewController:[[self.navigationController viewControllers] objectAtIndex:2] animated:YES];
 }
 - (void)viewDidLoad
 {
@@ -72,7 +91,8 @@
     [self.view addSubview:_tableView];
     
     LoginButtons *buttons=[[LoginButtons alloc] initWithFrame:CGRectMake(0,self.view.bounds.size.height-44, self.view.bounds.size.width, 44)];
-   
+    buttons.cancel.frame=CGRectMake(self.view.bounds.size.width*2/3, 0, self.view.bounds.size.width/3, 44);
+    buttons.submit.frame=CGRectMake(self.view.bounds.size.width/3, 0, self.view.bounds.size.width/3, 44);
     [buttons.cancel setTitle:@"下一步" forState:UIControlStateNormal];
     [buttons.submit setTitle:@"完成" forState:UIControlStateNormal];
     [buttons.submit addTarget:self action:@selector(buttonSubmit) forControlEvents:UIControlEventTouchUpInside];

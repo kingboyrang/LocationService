@@ -80,7 +80,7 @@
     _toolBarView.controls=self;
     [self.view addSubview:_toolBarView];
     
-    _recordView=[[RecordView alloc] initWithFrame:CGRectMake(DeviceWidth*4/5-DeviceWidth/10, self.view.bounds.size.height-27-20, 27, 27)];
+    _recordView=[[RecordView alloc] initWithFrame:CGRectMake(DeviceWidth*4/5-DeviceWidth/10, self.view.bounds.size.height-25-20, 25, 25)];
     
     //先执行一次
     [self loadSupervision];

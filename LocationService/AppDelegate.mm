@@ -13,6 +13,7 @@
 #import "MainViewController.h"
 #import "Account.h"
 #import "IndexViewController.h"
+#import "RunAnimateView.h"
 @implementation AppDelegate
 
 - (void)dealloc
@@ -55,7 +56,12 @@
         self.window.rootViewController =nav;
     }
      [self.window makeKeyAndVisible];
-    [AppHelper runAnimation:nil];//启动动画
+    
+    if (acc.isFirstRun) {//第一次启动时加载动画
+        RunAnimateView *view=[[RunAnimateView alloc] initWithFrame:DeviceRect];
+        [self.window addSubview:view];
+    }
+    //[AppHelper runAnimation:nil];
     
     return YES;
 }

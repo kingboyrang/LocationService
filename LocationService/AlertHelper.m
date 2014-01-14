@@ -31,4 +31,17 @@
     
     [self initWithTitle:inTitle message:inMessage cancelButtonItem:cancel otherButtonItems:confirm];
 }
++(void)confirmWithTitle:(NSString*)confirm confirm:(void (^)(void))confirmAction innnerView:(UIView*)view{
+    RIButtonItem *canBtn=[RIButtonItem item];
+    canBtn.label=@"取消";
+    canBtn.action=nil;
+
+    RIButtonItem *delBtn=[RIButtonItem item];
+    delBtn.label=confirm;
+    delBtn.action=confirmAction;
+    UIActionSheet *sheet=[[UIActionSheet alloc] initWithTitle:nil cancelButtonItem:canBtn destructiveButtonItem:nil otherButtonItems:delBtn, nil];
+    [sheet showInView:view];
+    [sheet release];
+
+}
 @end

@@ -12,6 +12,7 @@
 #import "AreaRuleViewController.h"
 #import "AreaPaoView.h"
 #import "AlertHelper.h"
+#import "AppUI.h"
 @interface ModifyAreaViewController (){
     UISlider *_silder;
     UILabel* _labDistance;
@@ -24,6 +25,7 @@
 - (void)addAreaCompleted:(void(^)(NSString* areaId))completed;
 - (void)editAreaCompleted:(void(^)(NSString* areaId))completed;
 - (void)loadingEditInfo;
+- (void)paintCircularWithCoor:(CLLocationCoordinate2D)coor;
 @end
 
 @implementation ModifyAreaViewController
@@ -45,6 +47,18 @@
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.navBarView setNavBarTitle:@"电子围栏"];
+    if (![self.navBarView viewWithTag:300]) {
+        UIButton *btn=[AppUI createhighlightButtonWithTitle:@"1/3" frame:CGRectMake(self.view.bounds.size.width-90, (44-35)/2, 50, 35)];
+        btn.tag=300;
+        [self.navBarView addSubview:btn];
+    }
+
+    if (![self.navBarView viewWithTag:301]) {
+        UIButton *btn=[AppUI createhighlightButtonWithTitle:@"列表" frame:CGRectMake(self.view.bounds.size.width-50, (44-35)/2, 50, 35)];
+        btn.tag=301;
+        [btn addTarget:self action:@selector(buttonListClick) forControlEvents:UIControlEventTouchUpInside];
+        [self.navBarView addSubview:btn];
+    }
     
     [_mapView viewWillAppear];
     _mapView.delegate = self; // 此处记得不用的时候需要置nil，否则影响内存的释放
@@ -57,6 +71,10 @@
     }else{//修改
         [self loadingEditInfo];
     }
+}
+//返回列表
+- (void)buttonListClick{
+   [self.navigationController popToViewController:[[self.navigationController viewControllers] objectAtIndex:2] animated:YES];
 }
 -(void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
@@ -101,12 +119,21 @@
     [self.view addSubview:_silder];
     
     LoginButtons *buttons=[[LoginButtons alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height-44, self.view.bounds.size.width, 44)];
+    buttons.cancel.frame=CGRectMake(self.view.bounds.size.width*2/3, 0, self.view.bounds.size.width/3, 44);
+    buttons.submit.frame=CGRectMake(self.view.bounds.size.width/3, 0, self.view.bounds.size.width/3, 44);
     [buttons.cancel setTitle:@"下一步" forState:UIControlStateNormal];
     [buttons.cancel addTarget:self action:@selector(buttonNextClick:) forControlEvents:UIControlEventTouchUpInside];
     [buttons.submit setTitle:@"完成" forState:UIControlStateNormal];
     [buttons.submit addTarget:self action:@selector(buttonFinishedClick:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:buttons];
     [buttons release];
+}
+//画圆
+- (void)paintCircularWithCoor:(CLLocationCoordinate2D)coor{
+    
+    [_mapView removeOverlays:_mapView.overlays];
+    BMKCircle *circle = [BMKCircle circleWithCenterCoordinate:coor radius:_silder.value*10];
+    [_mapView addOverlay:circle];
 }
 //修改时加载信息
 - (void)loadingEditInfo{
@@ -132,20 +159,22 @@
                     boo=YES;
                     [self hideLoadingViewAnimated:nil];
                    self.AreaSource=[arr objectAtIndex:0];
-                    CLLocationCoordinate2D coor;
-                    coor.latitude = [[self.AreaSource objectForKey:@"Lat"] floatValue];
-                    coor.longitude = [[self.AreaSource objectForKey:@"Lng"] floatValue];
+                    
+                    _coordinate.latitude = [[self.AreaSource objectForKey:@"Lat"] floatValue];
+                    _coordinate.longitude = [[self.AreaSource objectForKey:@"Lng"] floatValue];
                     
                     _silder.value=[[self.AreaSource objectForKey:@"CircleRedius"] floatValue]/10;
                     int meter=(int)_silder.value*10;
                     _labDistance.text=[NSString stringWithFormat:@"%d米",meter];
                     
                     BMKPointAnnotation  *pointAnnotation = [[[BMKPointAnnotation alloc] init] autorelease];
-                    pointAnnotation.coordinate =coor;
+                    pointAnnotation.coordinate =_coordinate;
                     pointAnnotation.title = @"当前位置";
                     [_mapView addAnnotation:pointAnnotation];
                     //这样就可以在初始化的时候将 气泡信息弹出(默认将气泡弹出)
                     [_mapView selectAnnotation:pointAnnotation animated:YES];
+                    
+                    [self paintCircularWithCoor:_coordinate];//画圆
                 }
             }
         }
@@ -211,6 +240,10 @@
 - (void)changeSilderValue:(id)sender{
     int meter=(int)_silder.value*10;
      _labDistance.text=[NSString stringWithFormat:@"%d米",meter];
+    
+    if (_coordinate.latitude>0&&_coordinate.longitude>0) {
+        [self paintCircularWithCoor:_coordinate];
+    }
 }
 //下一步
 - (void)buttonNextClick:(id)sender{
@@ -381,6 +414,8 @@
     [_mapView addAnnotation:pointAnnotation];
     //这样就可以在初始化的时候将 气泡信息弹出(默认将气泡弹出)
     [_mapView selectAnnotation:pointAnnotation animated:YES];
+    
+    [self paintCircularWithCoor:_coordinate];
 }
 - (void)mapView:(BMKMapView *)mapView didSelectAnnotationView:(BMKAnnotationView *)view
 {
@@ -399,5 +434,16 @@
     if (newState==BMKAnnotationViewDragStateEnding) {
        _coordinate=[view.annotation coordinate];
     }
+}
+// Override
+- (BMKOverlayView *)mapView:(BMKMapView *)mapView viewForOverlay:(id <BMKOverlay>)overlay{
+    if ([overlay isKindOfClass:[BMKCircle class]]){
+        BMKCircleView* circleView = [[[BMKCircleView alloc] initWithOverlay:overlay] autorelease];
+        circleView.fillColor = [[UIColor cyanColor] colorWithAlphaComponent:0.5];
+        circleView.strokeColor = [[UIColor blueColor] colorWithAlphaComponent:0.5];
+        circleView.lineWidth = 5.0;
+        return circleView;
+    }
+    return nil;
 }
 @end

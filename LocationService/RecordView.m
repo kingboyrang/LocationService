@@ -23,7 +23,7 @@
         
        _label=[[UILabel alloc] initWithFrame:CGRectMake(0,(image.size.height-20)/2, frame.size.width, 20)];
         _label.backgroundColor=[UIColor clearColor];
-        _label.font=[UIFont fontWithName:DeviceFontName size:DeviceFontSize];
+        _label.font=[UIFont boldSystemFontOfSize:14];
         _label.textAlignment=NSTextAlignmentCenter;
         [self addSubview:_label];
     }
@@ -36,7 +36,23 @@
         _hasValue=YES;
         
         NSString *title=[NSString stringWithFormat:@"%d",total];
-        CGSize size=[title textSize:[UIFont fontWithName:DeviceFontName size:DeviceFontSize] withWidth:DeviceWidth];
+        CGSize size=[title textSize:[UIFont boldSystemFontOfSize:14] withWidth:DeviceWidth];
+        
+        _label.text=title;
+        CGRect r=_imageView.frame;
+        r.size.width=size.width+2;
+        r.size.height=r.size.width;
+        _imageView.frame=r;
+        
+        r=_label.frame;
+        r.size.width=_imageView.frame.size.width;
+        r.origin.y=(_imageView.frame.size.height-size.height)/2;
+        _label.frame=r;
+        
+        r=self.frame;
+        r.size=_imageView.frame.size;
+        self.frame=r;
+        /***
         if (size.width>self.frame.size.width) {
             _label.text=title;
             CGRect r=_imageView.frame;
@@ -54,6 +70,7 @@
             return;
         }
         _label.text=title;
+         ***/
     }
 }
 @end

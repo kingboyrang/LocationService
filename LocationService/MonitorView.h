@@ -11,7 +11,7 @@
 @interface MonitorView : UIView
 @property (retain, nonatomic) IBOutlet UIButton *headImage;
 @property (retain, nonatomic) IBOutlet UILabel *labName;
-@property (retain, nonatomic) IBOutlet UILabel *labPhone;
+
 @property (strong,nonatomic) SupervisionPerson *Entity;
 @property (nonatomic,assign) id controler;
 - (IBAction)buttonEditHead:(id)sender;

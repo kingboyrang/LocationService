@@ -23,12 +23,20 @@
 - (void)setDataSource:(SupervisionPerson*)entity{
     self.Entity=entity;
     
+    //CGSize size=[entity.Name textSize:[UIFont fontWithName:DeviceFontName size:DeviceFontSize] withWidth:68];
     self.labName.text=entity.Name;
     self.labName.font=[UIFont fontWithName:DeviceFontName size:DeviceFontSize];
     self.labName.textColor=[UIColor blackColor];
-    self.labPhone.text=entity.SimNo;
-    self.labPhone.font=[UIFont fontWithName:DeviceFontName size:DeviceFontSize];
-    self.labPhone.textColor=[UIColor blackColor];
+    self.labName.numberOfLines=0;
+    self.labName.lineBreakMode=NSLineBreakByWordWrapping;
+    /***
+    CGRect r=self.labName.frame;
+    r.size=size;
+    r.origin.y=(self.frame.size.height-size.height)/2;
+    self.labName.frame=r;
+    
+    NSLog(@"r=%@",NSStringFromCGRect(r));
+     ***/
     
    
     [self.headImage setImageWithURL:[NSURL URLWithString:entity.Photo] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"bg02.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
@@ -46,7 +54,6 @@
 - (void)dealloc {
     [_headImage release];
     [_labName release];
-    [_labPhone release];
     [super dealloc];
 }
 - (IBAction)buttonEditHead:(id)sender {

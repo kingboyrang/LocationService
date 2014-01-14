@@ -17,6 +17,7 @@
 #import "AreaTimeSpan.h"
 #import "AppHelper.h"
 #import "NSDate+TPCategory.h"
+#import "AppUI.h"
 #define  dicWeeks [NSDictionary dictionaryWithObjectsAndKeys:@"一",@"1",@"二",@"2",@"三",@"3",@"四",@"4",@"五",@"5",@"六",@"6",@"日",@"7", nil]
 @interface AreaRangeViewController ()<UITableViewDataSource,UITableViewDelegate>{
     CVUICalendar *_sCalendar;
@@ -55,8 +56,24 @@
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     [self.navBarView setNavBarTitle:@"电子围栏"];
+    if (![self.navBarView viewWithTag:300]) {
+        UIButton *btn=[AppUI createhighlightButtonWithTitle:@"3/3" frame:CGRectMake(self.view.bounds.size.width-90, (44-35)/2, 50, 35)];
+        btn.tag=300;
+        [self.navBarView addSubview:btn];
+    }
+    if (![self.navBarView viewWithTag:301]) {
+        UIButton *btn=[AppUI createhighlightButtonWithTitle:@"列表" frame:CGRectMake(self.view.bounds.size.width-50, (44-35)/2, 50, 35)];
+        btn.tag=301;
+        [btn addTarget:self action:@selector(buttonListClick) forControlEvents:UIControlEventTouchUpInside];
+        [self.navBarView addSubview:btn];
+    }
+
     
     [self queueLoading];//修改时，加载资料
+}
+//返回列表
+- (void)buttonListClick{
+    [self.navigationController popToViewController:[[self.navigationController viewControllers] objectAtIndex:2] animated:YES];
 }
 - (void)viewDidLoad
 {
@@ -118,6 +135,8 @@
     [self.view addSubview:_tableView];
     
     LoginButtons *buttons=[[LoginButtons alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height-44, self.view.bounds.size.width, 44)];
+    buttons.cancel.frame=CGRectMake(0, 0, self.view.bounds.size.width/3, 44);
+    buttons.submit.frame=CGRectMake(self.view.bounds.size.width/3, 0, self.view.bounds.size.width/3, 44);
     [buttons.cancel setTitle:@"上一步" forState:UIControlStateNormal];
     [buttons.submit setTitle:@"完成" forState:UIControlStateNormal];
     [buttons.cancel addTarget:self action:@selector(buttonPrevClick) forControlEvents:UIControlEventTouchUpInside];
@@ -506,7 +525,7 @@
             {
                 boo=YES;
                 [self hideLoadingViewAnimated:^(AnimateLoadView *hideView) {
-                     [self.navigationController popToViewController:[[self.navigationController viewControllers] objectAtIndex:1] animated:YES];
+                     [self.navigationController popToViewController:[[self.navigationController viewControllers] objectAtIndex:2] animated:YES];
                 }];
             }
         }
