@@ -162,10 +162,7 @@
 }
 //新增
 - (void)finishAddTrajectory:(void(^)(NSString *personId,NSString *code))completed{
-    if (!self.hasNetWork) {
-        [self showErrorNetWorkNotice:nil];
-        return;
-    }
+   
     Account *acc=[Account unarchiverAccount];
     TKTextFieldCell *cell1=self.cells[1];
     
@@ -191,6 +188,10 @@
     if (!cell4.hasValue) {
         [AlertHelper initWithTitle:@"提示" message:@"请输入密码!"];
         [cell4.textField becomeFirstResponder];
+        return;
+    }
+    if (!self.hasNetWork) {
+        [self showErrorNetWorkNotice:nil];
         return;
     }
     
@@ -246,10 +247,7 @@
 }
 //修改
 - (void)finishEditTrajectory:(void(^)(NSString *personId))completed{
-    if (!self.hasNetWork) {
-        [self showErrorNetWorkNotice:nil];
-        return;
-    }
+    
     Account *acc=[Account unarchiverAccount];
     TKTextFieldCell *cell1=self.cells[1];
     
@@ -277,14 +275,17 @@
         [cell4.textField becomeFirstResponder];
         return;
     }
-    
+    if (!self.hasNetWork) {
+        [self showErrorNetWorkNotice:nil];
+        return;
+    }
     [self showLoadingAnimatedWithTitle:@"修改监管目标,请稍后..."];
     
     NSMutableArray *params=[NSMutableArray arrayWithCapacity:6];
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:self.PersonID,@"personID", nil]];
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[cell1.textField.text Trim],@"Name", nil]];
-    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[cell2.textField.text Trim],@"phoneNum", nil]];
-    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[cell3.textField.text Trim],@"strIMEI", nil]];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[cell3.textField.text Trim],@"phoneNum", nil]];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[cell2.textField.text Trim],@"strIMEI", nil]];
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[cell4.textField.text Trim],@"Password", nil]];
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[self getUploadFileName],@"photo", nil]];
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:acc.WorkNo,@"CurWorkNo", nil]];

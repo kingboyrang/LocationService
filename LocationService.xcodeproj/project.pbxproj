@@ -40,6 +40,8 @@
 		012B32A91869885D00717CDD /* MonitorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 012B32A81869885D00717CDD /* MonitorView.m */; };
 		012B32AC18698DD300717CDD /* TKMonitorCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 012B32AB18698DD300717CDD /* TKMonitorCell.m */; };
 		013B62AC187259BB0048C0A8 /* UIActionSheet+Blocks.m in Sources */ = {isa = PBXBuildFile; fileRef = 013B62AB187259BB0048C0A8 /* UIActionSheet+Blocks.m */; };
+		014419CE18867F1A00203B87 /* ExceptionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 014419CD18867F1A00203B87 /* ExceptionViewController.m */; };
+		014419D118867FD100203B87 /* ExceptionPaoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 014419D018867FD100203B87 /* ExceptionPaoView.m */; };
 		0146926D187669BE003664BE /* AreaPaoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0146926C187669BD003664BE /* AreaPaoView.m */; };
 		01498EEE1867C81D0098043F /* NavBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 01498EED1867C81D0098043F /* NavBarView.m */; };
 		015B627718682D1F00E488F2 /* UserInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 015B627618682D1E00E488F2 /* UserInfoViewController.m */; };
@@ -182,7 +184,6 @@
 		01BE3FDB185EACB6005C25D9 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01BE3FDA185EACB6005C25D9 /* UIKit.framework */; };
 		01BE3FDD185EACB6005C25D9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01BE3FDC185EACB6005C25D9 /* Foundation.framework */; };
 		01BE3FDF185EACB6005C25D9 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01BE3FDE185EACB6005C25D9 /* CoreGraphics.framework */; };
-		01BE3FE5185EACB6005C25D9 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 01BE3FE3185EACB6005C25D9 /* InfoPlist.strings */; };
 		01BE3FE7185EACB6005C25D9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 01BE3FE6185EACB6005C25D9 /* main.m */; };
 		01BE3FEB185EACB6005C25D9 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 01BE3FEA185EACB6005C25D9 /* AppDelegate.mm */; };
 		01BE3FED185EACB6005C25D9 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 01BE3FEC185EACB6005C25D9 /* Default.png */; };
@@ -200,7 +201,6 @@
 		01C0AA0E186D284C00F8A250 /* EditSupervisionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01C0AA0D186D284B00F8A250 /* EditSupervisionViewController.m */; };
 		01C0AA11186D538F00F8A250 /* AreaCrawl.m in Sources */ = {isa = PBXBuildFile; fileRef = 01C0AA10186D538F00F8A250 /* AreaCrawl.m */; };
 		01C0AA15186D547800F8A250 /* AreaViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01C0AA14186D547800F8A250 /* AreaViewController.m */; };
-		01C0AA18186D6C5200F8A250 /* InnerBasicViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01C0AA17186D6C5200F8A250 /* InnerBasicViewController.m */; };
 		01C0AA1C186D708400F8A250 /* OnlineMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01C0AA1B186D708400F8A250 /* OnlineMapViewController.m */; };
 		01C170F6187AA47A00CE62DD /* TKAreaWeekCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 01C170F5187AA47900CE62DD /* TKAreaWeekCell.m */; };
 		01C5FB83186C1101009986BF /* TrajectoryMessageController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01C5FB82186C1101009986BF /* TrajectoryMessageController.m */; };
@@ -246,6 +246,7 @@
 		01FCBE27186AC35A000835D4 /* UIImageView+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 01FCBE1A186AC35A000835D4 /* UIImageView+WebCache.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		01FCBE29186AC430000835D4 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01FCBE28186AC430000835D4 /* ImageIO.framework */; };
 		01FCBE2C186AD43A000835D4 /* CaseCameraImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 01FCBE2B186AD43A000835D4 /* CaseCameraImage.m */; };
+		01FCC2D3188638C9008F7B5D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 01FCC2D5188638C9008F7B5D /* InfoPlist.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -338,6 +339,10 @@
 		012B32AB18698DD300717CDD /* TKMonitorCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TKMonitorCell.m; sourceTree = "<group>"; };
 		013B62AA187259BB0048C0A8 /* UIActionSheet+Blocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIActionSheet+Blocks.h"; sourceTree = "<group>"; };
 		013B62AB187259BB0048C0A8 /* UIActionSheet+Blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIActionSheet+Blocks.m"; sourceTree = "<group>"; };
+		014419CC18867F1A00203B87 /* ExceptionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExceptionViewController.h; sourceTree = "<group>"; };
+		014419CD18867F1A00203B87 /* ExceptionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExceptionViewController.m; sourceTree = "<group>"; };
+		014419CF18867FD100203B87 /* ExceptionPaoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExceptionPaoView.h; sourceTree = "<group>"; };
+		014419D018867FD100203B87 /* ExceptionPaoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExceptionPaoView.m; sourceTree = "<group>"; };
 		0146926B187669BD003664BE /* AreaPaoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AreaPaoView.h; sourceTree = "<group>"; };
 		0146926C187669BD003664BE /* AreaPaoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AreaPaoView.m; sourceTree = "<group>"; };
 		01498EEC1867C81D0098043F /* NavBarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavBarView.h; sourceTree = "<group>"; };
@@ -576,7 +581,6 @@
 		01BE3FDC185EACB6005C25D9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		01BE3FDE185EACB6005C25D9 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		01BE3FE2185EACB6005C25D9 /* LocationService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "LocationService-Info.plist"; sourceTree = "<group>"; };
-		01BE3FE4185EACB6005C25D9 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		01BE3FE6185EACB6005C25D9 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		01BE3FE8185EACB6005C25D9 /* LocationService-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LocationService-Prefix.pch"; sourceTree = "<group>"; };
 		01BE3FE9185EACB6005C25D9 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -607,8 +611,6 @@
 		01C0AA10186D538F00F8A250 /* AreaCrawl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AreaCrawl.m; sourceTree = "<group>"; };
 		01C0AA13186D547800F8A250 /* AreaViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AreaViewController.h; sourceTree = "<group>"; };
 		01C0AA14186D547800F8A250 /* AreaViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AreaViewController.m; sourceTree = "<group>"; };
-		01C0AA16186D6C5200F8A250 /* InnerBasicViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InnerBasicViewController.h; sourceTree = "<group>"; };
-		01C0AA17186D6C5200F8A250 /* InnerBasicViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InnerBasicViewController.m; sourceTree = "<group>"; };
 		01C0AA1A186D708400F8A250 /* OnlineMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OnlineMapViewController.h; sourceTree = "<group>"; };
 		01C0AA1B186D708400F8A250 /* OnlineMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OnlineMapViewController.m; sourceTree = "<group>"; };
 		01C170F4187AA47900CE62DD /* TKAreaWeekCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TKAreaWeekCell.h; sourceTree = "<group>"; };
@@ -636,6 +638,7 @@
 		01C913BB187111BB00D9A926 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		01C913BE18715DD000D9A926 /* TKMapCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TKMapCell.h; sourceTree = "<group>"; };
 		01C913BF18715DD000D9A926 /* TKMapCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TKMapCell.m; sourceTree = "<group>"; };
+		01DDCAC61886585B00E4DFFE /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		01E9CBA3187566A3005F330A /* CVUISelect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVUISelect.h; sourceTree = "<group>"; };
 		01E9CBA4187566A3005F330A /* CVUISelect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CVUISelect.m; sourceTree = "<group>"; };
 		01E9CBA618756B44005F330A /* AreaCar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AreaCar.h; sourceTree = "<group>"; };
@@ -690,6 +693,7 @@
 		01FCBE28186AC430000835D4 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		01FCBE2A186AD43A000835D4 /* CaseCameraImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CaseCameraImage.h; sourceTree = "<group>"; };
 		01FCBE2B186AD43A000835D4 /* CaseCameraImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CaseCameraImage.m; sourceTree = "<group>"; };
+		01FCC2D4188638C9008F7B5D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -874,6 +878,8 @@
 				01BD3A20187A41D300B2F513 /* TelephoneViewController.m */,
 				01F859611883E8D100189051 /* ReadMessageViewController.h */,
 				01F859621883E8D400189051 /* ReadMessageViewController.m */,
+				014419CC18867F1A00203B87 /* ExceptionViewController.h */,
+				014419CD18867F1A00203B87 /* ExceptionViewController.m */,
 			);
 			name = Target;
 			sourceTree = "<group>";
@@ -890,6 +896,8 @@
 				012B32A81869885D00717CDD /* MonitorView.m */,
 				012B32AA18698DD300717CDD /* TKMonitorCell.h */,
 				012B32AB18698DD300717CDD /* TKMonitorCell.m */,
+				014419CF18867FD100203B87 /* ExceptionPaoView.h */,
+				014419D018867FD100203B87 /* ExceptionPaoView.m */,
 			);
 			name = UI;
 			sourceTree = "<group>";
@@ -982,8 +990,6 @@
 				0189889D185FE0990073B253 /* BasicViewController.m */,
 				0189891318612A280073B253 /* BasicNavigationController.h */,
 				0189891418612A280073B253 /* BasicNavigationController.m */,
-				01C0AA16186D6C5200F8A250 /* InnerBasicViewController.h */,
-				01C0AA17186D6C5200F8A250 /* InnerBasicViewController.m */,
 			);
 			name = Common;
 			sourceTree = "<group>";
@@ -1303,9 +1309,9 @@
 		01BE3FE1185EACB6005C25D9 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				01FCC2D5188638C9008F7B5D /* InfoPlist.strings */,
 				01BE4002185EAFD2005C25D9 /* images */,
 				01BE3FE2185EACB6005C25D9 /* LocationService-Info.plist */,
-				01BE3FE3185EACB6005C25D9 /* InfoPlist.strings */,
 				01BE3FE6185EACB6005C25D9 /* main.m */,
 				01BE3FE8185EACB6005C25D9 /* LocationService-Prefix.pch */,
 				01BE3FEC185EACB6005C25D9 /* Default.png */,
@@ -1592,6 +1598,8 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				"zh-Hant",
+				"zh-Hans",
 			);
 			mainGroup = 01BE3FCE185EACB6005C25D9;
 			productRefGroup = 01BE3FD8185EACB6005C25D9 /* Products */;
@@ -1610,7 +1618,6 @@
 			files = (
 				012097D2185ECA6600437EA3 /* load02@2x.jpg in Resources */,
 				0195139918852887003255D5 /* Icon@2x.png in Resources */,
-				01BE3FE5185EACB6005C25D9 /* InfoPlist.strings in Resources */,
 				018988C318601CB00073B253 /* bgbutton01.png in Resources */,
 				01898933186140C00073B253 /* notice_error_icon.png in Resources */,
 				019513AD18852AA7003255D5 /* ico07.png in Resources */,
@@ -1622,6 +1629,7 @@
 				01A4C78A187BE54E00B3963D /* ico02f.png in Resources */,
 				01BE3FEF185EACB6005C25D9 /* Default@2x.png in Resources */,
 				01BE3FF1185EACB6005C25D9 /* Default-568h@2x.png in Resources */,
+				01FCC2D3188638C9008F7B5D /* InfoPlist.strings in Resources */,
 				016924CF1862A33C0040E0C9 /* Entitlements.plist in Resources */,
 				0195139718852887003255D5 /* Icon-Small@2x.png in Resources */,
 				019513A118852A06003255D5 /* ico15.png in Resources */,
@@ -1808,7 +1816,6 @@
 				01C0AA0E186D284C00F8A250 /* EditSupervisionViewController.m in Sources */,
 				01C0AA11186D538F00F8A250 /* AreaCrawl.m in Sources */,
 				01C0AA15186D547800F8A250 /* AreaViewController.m in Sources */,
-				01C0AA18186D6C5200F8A250 /* InnerBasicViewController.m in Sources */,
 				01C0AA1C186D708400F8A250 /* OnlineMapViewController.m in Sources */,
 				01C9138D1871093500D9A926 /* DownloadMapController.mm in Sources */,
 				01C913C018715DD000D9A926 /* TKMapCell.m in Sources */,
@@ -1842,16 +1849,19 @@
 				01F859691883F2C200189051 /* NSTimer+TPCategory.m in Sources */,
 				019A93E11885151E002554A1 /* RunScrollView.m in Sources */,
 				019A93E41885167C002554A1 /* RunAnimateView.m in Sources */,
+				014419CE18867F1A00203B87 /* ExceptionViewController.m in Sources */,
+				014419D118867FD100203B87 /* ExceptionPaoView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		01BE3FE3185EACB6005C25D9 /* InfoPlist.strings */ = {
+		01FCC2D5188638C9008F7B5D /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				01BE3FE4185EACB6005C25D9 /* en */,
+				01FCC2D4188638C9008F7B5D /* en */,
+				01DDCAC61886585B00E4DFFE /* zh-Hans */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -1948,6 +1958,7 @@
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "BB0E0779-257D-46BB-89B1-E871F31FC0D9";
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1967,6 +1978,7 @@
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "352C0C08-D7D7-465D-8713-039DE9A5090C";
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

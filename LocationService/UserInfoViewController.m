@@ -11,6 +11,7 @@
 #import "TKLabelCell.h"
 #import "TKTextFieldCell.h"
 #import "Account.h"
+#import "AlertHelper.h"
 @interface UserInfoViewController ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>{
     UITableView *_tableView;
     LoginButtons *_buttons;
@@ -119,6 +120,28 @@
 - (void)buttonSubmit{
     TKTextFieldCell *cell1=self.cells[3];
     TKTextFieldCell *cell2=self.cells[5];
+    
+    if (!cell1.hasValue) {
+        [AlertHelper initWithTitle:@"提示" message:@"手机号码不为空!"];
+        [cell1.textField becomeFirstResponder];
+        return;
+    }
+    if (![cell1.textField.text isNumberString]) {
+        [AlertHelper initWithTitle:@"提示" message:@"手机号码只能为数字!"];
+        [cell1.textField becomeFirstResponder];
+        return;
+    }
+    if(strlen([cell1.textField.text UTF8String])<11)
+    {
+        [AlertHelper initWithTitle:@"提示" message:@"手机号码必须为11位！"];
+        [cell1.textField becomeFirstResponder];
+        return;
+    }
+    if (!self.hasNetWork) {
+        [self showErrorNetWorkNotice:nil];
+        return;
+    }
+    
      Account *acc=[Account unarchiverAccount];
     
     NSMutableArray *params=[NSMutableArray arrayWithCapacity:2];

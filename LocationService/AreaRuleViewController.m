@@ -191,11 +191,13 @@
         NSArray *source=[dic objectForKey:@"CarList"];
         NSArray *items=[AppHelper arrayWithSource:source className:@"AreaCar"];
         if (items&&[items count]>0) {
-            
             for (AreaCar *item in items) {
                 int row=[self getRowFindbyId:item.ID];
                 if (row>0&&self.sourceData&&row<[self.sourceData count]) {
                     NSIndexPath *indexPath=[NSIndexPath indexPathForRow:row inSection:0];
+                    //设置checkbox选中
+                    [_tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+                    //保存选中的值
                     [self tableView:_tableView didSelectRowAtIndexPath:indexPath];
                 }
             }
@@ -222,7 +224,6 @@
     args.serviceNameSpace=DataNameSpace1;
     args.methodName=@"GetAreaCar";
     args.soapParams=[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:self.AreaId,@"areaID", nil], nil];
-    
    
     ASIHTTPRequest *request1=[ServiceHelper commonSharedRequest:args];
     [request1 setUserInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"car",@"name", nil]];
@@ -254,7 +255,6 @@
     
     //执行队列请求
     [self.serviceHelper startQueue:nil failed:nil complete:^(NSArray *results) {
-        NSLog(@"queue cout=%d",results.count);
         ServiceResult *shipResult=nil;
         for (ServiceResult *result in results) {
             NSString *name=[result.userInfo objectForKey:@"name"];
@@ -276,7 +276,7 @@
     }];
 }
 //新增规则
-- (void)addRuleCompleted:(void(^)(NSString *ruleId))completed{
+- (void)addRuleCompleted:(void(^)(NSString *areaGuid))completed{
     
     if ([[_ruleSelect value] length]==0) {
         [AlertHelper initWithTitle:@"提示" message:@"请选择规则!"];
@@ -311,8 +311,9 @@
         if(result.hasSuccess)
         {
             NSDictionary *dic=[result json];
-            if(dic&&[[dic objectForKey:@"Result"] isEqualToString:@"Success"])
+            if(dic&&![[dic objectForKey:@"Result"] isEqualToString:@"Fail"])
             {
+                self.ruleId=[dic objectForKey:@"Result"];
                 boo=YES;
                 [self hideLoadingViewAnimated:^(AnimateLoadView *hideView) {
                     if (completed) {

@@ -174,7 +174,7 @@
     }
     float x,y;
     switch (_movePoint) {
-        /***
+       
         case LeftTop:
             if(((locationPoint.x + MIN_IMG_SIZE) >= (_translatedCropRect.origin.x + _translatedCropRect.size.width)) ||
                ((locationPoint.y + MIN_IMG_SIZE)>= (_translatedCropRect.origin.y + _translatedCropRect.size.height)))
@@ -208,7 +208,6 @@
                                    locationPoint.x - _translatedCropRect.origin.x,
                                    locationPoint.y - _translatedCropRect.origin.y);
             break;
-        ***/
         case MoveCenter:
 
             x = _lastMovePoint.x - locationPoint.x;

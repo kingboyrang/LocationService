@@ -195,6 +195,10 @@
         [_areaPaoView.field becomeFirstResponder];
         return;
     }
+    if (!self.hasNetWork) {
+        [self showErrorNetWorkNotice:nil];
+        return;
+    }
     
     Account *acc=[Account unarchiverAccount];
     NSMutableArray *params=[NSMutableArray array];
@@ -279,6 +283,10 @@
         [_areaPaoView.field becomeFirstResponder];
         return;
     }
+    if (!self.hasNetWork) {
+        [self showErrorNetWorkNotice:nil];
+        return;
+    }
     
     NSString *latlng=[NSString stringWithFormat:@"%f,%f",_coordinate.latitude,_coordinate.longitude];
     Account *acc=[Account unarchiverAccount];
@@ -339,6 +347,8 @@
 // 根据anntation生成对应的View
 - (BMKAnnotationView *)mapView:(BMKMapView *)mapView viewForAnnotation:(id <BMKAnnotation>)annotation
 {
+    
+    
     BMKPinAnnotationView *annotationView = (BMKPinAnnotationView*)[mapView viewForAnnotation:annotation];
     if (annotationView == nil)
     {
@@ -419,6 +429,7 @@
 }
 - (void)mapView:(BMKMapView *)mapView didSelectAnnotationView:(BMKAnnotationView *)view
 {
+   
     //CGPoint point = [mapView convertCoordinate:view.annotation.coordinate toPointToView:mapView];
     if ([view isKindOfClass:[BMKPinAnnotationView class]]) {
        

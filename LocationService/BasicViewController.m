@@ -109,11 +109,7 @@
     
     [self showErrorViewWithHide:^(AnimateErrorView *errorView) {
         errorView.labelTitle.text=@"网络未连接,请检查!";
-    } completed:^(AnimateErrorView *errorView) {
-        if (dismissError) {
-            dismissError();
-        }
-    }];
+    } completed:nil];
     /***
     WBErrorNoticeView *notice = [WBErrorNoticeView errorNoticeInView:self.view title:@"网络未连接" message:@"请检查您的网络连接."];
     [notice setDismissalBlock:^(BOOL dismissedInteractively) {
@@ -254,16 +250,19 @@
         errorView.frame=r;
     }];
 }
--(void) hideErrorViewAnimatedWithDuration:(NSTimeInterval)duration completed:(void (^)(AnimateErrorView *errorView))complete;{
+-(void) hideErrorViewAnimatedWithDuration:(NSTimeInterval)duration completed:(void (^)(AnimateErrorView *errorView))complete{
+    
     AnimateErrorView *errorView = [self errorView];
     CGRect r=errorView.frame;
     r.origin.y=-r.size.height;
     [UIView animateWithDuration:duration animations:^{
         errorView.frame=r;
     } completion:^(BOOL finished) {
-        [errorView removeFromSuperview];
-        if (complete) {
-            complete(errorView);
+        if (finished) {
+            [errorView removeFromSuperview];
+            if (complete) {
+                complete(errorView);
+            }
         }
     }];
 }

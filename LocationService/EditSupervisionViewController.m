@@ -15,6 +15,7 @@
 #import "Account.h"
 #import "AlertHelper.h"
 #import "SupervisionExtend.h"
+#import "AppUI.h"
 @interface EditSupervisionViewController ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>{
     UITableView *_tableView;
     UIImageView *_imageHead;
@@ -43,8 +44,17 @@
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     [self.navBarView setNavBarTitle:@"监管目标"];
+    if (![self.navBarView viewWithTag:301]) {
+        UIButton *btn=[AppUI createhighlightButtonWithTitle:@"列表" frame:CGRectMake(self.view.bounds.size.width-50, (44-35)/2, 50, 35)];
+        btn.tag=301;
+        [btn addTarget:self action:@selector(buttonListClick) forControlEvents:UIControlEventTouchUpInside];
+        [self.navBarView addSubview:btn];
+    }
 }
-
+//回列表
+- (void)buttonListClick{
+    [self.navigationController popToViewController:[[self.navigationController viewControllers] objectAtIndex:2] animated:YES];
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -65,7 +75,8 @@
     [self.view addSubview:_tableView];
     
     LoginButtons *buttons=[[LoginButtons alloc] initWithFrame:CGRectMake(0,self.view.bounds.size.height-44, self.view.bounds.size.width, 44)];
-    
+    buttons.cancel.frame=CGRectMake(self.view.bounds.size.width*2/3, 0, self.view.bounds.size.width/3, 44);
+    buttons.submit.frame=CGRectMake(self.view.bounds.size.width/3, 0, self.view.bounds.size.width/3, 44);
     [buttons.cancel setTitle:@"下一步" forState:UIControlStateNormal];
     [buttons.submit setTitle:@"完成" forState:UIControlStateNormal];
     [buttons.submit addTarget:self action:@selector(buttonSubmit) forControlEvents:UIControlEventTouchUpInside];
@@ -156,8 +167,8 @@
         NSMutableArray *params=[NSMutableArray arrayWithCapacity:6];
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:self.Entity.ID,@"personID", nil]];
         [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[cell1.textField.text Trim],@"Name", nil]];
-        [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[cell2.textField.text Trim],@"phoneNum", nil]];
-        [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[cell3.textField.text Trim],@"strIMEI", nil]];
+        [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[cell3.textField.text Trim],@"phoneNum", nil]];
+        [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[cell2.textField.text Trim],@"strIMEI", nil]];
         [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[cell4.textField.text Trim],@"Password", nil]];
         [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:self.Entity.fileName,@"photo", nil]];
         [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:acc.WorkNo,@"CurWorkNo", nil]];

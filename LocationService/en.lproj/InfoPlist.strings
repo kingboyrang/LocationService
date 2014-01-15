@@ -1,2 +1,5 @@
 /* Localized versions of Info.plist keys */
-
+"Retake"="Retake";
+"Cancel"="Cancel";
+"Choose"="Choose";
+"Photos"="Photos";

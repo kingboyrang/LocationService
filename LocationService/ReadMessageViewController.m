@@ -12,6 +12,7 @@
 #import "MessageCell.h"
 #import "TrajectoryMessage.h"
 #import "AppHelper.h"
+#import "ExceptionViewController.h"
 @interface ReadMessageViewController (){
    LoginButtons *_toolBar;
 }
@@ -322,6 +323,10 @@
     UIButton *btn=(UIButton*)[self.navBarView viewWithTag:301];
     if ([btn.currentTitle isEqualToString:@"编辑"]) {
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
+        ExceptionViewController *control=[[ExceptionViewController alloc] init];
+        control.Entity=self.cells[indexPath.row];
+        [self.navigationController pushViewController:control animated:YES];
+        [control release];
     }else{
         if (!self.removeList) {
             self.removeList=[NSMutableDictionary dictionary];

@@ -68,7 +68,7 @@
     _labInfo.font=[UIFont fontWithName:DeviceFontName size:DeviceFontSize];
     _labInfo.backgroundColor=[UIColor colorFromHexRGB:@"131313"];
     _labInfo.textAlignment=NSTextAlignmentCenter;
-    _labInfo.text=@"通话结束";
+    _labInfo.text=@"呼叫中";
     [self.view addSubview:_labInfo];
     
     //拨打电话

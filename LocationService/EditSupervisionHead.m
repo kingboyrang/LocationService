@@ -19,7 +19,7 @@
 @property (nonatomic, strong) CaseCameraImage *cameraImage;
 - (void)buttonViewerClick;
 - (void)buttonCameraClick;
-- (void)buttonCancelClick;
+//- (void)buttonCancelClick;
 - (void)buttonSubmitClick;
 - (void)uploadImageWithId:(NSString*)personId completed:(void(^)(NSString *fileName))completed;
 @end
@@ -102,10 +102,10 @@
     [self.view addSubview:btn];
     
     LoginButtons *buttons=[[LoginButtons alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height-40, self.view.bounds.size.width, 44)];
-    
+    buttons.cancel.frame=CGRectMake(0, 0, self.view.bounds.size.width/3, 44);
+    buttons.submit.frame=CGRectMake(self.view.bounds.size.width/3, 0, self.view.bounds.size.width/3, buttons.frame.size.height);
     [buttons.cancel setTitle:@"上一步" forState:UIControlStateNormal];
     [buttons.cancel addTarget:self action:@selector(buttonPrevClick) forControlEvents:UIControlEventTouchUpInside];
-    buttons.submit.frame=CGRectMake(self.view.bounds.size.width/3, 0, self.view.bounds.size.width/3, buttons.frame.size.height);
     [buttons.submit setTitle:@"完成" forState:UIControlStateNormal];
     [buttons.submit addTarget:self action:@selector(buttonSubmitClick) forControlEvents:UIControlEventTouchUpInside];
     /***
@@ -127,6 +127,31 @@
 }
 //上一步
 - (void)buttonPrevClick{
+    if (self.operateType==2) {//修改
+        if (_imageCropper) {
+            [self uploadImageWithId:self.Entity.ID completed:^(NSString *fileName) {
+                if (self.delegate&&[self.delegate respondsToSelector:@selector(finishSelectedImage:)]) {
+                    [self.delegate performSelector:@selector(finishSelectedImage:) withObject:[_imageCropper getCroppedImage]];
+                }
+                if (self.delegate&&[self.delegate respondsToSelector:@selector(finishUploadFileName:)]) {
+                    [self.delegate performSelector:@selector(finishUploadFileName:) withObject:fileName];
+                }
+            }];
+        }else{
+            //[AlertHelper initWithTitle:@"提示" message:@"未选择头像!"];
+        }
+    }else{
+        if (_imageCropper) {
+            //[self uploadImageWithId:self.Entity.ID completed:nil];
+            if (self.delegate&&[self.delegate respondsToSelector:@selector(finishSelectedImage:)]) {
+                [self.delegate performSelector:@selector(finishSelectedImage:) withObject:[_imageCropper getCroppedImage]];
+            }
+            [self.navigationController popViewControllerAnimated:YES];
+            return;
+        }else{
+            //[AlertHelper initWithTitle:@"提示" message:@"未选择头像!"];
+        }
+    }
     [self.navigationController popViewControllerAnimated:YES];
 }
 - (void)finishedImage:(UIImage*)image{
@@ -146,7 +171,7 @@
     _imageCropper = [[NLImageCropperView alloc] initWithFrame:r];
     [self.view addSubview:_imageCropper];
     [_imageCropper setImage:realImage];
-    [_imageCropper setCropRegionRect:CGRectMake((realImage.size.width-90)*_imageCropper.scaleReal/2, (realImage.size.width-104)*_imageCropper.scaleReal/2, 90*_imageCropper.scaleReal, 104*_imageCropper.scaleReal)];
+    [_imageCropper setCropRegionRect:CGRectMake((realImage.size.width-170)*_imageCropper.scaleReal/2, (realImage.size.width-178)*_imageCropper.scaleReal/2, 170*_imageCropper.scaleReal, 178*_imageCropper.scaleReal)];
     
 }
 - (void)uploadImageWithId:(NSString*)personId completed:(void(^)(NSString *fileName))completed{
@@ -200,10 +225,6 @@
             completed(@"");
         }
     }
-}
-//上一步
-- (void)buttonCancelClick{
-    [self.navigationController popViewControllerAnimated:YES];
 }
 //完成
 - (void)buttonSubmitClick{
