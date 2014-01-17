@@ -59,6 +59,7 @@
     
     if (acc.isFirstRun) {//第一次启动时加载动画
         RunAnimateView *view=[[RunAnimateView alloc] initWithFrame:DeviceRect];
+        view.backgroundColor=[UIColor blackColor];
         [self.window addSubview:view];
     }
     //[AppHelper runAnimation:nil];

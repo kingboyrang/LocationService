@@ -32,6 +32,7 @@
 - (void)handlerTrajectoryResult:(ServiceResult*)result;
 - (void)handlerShipResult:(ServiceResult*)result;
 - (int)getRowFindbyId:(NSString*)carId;
+
 @end
 
 @implementation AreaRuleViewController
@@ -249,6 +250,7 @@
     args2.serviceNameSpace=DataNameSpace1;
     args2.methodName=@"GetAreaRule";
     args2.soapParams=params;
+    //NSLog(@"soap=%@",args2.soapMessage);
     ASIHTTPRequest *request3=[ServiceHelper commonSharedRequest:args2];
     [request3 setUserInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"rule",@"name", nil]];
     [self.serviceHelper addQueue:request3];
@@ -266,7 +268,6 @@
                 [self handlerTrajectoryResult:result];
             }
             if ([name isEqualToString:@"car"]) {//修改时的关联对象
-                 NSLog(@"car xml=%@",result.xmlString);
                 shipResult=result;
             }
         }
@@ -275,6 +276,7 @@
         }
     }];
 }
+
 //新增规则
 - (void)addRuleCompleted:(void(^)(NSString *areaGuid))completed{
     
@@ -303,10 +305,10 @@
     args.serviceNameSpace=DataNameSpace1;
     args.methodName=@"SaveAreaRuleAndCar";
     args.soapParams=params;
-    NSLog(@"soap=%@",args.soapMessage);
+    //NSLog(@"soap=%@",args.soapMessage);
     [self showLoadingAnimatedWithTitle:[NSString stringWithFormat:@"正在%@规则,请稍后...",prefx]];
     [self.serviceHelper asynService:args success:^(ServiceResult *result) {
-        NSLog(@"xml=%@",result.xmlString);
+        //NSLog(@"xml=%@",result.xmlString);
         BOOL boo=NO;
         if(result.hasSuccess)
         {

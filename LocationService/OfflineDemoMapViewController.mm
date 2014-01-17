@@ -38,7 +38,6 @@
        
     //显示当前某地的离线地图
     _mapView = [[BMKMapView alloc] init];
-    [self setCurrentMapLevel:_mapView];
     _mapView.frame = CGRectMake(0, 44, self.view.bounds.size.width, self.view.bounds.size.height-44);
     [self.view addSubview:_mapView];
     

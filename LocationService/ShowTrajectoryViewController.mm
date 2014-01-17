@@ -12,6 +12,7 @@
 #import "Account.h"
 #import "AppHelper.h"
 #import "MeterViewController.h"
+#import "NSDate+TPCategory.h"
 @interface ShowTrajectoryViewController ()
 - (void)cleanMap;
 - (void)loadingHistory;
@@ -86,7 +87,7 @@
     _mapView= [[BMKMapView alloc]initWithFrame:r];
     [self.view addSubview:_mapView];
     
-    [self setCurrentMapLevel:_mapView];
+    
 }
 -(void)viewWillDisappear:(BOOL)animated {
     [_mapView viewWillDisappear];
@@ -162,7 +163,25 @@
             if ([dic.allKeys containsObject:@"Person"]) {
                 boo=YES;
                 NSArray *source=[dic objectForKey:@"Person"];
-                self.list=[AppHelper arrayWithSource:source className:@"TrajectoryHistory"];
+                NSArray *arr=[AppHelper arrayWithSource:source className:@"TrajectoryHistory"];
+                if(arr&&[arr count]>0)
+                {
+                    NSComparator cmptr = ^(id obj1, id obj2){
+                        TrajectoryHistory *field1=(TrajectoryHistory*)obj1;
+                        TrajectoryHistory *field2=(TrajectoryHistory*)obj2;
+                        NSDate *date1=[NSDate dateFromString:field1.pctime withFormat:@"yyyy/MM/dd HH:mm:ss"];
+                        NSDate *date2=[NSDate dateFromString:field2.pctime withFormat:@"yyyy/MM/dd HH:mm:ss"];
+                        return [date1 compare:date2];
+                        
+                    };
+                    self.list=[arr sortedArrayUsingComparator:cmptr];//降序排序
+//                    for (TrajectoryHistory *item in self.list) {
+//                        NSLog(@"time=%@",item.pctime);
+//                    }
+                    
+                }else{
+                    self.list=[NSArray array];
+                }
                 //重新加载地图
                 [self loadingPointAnnotations];
                 [self hideLoadingViewAnimated:^(AnimateLoadView *hideView) {
@@ -183,12 +202,20 @@
 {
     [self cleanMap];
     if (self.list&&[self.list count]>0) {
+        int numPoints=self.list.count;
+        // 添加折线覆盖物
+        //动态数组
+        CLLocationCoordinate2D *points = (CLLocationCoordinate2D*)malloc( numPoints * sizeof( CLLocationCoordinate2D));
         for (int i=0; i<self.list.count; i++) {
             TrajectoryHistory *entity=self.list[i];
             
             CLLocationCoordinate2D coor;
             coor.latitude=[entity.Latitude floatValue];
             coor.longitude=[entity.Longitude floatValue];
+            
+            points[i].latitude=[entity.Latitude floatValue];
+            points[i].longitude=[entity.Longitude floatValue];
+            
             
             KYPointAnnotation *item=[[KYPointAnnotation alloc] init];
             item.coordinate=coor;
@@ -200,6 +227,9 @@
                 [_mapView setCenterCoordinate:coor animated:YES];
             }
         }
+        //画线
+        BMKPolyline* polyline = [BMKPolyline polylineWithCoordinates:points count:numPoints];
+        [_mapView addOverlay:polyline];
     }
 }
 -(void)cleanMap
@@ -244,6 +274,16 @@
         [paopao release];
     }
    	return view;
+}
+// Override
+- (BMKOverlayView *)mapView:(BMKMapView *)mapView viewForOverlay:(id <BMKOverlay>)overlay{
+    if ([overlay isKindOfClass:[BMKPolyline class]]){
+        BMKPolylineView* polylineView = [[[BMKPolylineView alloc] initWithOverlay:overlay] autorelease];
+        polylineView.strokeColor = [UIColor blueColor];
+        polylineView.lineWidth = 2.0;
+        return polylineView;
+    }
+    return nil;
 }
 //点击空白处调用此接口
 - (void)mapView:(BMKMapView *)mapView onClickedMapBlank:(CLLocationCoordinate2D)coordinate{

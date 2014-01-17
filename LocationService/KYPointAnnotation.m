@@ -7,9 +7,7 @@
 //
 
 #import "KYPointAnnotation.h"
-
 @implementation KYPointAnnotation
 
 @synthesize tag =_tag;
-
 @end

@@ -66,6 +66,13 @@
     }
     return @"";
 }
+- (BOOL)hasValue{
+    NSString *str=[self timeSlot];
+    if ([str length]>0) {
+        return YES;
+    }
+    return NO;
+}
 #pragma mark - field delegate Methods
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{
     [textField resignFirstResponder];

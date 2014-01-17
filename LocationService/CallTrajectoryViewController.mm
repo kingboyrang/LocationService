@@ -62,7 +62,6 @@
    
     _mapView= [[BMKMapView alloc]initWithFrame:r];
     [self.view addSubview:_mapView];
-    [self setCurrentMapLevel:_mapView];
     
     CGFloat topY=self.view.bounds.size.height;
     _phoneView=[[CallPhoneView alloc] initWithFrame:CGRectMake(0, topY, self.view.bounds.size.width, 119)];

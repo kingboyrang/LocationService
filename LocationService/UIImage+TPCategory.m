@@ -437,7 +437,13 @@ CGFloat RadiansToDegrees(CGFloat radians) {return radians * 180/M_PI;};
 	
 	return scaledImage;
 }
-
++(UIImage *)getImageFromView:(UIView *)view{
+    UIGraphicsBeginImageContext(view.bounds.size);
+    [view.layer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
+}
 - (CGSize)aspectScaleSize:(CGFloat)size{
 	
 	CGSize imageSize = CGSizeMake(self.size.width, self.size.height);

@@ -17,4 +17,5 @@
 @property (nonatomic,strong) UIButton *deleteButton;
 @property (nonatomic,assign) int index;
 @property (nonatomic,readonly) NSString *timeSlot;//时间段
+@property (nonatomic,readonly) BOOL hasValue;//是否有值
 @end

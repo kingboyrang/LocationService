@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "BMapKit.h"
+#import "OnlineMapViewController.h"
 @interface DownloadMapController : BasicViewController<BMKOfflineMapDelegate,BMKMapViewDelegate>{
    //BMKMapView* _mapView;//.xib里要有BMKMapView类用于初始化数据驱动
    BMKOfflineMap* _offlineMap;

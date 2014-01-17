@@ -24,9 +24,15 @@
 #import "MeterViewController.h"
 #import "MonitorPersonViewController.h"
 #import "NSTimer+TPCategory.h"
+#import "UIImage+TPCategory.h"
+#import <QuartzCore/QuartzCore.h>
+#import "UIImageView+WebCache.h"
+#import "PinView.h"
+#import "BMKAnnotationView+TPCategory.h"
 @interface IndexViewController (){
     RecordView *_recordView;
     NSTimer *_updateTimer;
+    //PinView *_pinView;
 }
 - (void)buttonCompassClick;
 - (void)buttonTargetClick;
@@ -39,6 +45,8 @@
 - (void)changedAdTimer:(NSTimer *)timer;
 - (void)loadingReadCountWithId:(NSString*)personId;//加载未读总数
 - (void)updateInfoUI:(int)total;//
+- (void)reloadAnnotations:(BMKMapView *)mapView;
+- (void)removeSupervisionAnnotations;
 @end
 
 @implementation IndexViewController
@@ -53,6 +61,7 @@
         [_recordView release];
         _recordView = nil;
     }
+   // [_pinView release];
     
 }
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -68,13 +77,16 @@
     [super viewDidLoad];
     self.navigationController.delegate=self;
     
+   // _pinView=[[PinView alloc] initWithFrame:CGRectMake(0, 44, 90, 164)];
+    
+    
     CGRect r=self.view.bounds;
     r.origin.y=44;
     r.size.height-=TabHeight+44;
     _mapView= [[BMKMapView alloc]initWithFrame:r];
+    
     [self.view addSubview:_mapView];
-
-    [self setCurrentMapLevel:_mapView];
+    orginLevel=_mapView.zoomLevel;
     
     _toolBarView=[[ToolBarView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height-TabHeight, self.view.bounds.size.width, TabHeight)];
     _toolBarView.controls=self;
@@ -92,7 +104,6 @@
      //30秒刷新一次
     [NSTimer scheduledTimerWithTimeInterval:30.0f target:self selector:@selector(changedAdTimer:) userInfo:nil repeats:YES];
     ***/
-   // [_mapView addObserver:self forKeyPath:@"zoomLevel" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:nil];
 }
 - (void)selectedMetaWithEntity:(SupervisionPerson*)entity{
     MeterViewController *meter=[[MeterViewController alloc] init];
@@ -289,12 +300,25 @@
 }
 //当前定位
 - (void)startUserLocation{
-    [self cleanMap];
+    if (_mapView.annotations&&[_mapView.annotations count]>0) {
+        NSMutableArray *delSource=[NSMutableArray array];
+        for (id v in _mapView.annotations) {
+            if([v isKindOfClass:[BMKPointAnnotation class]])
+            {
+                [delSource addObject:v];
+            }
+        }
+        if ([delSource count]>0) {
+            [_mapView removeAnnotations:delSource];
+        }
+    }
     _mapView.showsUserLocation = NO;//先关闭显示的定位图层
     _mapView.userTrackingMode = BMKUserTrackingModeNone;//设置定位的状态
     _mapView.showsUserLocation = YES;//显示定位图层
 }
 - (void)loadSupervision{
+    [self startUserLocation];//当前定位
+    
     Account *acc=[Account unarchiverAccount];
     ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
     args.serviceURL=DataWebservice1;
@@ -329,12 +353,8 @@
             }
            
         }
-        if (!boo) {
-            [self startUserLocation];
-        }
       [self setOrginTrajectorySupersion];//重设
     } failed:^(NSError *error, NSDictionary *userInfo) {
-        [self startUserLocation];
         [self setOrginTrajectorySupersion];//重设
     }];
 }
@@ -345,12 +365,12 @@
     NSArray* array = [NSArray arrayWithArray:_mapView.annotations];
     [_mapView removeAnnotations:array];
 }
-//设置当前地图等级
+//显示当前定位
 - (void)buttonCompassClick{
-    Account *acc=[Account unarchiverAccount];
-    acc.zoomLevel=_mapView.zoomLevel;
-    [acc save];
-    [AlertHelper initWithTitle:@"提示" message:@"当前地图等级保存成功!"];
+    if (currentCoor.latitude>0&&currentCoor.longitude>0) {
+        [_mapView setCenterCoordinate:currentCoor];
+    }
+    
 }
 //新增监管目标
 - (void)buttonTargetClick{
@@ -373,7 +393,6 @@
 // 根据anntation生成对应的View
 - (BMKAnnotationView *)mapView:(BMKMapView *)mapView viewForAnnotation:(id <BMKAnnotation>)annotation
 {
-   
     
      BMKPinAnnotationView *newAnnotation = (BMKPinAnnotationView*)[mapView viewForAnnotation:annotation];
      NSString *AnnotationViewID = @"renameMark";
@@ -384,12 +403,14 @@
          newAnnotation = [[BMKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:AnnotationViewID];
          // 设置颜色
          ((BMKPinAnnotationView*)newAnnotation).pinColor = BMKPinAnnotationColorRed;
-         // 从天上掉下效果
-         ((BMKPinAnnotationView*)newAnnotation).animatesDrop = YES;
-         
          if ([annotation isKindOfClass:[KYPointAnnotation class]]) {
              int pos=[(KYPointAnnotation*)annotation tag]-100;
+             //自定义图片
+             //UIImage* image = [self getPinImageWithLevel:mapView.zoomLevel source:self.cells[pos]];
+             //newAnnotation.image = image;
+             [newAnnotation setPinImageWithEntity:self.cells[pos] mapLevel:mapView.zoomLevel];
              
+             //newAnnotation.annotation = annotation;
              newAnnotation.centerOffset = CGPointMake(0, -(newAnnotation.frame.size.height * 0.5));
              newAnnotation.annotation = annotation;
              //自定义气泡
@@ -399,9 +420,12 @@
              BMKActionPaopaoView *paopao=[[BMKActionPaopaoView alloc] initWithCustomView:_areaPaoView];
              newAnnotation.paopaoView=paopao;
              [paopao release];
+         }else{
+             // 从天上掉下效果
+             ((BMKPinAnnotationView*)newAnnotation).animatesDrop = YES;
          }
-         // 设置可拖拽
-         //((BMKPinAnnotationView*)newAnnotation).draggable = YES;
+     }else{
+         
      }
      return newAnnotation;
 }
@@ -431,11 +455,34 @@
     //[mapView addOverlay:circle];
     
     
+    /***
     BMKPointAnnotation* item = [[BMKPointAnnotation alloc] init];
     item.coordinate = mapView.centerCoordinate;
     item.title=@"当前位置";
     [_mapView addAnnotation:item];
     [item release];
+     ***/
+    
+    BMKUserLocation *userLocation = mapView.userLocation;
+    userLocation.title = @"当前位置";
+    currentCoor= userLocation.coordinate;//保存当前定位
+    [_mapView addAnnotation:userLocation];
+    
+    //选中一项
+    if (self.cells&&[self.cells count]>0) {
+        for (int i=0; i<self.cells.count; i++) {
+            SupervisionPerson *entity=self.cells[i];
+            if ([entity.Latitude length]>0&&[entity.Longitude length]>0) {
+                CLLocationCoordinate2D coor;
+                coor.latitude=[entity.Latitude floatValue];
+                coor.longitude=[entity.Longitude floatValue];
+                [_mapView setCenterCoordinate:coor];
+                break;
+            }
+        }
+    }
+
+    
     /*
      //标记我的位置
      BMKUserLocation *userLocation = mapView.userLocation;
@@ -453,8 +500,80 @@
         SupervisionPerson *entity=self.cells[index];
         //NSLog(@"id=%@",entity.ID);
         [self setRecetiveSupersion:entity];
-       
     }
 }
+//双击事件
+- (void)mapview:(BMKMapView *)mapView onDoubleClick:(CLLocationCoordinate2D)coordinate{
+    [self reloadAnnotations:mapView];
+}
+//区域发生改变时，调用
+- (void)mapView:(BMKMapView *)mapView regionDidChangeAnimated:(BOOL)animated
+{
+    [self reloadAnnotations:mapView];
+}
+//重新加载标注
+- (void)reloadAnnotations:(BMKMapView *)mapView{
+    if (orginLevel>6&&mapView.zoomLevel<6) {
+        orginLevel=mapView.zoomLevel;
+        [self removeSupervisionAnnotations];
+        if (self.cells&&[self.cells count]>0) {
+            //加载监管目标
+            for (int i=0; i<self.cells.count; i++) {
+                SupervisionPerson *entity=self.cells[i];
+                if ([entity.Latitude length]==0||[entity.Longitude length]==0) {
+                    continue;
+                }
+                CLLocationCoordinate2D coor;
+                coor.latitude=[entity.Latitude floatValue];
+                coor.longitude=[entity.Longitude floatValue];
+                KYPointAnnotation* item = [[KYPointAnnotation alloc] init];
+                item.coordinate =coor;
+                item.title=@"当前位置";
+                item.tag=100+i;
+                [_mapView addAnnotation:item];
+                [item release];
+                [_mapView setCenterCoordinate:coor];
+            }
+        }
+        return;
+    }
+    if (orginLevel<6&&mapView.zoomLevel>6) {
+        orginLevel=mapView.zoomLevel;
+        [self removeSupervisionAnnotations];
+        if (self.cells&&[self.cells count]>0) {
+            //加载监管目标
+            for (int i=0; i<self.cells.count; i++) {
+                SupervisionPerson *entity=self.cells[i];
+                if ([entity.Latitude length]==0||[entity.Longitude length]==0) {
+                    continue;
+                }
+                CLLocationCoordinate2D coor;
+                coor.latitude=[entity.Latitude floatValue];
+                coor.longitude=[entity.Longitude floatValue];
+                KYPointAnnotation* item = [[KYPointAnnotation alloc] init];
+                item.coordinate =coor;
+                item.title=@"当前位置";
+                item.tag=100+i;
+                [_mapView addAnnotation:item];
+                [item release];
+                [_mapView setCenterCoordinate:coor];
+            }
+        }
+    }
 
+}
+- (void)removeSupervisionAnnotations{
+    if (_mapView.annotations&&[_mapView.annotations count]>0) {
+        NSMutableArray *delSource=[NSMutableArray array];
+        for (id v in _mapView.annotations) {
+            if([v isKindOfClass:[KYPointAnnotation class]])
+            {
+                [delSource addObject:v];
+            }
+        }
+        if ([delSource count]>0) {
+            [_mapView removeAnnotations:delSource];
+        }
+    }
+}
 @end

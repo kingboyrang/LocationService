@@ -85,6 +85,10 @@
  * Aspect scales the image to a rect size
  */
 - (UIImage*)aspectScaleToSize:(CGSize)size;
+/*
+ * view生成图片
+ */
++(UIImage *)getImageFromView:(UIView *)view;
 
 /*
  * Masks the context with the image, then fills with the color

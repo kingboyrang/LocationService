@@ -34,6 +34,8 @@
 - (void)setSelectedCellWithWeek:(int)week;
 - (void)updateOrderCellRow;
 - (void)closedOpenCellRow:(NSMutableDictionary*)dic;
+- (BOOL)formVerify;//表单验证
+- (BOOL)singleWeekVerifyWithRow:(int)row week:(int)week;
 @end
 
 @implementation AreaRangeViewController
@@ -293,6 +295,7 @@
             TKAreaRangeCell *cell=arr[total];
             cell.startField.popoverText.popoverTextField.text=k.starTime;
             cell.endField.popoverText.popoverTextField.text=k.endTime;
+            total++;
             continue;
         }
         TKAreaRangeCell *cell1=[[TKAreaRangeCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
@@ -486,6 +489,58 @@
 - (void)buttonPrevClick{
     [self.navigationController popViewControllerAnimated:YES];
 }
+- (BOOL)singleWeekVerifyWithRow:(int)row week:(int)week{
+    if (row+1<self.cells.count&&[self.cells[row+1] isKindOfClass:[TKAreaRangeCell class]]) {//打开
+        int total=row+1;
+        id v=self.cells[total];
+        while ([v isKindOfClass:[TKAreaRangeCell class]]) {
+            TKAreaRangeCell *cell=(TKAreaRangeCell*)v;
+            if (cell.hasValue) {
+                return YES;
+            }
+            total++;
+            if (total>self.cells.count-1) {
+                break;
+            }
+            v=self.cells[total];
+        }
+    }
+     NSString *key=[NSString stringWithFormat:@"%d",week];
+    NSArray *source=[self.cellChilds objectForKey:key];
+    if (row+1<self.cells.count&&[self.cells[row+1] isKindOfClass:[TKAreaWeekCell class]]) {//关闭
+        for (TKAreaRangeCell *item in source) {
+            if (item.hasValue) {
+                return YES;
+            }
+        }
+    }
+    if (row==self.cells.count-1) {//最后一项
+        for (TKAreaRangeCell *item in source) {
+            if (item.hasValue) {
+                return YES;
+            }
+        }
+    }
+    TKAreaWeekCell *weekCell=self.cells[row];
+    [AlertHelper initWithTitle:@"提示" message:[NSString stringWithFormat:@"请至少在%@中设定一个时间段!",weekCell.label.text]];
+    return NO;
+}
+//表单验证
+- (BOOL)formVerify{
+    for (id  v in self.cells) {
+        if ([v isKindOfClass:[TKAreaWeekCell class]]) {
+            TKAreaWeekCell *cell=(TKAreaWeekCell*)v;
+            if (cell.hasSelected) {
+                NSIndexPath *indexPath=[_tableView indexPathForCell:cell];
+                BOOL boo=[self singleWeekVerifyWithRow:indexPath.row week:cell.index];
+                if (!boo) {
+                    return NO;
+                }
+            }
+        }
+    }
+    return YES;
+}
 //完成
 - (void)buttonSubmitClick:(id)sender{
     
@@ -499,6 +554,9 @@
     }
     if (![self existsLimitedTime]) {
         [AlertHelper initWithTitle:@"提示" message:@"请至少选择一项有限时间!"];
+        return;
+    }
+    if (![self formVerify]) {//验证
         return;
     }
     

@@ -24,6 +24,9 @@
     
     UIImageView *_accountImageView;
     UIImageView *_phoneImageView;
+    
+    BOOL isExistsNumber;//帐号是否已存在
+    BOOL isExistsPhone;//手机号码是否已存在
 }
 - (void)updateShowInfo;
 - (void)buttonSubmit;
@@ -57,7 +60,8 @@
 {
     [super viewDidLoad];
     self.showBackButton=NO;
-   
+    isExistsPhone=NO;
+    isExistsNumber=NO;
     
    CGRect r=self.view.bounds;
     r.origin.y=44;
@@ -182,6 +186,18 @@
         [cell5.textField becomeFirstResponder];
         return;
     }
+    if(isExistsNumber)
+    {
+        [AlertHelper initWithTitle:@"提示" message:@"帐号已被注册,请重新输入!"];
+        [cell1.textField becomeFirstResponder];
+        return;
+    }
+    if(isExistsPhone)
+    {
+        [AlertHelper initWithTitle:@"提示" message:@"手机号码已被注册,请重新输入!"];
+        [cell3.textField becomeFirstResponder];
+        return;
+    }
     if (!self.hasNetWork) {
         [self showErrorNetWorkNotice:nil];
         return;
@@ -201,6 +217,7 @@
         NSString *msg=@"注册失败!";
         NSString *status=@"";
         BOOL boo=NO;
+        //NSLog(@"result=%@",result.request.responseString);
         if(result.hasSuccess){
             XmlNode *node=[result methodNode];
             status=node.Value;
@@ -259,19 +276,23 @@
         if (result.hasSuccess) {
             XmlNode *node=[result methodNode];
             if ([node.Value isEqualToString:@"false"]) {
+                 isExistsNumber=NO;
                  _showInfo.text=@"";
                  _accountImageView.hidden=NO;
             }else{
+                isExistsNumber=YES;
                 _accountImageView.hidden=YES;
                 _showInfo.text=@"帐号已被注册!";
                 _showInfo.textColor=[UIColor redColor];
             }
         }else{
+            isExistsNumber=NO;
             _accountImageView.hidden=YES;
             _showInfo.text=@"帐号检测异常!";
             _showInfo.textColor=[UIColor redColor];
         }
     } failed:^(NSError *error, NSDictionary *userInfo) {
+        isExistsNumber=NO;
         _accountImageView.hidden=YES;
         _showInfo.text=@"帐号检测异常!";
         _showInfo.textColor=[UIColor redColor];
@@ -293,17 +314,21 @@
             if ([node.Value isEqualToString:@"false"]) {
                 _phoneShowInfo.text=@"";
                 _phoneImageView.hidden=NO;
+                 isExistsPhone=NO;
             }else{
+                 isExistsPhone=YES;
                  _phoneImageView.hidden=YES;
                 _phoneShowInfo.text=@"已注册!";
                 _phoneShowInfo.textColor=[UIColor redColor];
             }
         }else{
+             isExistsPhone=NO;
              _phoneImageView.hidden=YES;
             _phoneShowInfo.text=@"手机号码检测异常!";
             _phoneShowInfo.textColor=[UIColor redColor];
         }
     } failed:^(NSError *error, NSDictionary *userInfo) {
+        isExistsPhone=NO;
          _phoneImageView.hidden=YES;
         _phoneShowInfo.text=@"手机号码检测异常!";
         _phoneShowInfo.textColor=[UIColor redColor];

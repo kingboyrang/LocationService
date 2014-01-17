@@ -418,7 +418,7 @@
     if(tableView==_tableView){
        titleLabel.text=section==0?@"热门城市":@"按省份查找";
     }else{
-       titleLabel.text=@"搜索绍果";
+       titleLabel.text=@"搜索结果";
     }
     [myView addSubview:titleLabel];
     [titleLabel release];
@@ -439,10 +439,17 @@
     }
     BOOL boo=[self findByIdUpdate:entity.cityID];
     if (!boo) {//可下载
-        if (self.controler&&[self.controler respondsToSelector:@selector(downloadMapWithEntity:)]) {
-            [self.navigationController popViewControllerAnimated:YES];
-            [self.controler performSelector:@selector(downloadMapWithEntity:) withObject:entity];
+        if([self.navigationController.viewControllers[2] isKindOfClass:[OnlineMapViewController class]])
+        {
+            OnlineMapViewController *online=(OnlineMapViewController*)self.navigationController.viewControllers[2];
+            online.downloadRecord=entity;
         }
+        [self.navigationController popViewControllerAnimated:YES];
+        /***
+        if (self.controler&&[self.controler respondsToSelector:@selector(downloadMapWithEntity:)]) {
+            [self.controler downloadMapWithEntity:entity];
+        }
+         ***/
     }
 }
 @end

@@ -11,7 +11,7 @@
 #import "DownloadMapController.h"
 #import "TKMapCell.h"
 #import "UIActionSheet+Blocks.h"
-//#import "UIDevice+TPCategory.h"
+#import "UIDevice+TPCategory.h"
 #import "OfflineDemoMapViewController.h"
 #import "AppUI.h"
 @interface OnlineMapViewController ()<UITableViewDataSource,UITableViewDelegate>{
@@ -66,6 +66,12 @@
     }
     _offlineMap.delegate = self;
     _mapView.delegate=self;
+}
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    if (self.downloadRecord) {
+        [self downloadMapWithEntity:self.downloadRecord];
+    }
 }
 -(void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
@@ -200,12 +206,12 @@
 //下载地图
 - (void)startDownloadWithCityId:(int)cityId{
     NSLog(@"为何总是不执行...");
-    [_offlineMap scan:NO];
     currentDownloadCityId=cityId;
     if ([self existslocalSourceByCityId:cityId]) {
         [_offlineMap update:cityId];
     }else{
         [_offlineMap start:cityId];
+        [self onGetOfflineMapState:0 withState:cityId];
     }
 }
 //暂停地图
@@ -349,6 +355,7 @@
     }
     return NO;
 }
+//新增一笔下载项
 //下载地图
 - (void)downloadMapWithEntity:(BMKOLSearchRecord*)entity{
     if (!self.arraylDownLoadSource) {
@@ -358,10 +365,13 @@
     if (self.arraylDownLoadSource.count==1) {
         //新增下载行
         NSIndexPath *indexPath=[NSIndexPath indexPathForRow:0 inSection:0];
+       
         [_tableView beginUpdates];
         [_tableView insertSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationTop];
         [_tableView insertRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationFade];
         [_tableView endUpdates];
+        //一秒后执行
+        //[self performSelector:@selector(downloadMapWithCityId:) withObject:[NSNumber numberWithInt:entity.cityID] afterDelay:1.0f];
         [self startDownloadWithCityId:entity.cityID];//开始下载地图
         return;
     }
@@ -369,6 +379,12 @@
     [_tableView beginUpdates];
     [_tableView insertRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationFade];
     [_tableView endUpdates];
+}
+- (void)downloadMapWithCityId:(id)num{
+    NSLog(@"开始下载地图啦!");
+    NSNumber *number=(NSNumber*)num;
+    int city=[number intValue];
+    [self startDownloadWithCityId:city];
 }
 //全部暂停
 - (void)buttonPauseClick:(id)sender{
@@ -418,8 +434,9 @@
 }
 //添加地图
 - (void)buttonAddClick:(id)sender{
+    self.downloadRecord=nil;
     DownloadMapController *map=[[DownloadMapController alloc] init];
-    map.controler=self;
+    //map.controler=self;
     map.downloadSource=self.arraylDownLoadSource;
     map.arraylocalDownLoadMapInfo=_arraylocalDownLoadMapInfo;
     [self.navigationController pushViewController:map animated:YES];
@@ -516,6 +533,9 @@
             NSIndexPath *indexPath=[NSIndexPath indexPathForRow:row inSection:0];
             TKMapCell *cell=(TKMapCell*)[_tableView cellForRowAtIndexPath:indexPath];
             [cell updateProgressInfo:updateInfo];
+        }
+        if (updateInfo.ratio<100) {
+            //[self onGetOfflineMapState:0 withState:updateInfo.cityID];
         }
     }
     if (type == TYPE_OFFLINE_NEWVER) {

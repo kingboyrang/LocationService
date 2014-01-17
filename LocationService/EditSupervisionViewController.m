@@ -24,6 +24,7 @@
 - (void)buttonCancel;
 - (void)buttonChooseImage;
 - (void)finishEditTrajectory:(void(^)(NSString *personId))completed;
+- (void)loadingPersonInfo;
 @end
 
 @implementation EditSupervisionViewController
@@ -50,6 +51,7 @@
         [btn addTarget:self action:@selector(buttonListClick) forControlEvents:UIControlEventTouchUpInside];
         [self.navBarView addSubview:btn];
     }
+    [self loadingPersonInfo];//修改时加载信息
 }
 //回列表
 - (void)buttonListClick{
@@ -122,7 +124,53 @@
     self.cells=[NSMutableArray arrayWithObjects:cell1,cell2,cell3,cell4,cell5,cell6,cell7,cell8, nil];
 
 }
+//修改时，加载信息
+- (void)loadingPersonInfo{
+    ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
+    args.methodName=@"GetPersonByID";
+    args.serviceURL=DataWebservice1;
+    args.serviceNameSpace=DataNameSpace1;
+    args.soapParams=[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:self.Entity.ID,@"personID", nil], nil];
+    
+    [self.serviceHelper asynService:args success:^(ServiceResult *result) {
+        NSDictionary *dic=[result json];
+        if(dic!=nil)
+        {
+            NSArray *source=[dic objectForKey:@"Person"];
+            if ([source count]>0) {
+                NSDictionary *item=[source objectAtIndex:0];
+                //self.PhoneName=[item objectForKey:@"Photo"];//手机号码
+                
+                self.Entity.Name=[item objectForKey:@"Name"];
+                self.Entity.SimNo=[item objectForKey:@"SimNo"];
+                self.Entity.IMEI=[item objectForKey:@"DeviceID"];
+                self.Entity.Password=[item objectForKey:@"Password"];
+                TKTextFieldCell *cell1=self.cells[1];
+                cell1.textField.text=self.Entity.Name;
+                
+                TKTextFieldCell *cell2=self.cells[3];
+                cell2.textField.text=self.Entity.IMEI;
+                
+                TKTextFieldCell *cell3=self.cells[5];
+                cell3.textField.text=self.Entity.SimNo;
+                
+                TKTextFieldCell *cell4=self.cells[7];
+                cell4.textField.text=self.Entity.Password;
 
+                
+                /***
+                "ID":"99deee78-2705-453a-a5e7-3e9d4ca8d433",   --监控目标唯一ID
+                "Name":"韦昌",    --监控目标名称
+                "SimNo":"358688000000158",    --手机SIM卡号
+                "DeviceID":"18665892568",    --终端号
+                "Password":"123456",     --终端密码
+                "Photo":"201308060308567830.png"    --头像图片
+                 ***/
+                
+            }
+        }
+    } failed:nil];
+}
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

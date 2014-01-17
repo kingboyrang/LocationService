@@ -155,6 +155,15 @@
                     TKTextFieldCell *cell1=self.cells[1];
                     cell1.textField.text=[item objectForKey:@"Name"];
                     
+                    TKTextFieldCell *cell2=self.cells[3];
+                    cell2.textField.text=[item objectForKey:@"DeviceID"];
+                    
+                    TKTextFieldCell *cell3=self.cells[5];
+                    cell3.textField.text=[item objectForKey:@"SimNo"];
+                    
+                    TKTextFieldCell *cell4=self.cells[7];
+                    cell4.textField.text=[item objectForKey:@"Password"];
+                    
                 }
             }
         } failed:nil];

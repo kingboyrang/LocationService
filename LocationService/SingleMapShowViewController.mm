@@ -59,7 +59,7 @@
     r.size.height-=44;
     _mapView= [[BMKMapView alloc]initWithFrame:r];
     [self.view addSubview:_mapView];
-    [self setCurrentMapLevel:_mapView];
+    
 }
 -(void)viewWillDisappear:(BOOL)animated {
     [_mapView viewWillDisappear];
