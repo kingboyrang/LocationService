@@ -70,7 +70,7 @@
 - (void)setTargetButtonWithTarget:(id)target action:(SEL)action{
     if (![self viewWithTag:203]) {
         UIImage *image=[UIImage imageNamed:@"ico13.png"];
-        CGFloat leftX=self.bounds.size.width-(40+5+image.size.width);
+        CGFloat leftX=self.bounds.size.width-(33+5+image.size.width);
         UIButton *btn=[UIButton buttonWithType:UIButtonTypeCustom];
         btn.tag=203;
         btn.frame=CGRectMake(leftX, (self.bounds.size.height-image.size.height)/2.0, image.size.width, image.size.height);
@@ -82,7 +82,7 @@
 - (void)setCompassButtonWithTarget:(id)target action:(SEL)action{
     if (![self viewWithTag:202]) {
         UIImage *image=[UIImage imageNamed:@"ico12.png"];
-        CGFloat leftX=self.bounds.size.width-(40+5+35+5+image.size.width);
+        CGFloat leftX=self.bounds.size.width-(38+5+33+5+image.size.width);
         UIButton *btn=[UIButton buttonWithType:UIButtonTypeCustom];
         btn.tag=202;
         btn.frame=CGRectMake(leftX, (self.bounds.size.height-image.size.height)/2.0, image.size.width, image.size.height);

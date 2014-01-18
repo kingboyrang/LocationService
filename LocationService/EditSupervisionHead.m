@@ -203,6 +203,7 @@
                     boo=YES;
                 }
             }
+            
             if (!boo) {
                 [self hideLoadingFailedWithTitle:@"上传头像失败!" completed:nil];
             }else{
@@ -210,6 +211,7 @@
                     if (completed) {
                         completed(name);
                     }
+                    NSLog(@"name=%@",name);
                     [self.navigationController popViewControllerAnimated:YES];
                 }];
             }

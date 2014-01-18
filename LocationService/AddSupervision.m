@@ -219,8 +219,9 @@
         args.serviceNameSpace=DataNameSpace1;
         args.methodName=@"InsertPerson";
         args.soapParams=params;
-        
+        //NSLog(@"soap=%@",args.soapMessage);
         [self.serviceHelper asynService:args success:^(ServiceResult *result) {
+             //NSLog(@"xml=%@",result.request.responseString);
             BOOL boo=NO;
             NSString *status=@"0";
             if (result.hasSuccess) {
@@ -418,6 +419,10 @@
                 }
             }
             if (completed) {
+                    int pos=[name lastIndexOf:@"/"];
+                    if (pos!=-1) {
+                        name=[name substringFromIndex:pos+1];
+                    }
                 completed(name);
             }
         } failed:^(NSError *error, NSDictionary *userInfo) {

@@ -12,8 +12,9 @@
 #import "ToolBarView.h"
 @interface IndexViewController : BasicViewController<BMKMapViewDelegate,UINavigationControllerDelegate>{
     BMKMapView* _mapView;
-    int orginLevel;
+    float orginLevel;
     CLLocationCoordinate2D currentCoor;//当前定位坐标
+    BOOL isFirstLoad;
 }
 @property (nonatomic,strong) ToolBarView *toolBarView;
 @property(nonatomic,strong) NSMutableArray *cells;

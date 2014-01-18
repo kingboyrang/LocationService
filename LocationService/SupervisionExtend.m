@@ -94,12 +94,14 @@
     [self.view addSubview:buttons];
     [buttons release];
     
+   
     TKLabelCell *cell1=[[[TKLabelCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
     cell1.label.text=@"信号发送频率(秒)";
     
     TKTextFieldCell *cell2=[[[TKTextFieldCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
     cell2.textField.placeholder=@"请输入信号发送频率";
     cell2.textField.delegate=self;
+   
     
     TKLabelCell *cell3=[[[TKLabelCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
     cell3.label.text=@"SOS号";
@@ -143,7 +145,7 @@
     args.serviceURL=DataWebservice1;
     args.serviceNameSpace=DataNameSpace1;
     args.soapParams=[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:self.DeviceCode,@"DeviceCode", nil], nil];
-    
+    //NSLog(@"soap=%@",args.soapMessage);
     ASIHTTPRequest *request1=[ServiceHelper commonSharedRequest:args];
     [request1 setUserInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"Frequence",@"name", nil]];
     [self.serviceHelper addQueue:request1];
@@ -163,6 +165,7 @@
         for (ServiceResult *result in results) {
             NSString *name=[[result.request userInfo] objectForKey:@"name"];
             if ([name isEqualToString:@"Frequence"]) {
+                //NSLog(@"xml=%@",result.request.responseString);
                 if (result.hasSuccess) {
                     NSDictionary *dic=[result json];
                     if (dic!=nil) {
@@ -180,20 +183,35 @@
                 if (result.hasSuccess) {
                      NSDictionary *dic=[result json];
                     if (dic!=nil) {
-                         NSArray *source=[dic objectForKey:@"Person"];
-                        if (source&&[source count]>0) {
+                        NSArray *source=[dic objectForKey:@"Person"];
+                        if (source&&[source count]>0&&![name isEqualToString:@"type2"]) {
                             NSDictionary *souceDic=[source objectAtIndex:0];
                             if ([[souceDic objectForKey:@"Type"] isEqualToString:@"1"]) {//1 : SOS 号码
                                 TKTextFieldCell *cell=self.cells[3];
                                 cell.textField.text=[souceDic objectForKey:@"Phone"];
                             }
-                            if ([[souceDic objectForKey:@"Type"] isEqualToString:@"2"]) {//2 :亲情号码;  
-                                TKTextFieldCell *cell=self.cells[7];
-                                cell.textField.text=[souceDic objectForKey:@"Phone"];
-                            }
                             if ([[souceDic objectForKey:@"Type"] isEqualToString:@"3"]) {//3: 监听号码;
                                 TKTextFieldCell *cell=self.cells[5];
                                 cell.textField.text=[souceDic objectForKey:@"Phone"];
+                            }
+                        }
+                        if (source&&[source count]>0&&[name isEqualToString:@"type2"]) {
+                            NSDictionary *souceDic=[source objectAtIndex:0];
+                            if ([[souceDic objectForKey:@"Type"] isEqualToString:@"2"]) {//2 :亲情号码1;
+                                TKTextFieldCell *cell=self.cells[7];
+                                cell.textField.text=[souceDic objectForKey:@"Phone"];
+                            }
+                            if (source.count>=2) {
+                                if ([[source[1] objectForKey:@"Type"] isEqualToString:@"2"]) {//2 :亲情号码2;
+                                    TKTextFieldCell *cell=self.cells[8];
+                                    cell.textField.text=[source[1] objectForKey:@"Phone"];
+                                }
+                            }
+                            if (source.count>=3) {
+                                if ([[source[2] objectForKey:@"Type"] isEqualToString:@"2"]) {//2 :亲情号码3;
+                                    TKTextFieldCell *cell=self.cells[9];
+                                    cell.textField.text=[source[2] objectForKey:@"Phone"];
+                                }
                             }
                         }
                     }
@@ -224,12 +242,14 @@
 - (void)buttonSubmit{
  
     Account *acc=[Account unarchiverAccount];
+  
     TKTextFieldCell *cell1=self.cells[1];
     if (!cell1.hasValue) {
         [AlertHelper initWithTitle:@"提示" message:@"请输入信号发送频率!"];
         [cell1.textField becomeFirstResponder];
         return;
     }
+    
 
     TKTextFieldCell *cell2=self.cells[3];
     if (!cell2.hasValue) {
@@ -264,6 +284,7 @@
     }
     NSMutableArray *params=[NSMutableArray arrayWithCapacity:6];
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[cell1.textField.text Trim],@"OperateValue", nil]];
+    //[params addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"15",@"OperateValue", nil]];
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:self.SysID,@"SysID", nil]];
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%@,1",[cell2.textField.text Trim]],@"SOS_Order", nil]];//sos号码+顺序
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:affection,@"KinShip_Order", nil]];//亲情号码+顺序
@@ -278,9 +299,11 @@
     args.serviceNameSpace=DataNameSpace1;
     args.methodName=@"SaveTeleAndFreqIn";
     args.soapParams=params;
+    NSLog(@"soap=%@",args.soapMessage);
     NSString *memo=self.operateType==1?@"新增":@"修改";
     [self showLoadingAnimatedWithTitle:[NSString stringWithFormat:@"正在%@,请稍后...",memo]];
     [self.serviceHelper asynService:args success:^(ServiceResult *result) {
+        NSLog(@"xml=%@",result.request.responseString);
         BOOL boo=NO;
         if (result.hasSuccess) {
             NSDictionary *dic=(NSDictionary*)[result json];
@@ -336,13 +359,13 @@
     // return NO to not change text
     BOOL boo=YES;
     TKTextFieldCell *cell1=self.cells[3];
-    TKTextFieldCell *cell2=self.cells[5];
+    TKTextFieldCell *cell2=self.cells[5];//监听号
     TKTextFieldCell *cell3=self.cells[7];
     TKTextFieldCell *cell4=self.cells[8];
     TKTextFieldCell *cell5=self.cells[9];
     if (cell1.textField==textField||cell2.textField==textField||cell3.textField==textField||cell4.textField==textField||cell5.textField==textField) {
         [self replacePhonestring:textField];
-        if (cell3.textField==textField||cell4.textField==textField||cell5.textField==textField) {
+        if (cell2.textField==textField||cell3.textField==textField||cell4.textField==textField||cell5.textField==textField) {
             if(strlen([textField.text UTF8String]) >= 11 && range.length != 1)
                 boo=NO;
         }

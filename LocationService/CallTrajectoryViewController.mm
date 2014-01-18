@@ -66,6 +66,7 @@
     CGFloat topY=self.view.bounds.size.height;
     _phoneView=[[CallPhoneView alloc] initWithFrame:CGRectMake(0, topY, self.view.bounds.size.width, 119)];
     _phoneView.controlers=self;
+    _phoneView.labPhone.text=self.Entity.Phone;
     [self.view addSubview:_phoneView];
     
     

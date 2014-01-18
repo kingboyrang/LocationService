@@ -14,6 +14,7 @@
 #import "UIDevice+TPCategory.h"
 #import "OfflineDemoMapViewController.h"
 #import "AppUI.h"
+#import "OfflineHelper.h"
 @interface OnlineMapViewController ()<UITableViewDataSource,UITableViewDelegate>{
     UITableView *_tableView;
 }
@@ -28,7 +29,6 @@
 - (BOOL)existslocalSourceByCityId:(int)cityId;
 - (int)getDownloadMapRowWithCityId:(int)cityId;
 - (NSMutableArray*)getUpdateMapsWithCompleted:(void(^)(NSMutableArray *indexPaths,NSMutableArray *delSource))completed;
-- (NSString *)getDataSizeString:(int) nSize;
 @end
 
 @implementation OnlineMapViewController
@@ -64,20 +64,32 @@
         [btn addTarget:self action:@selector(buttonAddClick:) forControlEvents:UIControlEventTouchUpInside];
         [self.navBarView addSubview:btn];
     }
+    //_mapView.delegate=self;
+    /***
+    if (_offlineMap) {
+        [_offlineMap release];
+        _offlineMap = nil;
+        NSLog(@"fdsafdsfdsaf");
+    }
+    ***/
+   
     _offlineMap.delegate = self;
-    _mapView.delegate=self;
-}
-- (void)viewDidAppear:(BOOL)animated{
-    [super viewDidAppear:animated];
     if (self.downloadRecord) {
         [self downloadMapWithEntity:self.downloadRecord];
     }
+}
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    if (self.downloadRecord&&self.arraylDownLoadSource&&[self.arraylDownLoadSource count]==1) {
+        //[self downloadMapWithEntity:self.downloadRecord];
+        [self startDownloadWithCityId:self.downloadRecord.cityID];//开始下载地图
+    }
+    
 }
 -(void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
      [_mapView viewWillDisappear];
     _mapView.delegate=nil;
-    
     _offlineMap.delegate = nil; // 不用时，置nil
      
 }
@@ -118,90 +130,9 @@
     
     //初始化离线地图服务
     _offlineMap = [[BMKOfflineMap alloc] init];
-    
     //获取各城市离线地图更新信息
     _arraylocalDownLoadMapInfo = [[NSMutableArray arrayWithArray:[_offlineMap getAllUpdateInfo]] retain];
-    
     currentDownloadCityId=-1;
-}
-#pragma mark 包大小转换工具类（将包大小转换成合适单位）
--(NSString *)getDataSizeString:(int) nSize
-{
-	NSString *string = nil;
-	if (nSize<1024)
-	{
-		string = [NSString stringWithFormat:@"%dB", nSize];
-	}
-	else if (nSize<1048576)
-	{
-		string = [NSString stringWithFormat:@"%dK", (nSize/1024)];
-	}
-	else if (nSize<1073741824)
-	{
-		if ((nSize%1048576)== 0 )
-        {
-			string = [NSString stringWithFormat:@"%dM", nSize/1048576];
-        }
-		else
-        {
-            int decimal = 0; //小数
-            NSString* decimalStr = nil;
-            decimal = (nSize%1048576);
-            decimal /= 1024;
-            
-            if (decimal < 10)
-            {
-                decimalStr = [NSString stringWithFormat:@"%d", 0];
-            }
-            else if (decimal >= 10 && decimal < 100)
-            {
-                int i = decimal / 10;
-                if (i >= 5)
-                {
-                    decimalStr = [NSString stringWithFormat:@"%d", 1];
-                }
-                else
-                {
-                    decimalStr = [NSString stringWithFormat:@"%d", 0];
-                }
-                
-            }
-            else if (decimal >= 100 && decimal < 1024)
-            {
-                int i = decimal / 100;
-                if (i >= 5)
-                {
-                    decimal = i + 1;
-                    
-                    if (decimal >= 10)
-                    {
-                        decimal = 9;
-                    }
-                    
-                    decimalStr = [NSString stringWithFormat:@"%d", decimal];
-                }
-                else
-                {
-                    decimalStr = [NSString stringWithFormat:@"%d", i];
-                }
-            }
-            
-            if (decimalStr == nil || [decimalStr isEqualToString:@""])
-            {
-                string = [NSString stringWithFormat:@"%dMss", nSize/1048576];
-            }
-            else
-            {
-                string = [NSString stringWithFormat:@"%d.%@M", nSize/1048576, decimalStr];
-            }
-        }
-	}
-	else	// >1G
-	{
-		string = [NSString stringWithFormat:@"%dG", nSize/1073741824];
-	}
-	
-	return string;
 }
 //下载地图
 - (void)startDownloadWithCityId:(int)cityId{
@@ -231,31 +162,18 @@
     [_offlineMap remove:cityId];
 }
 //删除正在下载的地图
-- (void)viewerDownloadWithEntity:(BMKOLSearchRecord*)entity withRow:(int)row{
-    RIButtonItem *canBtn=[RIButtonItem item];
-    canBtn.label=@"取消";
-    canBtn.action=nil;
-    
-    RIButtonItem *viewerBtn=[RIButtonItem item];
-    viewerBtn.label=@"查看地图";
-    viewerBtn.action=^(){
+- (void)viewerDownloadWithEntity:(BMKOLSearchRecord*)entity withRow:(int)row{    
+    [OfflineHelper viewerDownloadMapInView:self.view viewAction:^{//查看地图
         BMKOLSearchRecord *entity=self.arraylDownLoadSource[row];
         OfflineDemoMapViewController *offlineMapViewCtrl = [[[OfflineDemoMapViewController alloc] init] autorelease];
         offlineMapViewCtrl.cityId = entity.cityID;
-        //offlineMapViewCtrl.offlineServiceOfMapview = _offlineMap;
         [self.navigationController pushViewController:offlineMapViewCtrl animated:YES];
-    };
-    
-    RIButtonItem *pauseBtn=[RIButtonItem item];
-    pauseBtn.label=@"暂停";
-    pauseBtn.action=^(){
+        
+    } pauseAction:^{//暂停下载
         BMKOLSearchRecord *entity=self.arraylDownLoadSource[row];
         [self pauseDownloadWithCityId:entity.cityID];//暂停下载
-    };
-    
-    RIButtonItem *delBtn=[RIButtonItem item];
-    delBtn.label=@"删除";
-    delBtn.action=^(){
+        
+    } deleteAction:^{//删除地图
         BMKOLSearchRecord *entity=self.arraylDownLoadSource[row];
         [self removeDownloadWithCityId:entity.cityID];//删除正在下载的地图
         //删除数据源与数据行
@@ -280,29 +198,16 @@
             BMKOLSearchRecord *entity=self.arraylDownLoadSource[0];
             [self startDownloadWithCityId:entity.cityID];//开始下一个下载
         }
-    };
-    UIActionSheet *sheet=[[UIActionSheet alloc] initWithTitle:nil cancelButtonItem:canBtn destructiveButtonItem:nil otherButtonItems:viewerBtn,pauseBtn,delBtn, nil];
-    [sheet showInView:self.view];
-    [sheet release];
+
+    }];
 }
 //查看或删除已下载的地图
 - (void)viewerlocalMapWithEntity:(BMKOLUpdateElement*)entity withRow:(int)row{
-    RIButtonItem *canBtn=[RIButtonItem item];
-    canBtn.label=@"取消";
-    canBtn.action=nil;
-    
-    RIButtonItem *viewerBtn=[RIButtonItem item];
-    viewerBtn.label=@"查看地图";
-    viewerBtn.action=^(){
+    [OfflineHelper viewerMapInView:self.view viewAction:^{//查看地图
         OfflineDemoMapViewController *offlineMapViewCtrl = [[[OfflineDemoMapViewController alloc] init] autorelease];
         offlineMapViewCtrl.cityId = entity.cityID;
-        //offlineMapViewCtrl.offlineServiceOfMapview = _offlineMap;
         [self.navigationController pushViewController:offlineMapViewCtrl animated:YES];
-    };
-    
-    RIButtonItem *delBtn=[RIButtonItem item];
-    delBtn.label=@"删除";
-    delBtn.action=^(){
+    } deleteAction:^{//删除
         int sec=0;
         if ([self isLoadingSection]) {
             sec=1;
@@ -315,10 +220,7 @@
         [_tableView beginUpdates];
         [_tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:[NSIndexPath indexPathForRow:row inSection:sec], nil] withRowAnimation:UITableViewRowAnimationFade];
         [_tableView endUpdates];
-    };
-    UIActionSheet *sheet=[[UIActionSheet alloc] initWithTitle:nil cancelButtonItem:canBtn destructiveButtonItem:nil otherButtonItems:viewerBtn,delBtn, nil];
-    [sheet showInView:self.view];
-    [sheet release];
+    }];
 }
 //下载完成
 - (void)finishedDownloadWithRow:(UITableViewCell*)cell element:(BMKOLUpdateElement*)elem{
@@ -370,9 +272,9 @@
         [_tableView insertSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationTop];
         [_tableView insertRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationFade];
         [_tableView endUpdates];
+        //[self startDownloadWithCityId:entity.cityID];//开始下载地图
         //一秒后执行
         //[self performSelector:@selector(downloadMapWithCityId:) withObject:[NSNumber numberWithInt:entity.cityID] afterDelay:1.0f];
-        [self startDownloadWithCityId:entity.cityID];//开始下载地图
         return;
     }
     NSIndexPath *indexPath=[NSIndexPath indexPathForRow:self.arraylDownLoadSource.count-1 inSection:0];
@@ -535,7 +437,7 @@
             [cell updateProgressInfo:updateInfo];
         }
         if (updateInfo.ratio<100) {
-            //[self onGetOfflineMapState:0 withState:updateInfo.cityID];
+            [self onGetOfflineMapState:0 withState:updateInfo.cityID];
         }
     }
     if (type == TYPE_OFFLINE_NEWVER) {
@@ -566,12 +468,12 @@
     return  [_arraylocalDownLoadMapInfo count];
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    static NSString *cellIdentifier=@"mapcell";
+    static NSString *cellIdentifier1=@"downloadmapcell";
     if ([self isLoadingSection]) {
          if (indexPath.section==0) {
-             TKMapCell *cell=[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+             TKMapCell *cell=[tableView dequeueReusableCellWithIdentifier:cellIdentifier1];
              if (cell==nil||[cell isKindOfClass:[UITableViewCell class]]) {
-                 cell=[[[TKMapCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier] autorelease];
+                 cell=[[[TKMapCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier1] autorelease];
                  cell.controlers=self;
              }
              BMKOLSearchRecord *entity=self.arraylDownLoadSource[indexPath.row];
@@ -579,14 +481,14 @@
              return cell;
          }
      }
-    
+    static NSString *cellIdentifier=@"mapcell";
     UITableViewCell *cell=[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     if (cell==nil||[cell isKindOfClass:[TKMapCell class]]) {
         cell=[[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier] autorelease];
     }
     BMKOLUpdateElement* item = [_arraylocalDownLoadMapInfo objectAtIndex:indexPath.row];
     
-    NSString *memo=item.update?[NSString stringWithFormat:@"有更新包 %@",[self getDataSizeString:item.serversize]]:@"完成";
+    NSString *memo=item.update?[NSString stringWithFormat:@"有更新包 %@",[OfflineHelper getDataSizeString:item.serversize]]:@"完成";
     CGSize size=[memo textSize:[UIFont fontWithName:DeviceFontName size:DeviceFontSize] withWidth:self.view.bounds.size.width];
     
     cell.textLabel.text = [NSString stringWithFormat:@"%@(%d)", item.cityName, item.cityID];

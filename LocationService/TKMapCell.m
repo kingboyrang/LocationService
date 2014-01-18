@@ -8,10 +8,10 @@
 
 #import "TKMapCell.h"
 #import "UIDevice+TPCategory.h"
+#import "OfflineHelper.h"
 @interface TKMapCell (){
     BOOL isFinished;
 }
--(NSString *)getDataSizeString:(int) nSize;
 @end
 
 @implementation TKMapCell
@@ -30,8 +30,8 @@
     _labprocess.textAlignment=NSTextAlignmentRight;
     [self.contentView addSubview:_labprocess];
     
-    _progressView=[[UIProgressView alloc] initWithFrame:CGRectZero];
-    _progressView.progressViewStyle=UIProgressViewStyleDefault;
+    _progressView=[[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleBar];
+    _progressView.frame=CGRectZero;
     [self.contentView addSubview:_progressView];
     
 
@@ -50,7 +50,7 @@
     self.Entity=entity;
     NSString *title=entity.cityName;
     //转换包大小
-    NSString*packSize = [self getDataSizeString:entity.size];
+    NSString*packSize = [OfflineHelper getDataSizeString:entity.size];
     _labTitle.text=[NSString stringWithFormat:@"%@(%@)",title,packSize];
     
     if ([_labprocess.text length]==0) {
@@ -63,92 +63,15 @@
     }
     
     _labprocess.text=[NSString stringWithFormat:@"正在下载 %d%%",updateInfo.ratio];
-    [_progressView setProgress:updateInfo.ratio animated:YES];
-    if (updateInfo.status==4) {//表示下载完成
+    NSLog(@"text=%@",_labprocess.text);
+    _progressView.progress=updateInfo.ratio*1.0;
+    //[_progressView setProgress:updateInfo.ratio animated:YES];
+    if (updateInfo.ratio==100) {//表示下载完成
         isFinished=YES;
         if (self.controlers&&[self.controlers respondsToSelector:@selector(finishedDownloadWithRow:element:)]) {
             [self.controlers performSelector:@selector(finishedDownloadWithRow:element:) withObject:self withObject:updateInfo];
         }
     }
-}
-#pragma mark 包大小转换工具类（将包大小转换成合适单位）
--(NSString *)getDataSizeString:(int) nSize
-{
-	NSString *string = nil;
-	if (nSize<1024)
-	{
-		string = [NSString stringWithFormat:@"%dB", nSize];
-	}
-	else if (nSize<1048576)
-	{
-		string = [NSString stringWithFormat:@"%dK", (nSize/1024)];
-	}
-	else if (nSize<1073741824)
-	{
-		if ((nSize%1048576)== 0 )
-        {
-			string = [NSString stringWithFormat:@"%dM", nSize/1048576];
-        }
-		else
-        {
-            int decimal = 0; //小数
-            NSString* decimalStr = nil;
-            decimal = (nSize%1048576);
-            decimal /= 1024;
-            
-            if (decimal < 10)
-            {
-                decimalStr = [NSString stringWithFormat:@"%d", 0];
-            }
-            else if (decimal >= 10 && decimal < 100)
-            {
-                int i = decimal / 10;
-                if (i >= 5)
-                {
-                    decimalStr = [NSString stringWithFormat:@"%d", 1];
-                }
-                else
-                {
-                    decimalStr = [NSString stringWithFormat:@"%d", 0];
-                }
-                
-            }
-            else if (decimal >= 100 && decimal < 1024)
-            {
-                int i = decimal / 100;
-                if (i >= 5)
-                {
-                    decimal = i + 1;
-                    
-                    if (decimal >= 10)
-                    {
-                        decimal = 9;
-                    }
-                    
-                    decimalStr = [NSString stringWithFormat:@"%d", decimal];
-                }
-                else
-                {
-                    decimalStr = [NSString stringWithFormat:@"%d", i];
-                }
-            }
-            
-            if (decimalStr == nil || [decimalStr isEqualToString:@""])
-            {
-                string = [NSString stringWithFormat:@"%dMss", nSize/1048576];
-            }
-            else
-            {
-                string = [NSString stringWithFormat:@"%d.%@M", nSize/1048576, decimalStr];
-            }
-        }
-	}
-	else	// >1G
-	{
-		string = [NSString stringWithFormat:@"%dG", nSize/1073741824];
-	}
-	
-	return string;
 }
 - (void)layoutSubviews{
     [super layoutSubviews];
@@ -158,7 +81,7 @@
     _labTitle.frame=r;
     
     r.size.width=100;
-    r.origin.x=self.frame.size.width-10-100;
+    r.origin.x=self.frame.size.width-10-90;
     _labprocess.frame=r;
     
     

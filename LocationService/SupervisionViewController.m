@@ -61,6 +61,11 @@
             [self.navBarView addSubview:btn];
         }
     }
+   
+    
+}
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
     [self loadSupervision];//重新加载资料
 }
 - (void)viewDidLoad
@@ -103,11 +108,9 @@
     [self showLoadingAnimatedWithTitle:@"正在加载,请稍后..."];
     [self.serviceHelper asynService:args success:^(ServiceResult *result) {
         [self hideLoadingViewAnimated:nil];
-    
-            NSDictionary *dic=[result json];
+        NSDictionary *dic=[result json];
         if (dic!=nil) {
             NSArray *source=[dic objectForKey:@"Person"];
-            //NSLog(@"source=%@",source);
             self.cells=[NSMutableArray arrayWithArray:[self arrayToSupervisions:source]];
             [_tableView reloadData];
 
@@ -218,13 +221,13 @@
             NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:[node.InnerText dataUsingEncoding:NSUTF8StringEncoding] options:1 error:nil];
             if ([[dic objectForKey:@"Result"] isEqualToString:@"1"]) {
                 boo=YES;
-                [self hideLoadingSuccessWithTitle:@"删除成功!" completed:^(AnimateErrorView *successView) {
-                    [self.cells removeObjectsInArray:delSource];
-                    [_tableView beginUpdates];
-                    [_tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationFade];
-                    [_tableView endUpdates];
-                    [self.removeList removeAllObjects];
-                }];
+                [self.cells removeObjectsInArray:delSource];
+                [_tableView beginUpdates];
+                [_tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationFade];
+                [_tableView endUpdates];
+                [self.removeList removeAllObjects];
+                [_toolBar.submit setTitle:@"删除(0)" forState:UIControlStateNormal];
+                [self hideLoadingSuccessWithTitle:@"删除成功!" completed:nil];
             }
         }
         if (!boo) {
