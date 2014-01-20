@@ -30,13 +30,11 @@
     _labprocess.textAlignment=NSTextAlignmentRight;
     [self.contentView addSubview:_labprocess];
     
-    _progressView=[[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleBar];
+    _progressView=[[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
     _progressView.frame=CGRectZero;
     [self.contentView addSubview:_progressView];
     
 
-    
-    
     isFinished=NO;
     
 	return self;
@@ -64,7 +62,7 @@
     
     _labprocess.text=[NSString stringWithFormat:@"正在下载 %d%%",updateInfo.ratio];
     NSLog(@"text=%@",_labprocess.text);
-    _progressView.progress=updateInfo.ratio*1.0;
+    _progressView.progress=updateInfo.ratio/100.0;
     //[_progressView setProgress:updateInfo.ratio animated:YES];
     if (updateInfo.ratio==100) {//表示下载完成
         isFinished=YES;

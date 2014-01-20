@@ -15,6 +15,8 @@
     float orginLevel;
     CLLocationCoordinate2D currentCoor;//当前定位坐标
     BOOL isFirstLoad;
+    
+    CLLocationCoordinate2D currentCenterCoor;//设置中心点
 }
 @property (nonatomic,strong) ToolBarView *toolBarView;
 @property(nonatomic,strong) NSMutableArray *cells;

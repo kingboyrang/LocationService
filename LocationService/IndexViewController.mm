@@ -81,7 +81,7 @@
     
     isFirstLoad=YES;
    // _pinView=[[PinView alloc] initWithFrame:CGRectMake(0, 44, 90, 164)];
-    
+    //NSLog(@"lat=%f,log=%f",currentCenterCoor.latitude,currentCenterCoor.longitude);
     
     CGRect r=self.view.bounds;
     r.origin.y=44;
@@ -90,6 +90,7 @@
     
     [self.view addSubview:_mapView];
     orginLevel=_mapView.zoomLevel;
+
     
     _toolBarView=[[ToolBarView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height-TabHeight, self.view.bounds.size.width, TabHeight)];
     _toolBarView.controls=self;
@@ -114,7 +115,8 @@
         coor.latitude=[entity.Latitude floatValue];
         coor.longitude=[entity.Longitude floatValue];
         [_mapView setCenterCoordinate:coor];
-        
+        currentCenterCoor=coor;
+        /***
         //选中监管目标
         if(_mapView.annotations&&[_mapView.annotations count]>0)
         {
@@ -122,12 +124,15 @@
                 if ([v isKindOfClass:[KYPointAnnotation class]]) {
                     KYPointAnnotation *point=(KYPointAnnotation*)v;
                     if (point.coordinate.latitude==coor.latitude&&point.coordinate.longitude==coor.longitude) {
-                        [_mapView selectAnnotation:point animated:YES];
+                        //[_mapView selectAnnotation:point animated:YES];
+                         
+                        [_mapView setCenterCoordinate:point.coordinate];
                         break;
                     }
                 }
             }
         }
+         ***/
     }
 }
 #pragma mark - UINavigationController delegate
@@ -298,7 +303,7 @@
         NSArray* arr = [NSArray arrayWithArray:_mapView.annotations];
         for (NSInteger i = 0;i<[arr count];i++) {
             id elem = [arr objectAtIndex:i];
-            if ([elem isKindOfClass:[BMKUserLocation class]]) {
+            if ([elem isKindOfClass:[BMKUserLocation class]]||[elem isKindOfClass:[BMKPointAnnotation class]]) {
                 [_mapView removeAnnotation:elem];
             }
             
@@ -358,8 +363,9 @@
 -(void)cleanMap
 {
     [_mapView removeOverlays:_mapView.overlays];
-    NSMutableArray *arr=[NSMutableArray arrayWithArray:_mapView.annotations];
-    [_mapView removeAnnotations:arr];
+    //[_mapView removeAnnotations:_mapView.annotations];
+    NSArray* array = [NSArray arrayWithArray:_mapView.annotations];
+    [_mapView removeAnnotations:array];
 }
 //显示当前定位
 - (void)buttonCompassClick{
@@ -451,11 +457,30 @@
 //定位停止
 -(void)mapViewDidStopLocatingUser:(BMKMapView *)mapView{
 
+  
     BMKUserLocation *userLocation = mapView.userLocation;
     userLocation.title = @"当前位置";
     currentCoor= userLocation.coordinate;//保存当前定位
     [_mapView addAnnotation:userLocation];
     
+    /***
+    BMKPointAnnotation *annotation=[[BMKPointAnnotation alloc] init];
+    annotation.title=@"当前位置";
+    annotation.coordinate=userLocation.coordinate;//保存当前定位
+    [_mapView addAnnotation:annotation];
+    [annotation release];
+     ***/
+    
+   
+    if (currentCenterCoor.latitude>0&&currentCenterCoor.longitude>0) {
+        [_mapView setCenterCoordinate:currentCenterCoor];
+        currentCenterCoor.latitude=0.0;
+        currentCenterCoor.longitude=0.0;
+    }
+   
+    
+    //当前中心点
+   
     //选中一项
     /***
     if (self.cells&&[self.cells count]>0) {
@@ -476,6 +501,7 @@
 //选中
 - (void)mapView:(BMKMapView *)mapView didSelectAnnotationView:(BMKAnnotationView *)view
 {
+   
     if ([view.annotation isKindOfClass:[KYPointAnnotation class]]) {//选中监管目标
         KYPointAnnotation *elem=(KYPointAnnotation*)view.annotation;
         int index=elem.tag-100;
@@ -487,10 +513,12 @@
 //双击事件
 - (void)mapview:(BMKMapView *)mapView onDoubleClick:(CLLocationCoordinate2D)coordinate{
     [self reloadAnnotations:mapView];
+   
 }
 //区域发生改变时，调用
 - (void)mapView:(BMKMapView *)mapView regionDidChangeAnimated:(BOOL)animated
 {
+   
     [self reloadAnnotations:mapView];
 }
 //重新加载标注

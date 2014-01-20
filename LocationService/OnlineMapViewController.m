@@ -65,15 +65,13 @@
         [self.navBarView addSubview:btn];
     }
     //_mapView.delegate=self;
-    /***
-    if (_offlineMap) {
-        [_offlineMap release];
-        _offlineMap = nil;
-        NSLog(@"fdsafdsfdsaf");
-    }
-    ***/
-   
+    
+       //初始化离线地图服务
+    _offlineMap = [[BMKOfflineMap alloc] init];
+    //获取各城市离线地图更新信息
+    _arraylocalDownLoadMapInfo = [[NSMutableArray arrayWithArray:[_offlineMap getAllUpdateInfo]] retain];
     _offlineMap.delegate = self;
+    [_tableView reloadData];
     if (self.downloadRecord) {
         [self downloadMapWithEntity:self.downloadRecord];
     }
@@ -90,7 +88,13 @@
     [super viewWillDisappear:animated];
      [_mapView viewWillDisappear];
     _mapView.delegate=nil;
-    _offlineMap.delegate = nil; // 不用时，置nil
+    //_offlineMap.delegate = nil; // 不用时，置nil
+    if (_offlineMap) {
+        _offlineMap.delegate=nil;
+        [_offlineMap release];
+        _offlineMap = nil;
+        NSLog(@"fdsafdsfdsaf");
+    }
      
 }
 - (void)viewDidLoad
@@ -128,10 +132,7 @@
     [self.view addSubview:buttons];
     [buttons release];
     
-    //初始化离线地图服务
-    _offlineMap = [[BMKOfflineMap alloc] init];
-    //获取各城市离线地图更新信息
-    _arraylocalDownLoadMapInfo = [[NSMutableArray arrayWithArray:[_offlineMap getAllUpdateInfo]] retain];
+    
     currentDownloadCityId=-1;
 }
 //下载地图
@@ -142,7 +143,7 @@
         [_offlineMap update:cityId];
     }else{
         [_offlineMap start:cityId];
-        [self onGetOfflineMapState:0 withState:cityId];
+        //[self onGetOfflineMapState:0 withState:cityId];
     }
 }
 //暂停地图
@@ -435,6 +436,7 @@
             NSIndexPath *indexPath=[NSIndexPath indexPathForRow:row inSection:0];
             TKMapCell *cell=(TKMapCell*)[_tableView cellForRowAtIndexPath:indexPath];
             [cell updateProgressInfo:updateInfo];
+            [_tableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationNone];
         }
         if (updateInfo.ratio<100) {
             [self onGetOfflineMapState:0 withState:updateInfo.cityID];

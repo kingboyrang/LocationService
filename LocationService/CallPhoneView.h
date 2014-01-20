@@ -12,9 +12,6 @@
 @property (nonatomic,strong) UILabel *labPhone;
 @property (nonatomic,strong) SimpleSwitch *switchPhone;
 @property (nonatomic,strong) UIButton *button;
-@property (nonatomic,copy) NSString *shipPhone;
-@property (nonatomic,copy) NSString *trajectoryPhone;
-
 @property (nonatomic,assign) id controlers;
-- (void)setDataWithShipPhone:(NSString*)phone trajectoryTel:(NSString*)tel;
+- (void)setCallPhone:(NSString*)phone type:(NSString*)type;
 @end

@@ -8,12 +8,22 @@
 
 #import "CallTrajectoryViewController.h"
 #import "TelephoneViewController.h"
+//#import <CoreTelephony/CTCallCenter.h>
+//#import <CoreTelephony/CTCall.h>
+
+
+//extern NSString *CTSettingCopyMyPhoneNumber();
+
 @interface CallTrajectoryViewController ()
 - (void)loadingPhones;
 - (void)cleanMap;
 @end
 
+
+
 @implementation CallTrajectoryViewController
+
+
 - (void)dealloc {
     [super dealloc];
     if (_mapView) {
@@ -66,7 +76,7 @@
     CGFloat topY=self.view.bounds.size.height;
     _phoneView=[[CallPhoneView alloc] initWithFrame:CGRectMake(0, topY, self.view.bounds.size.width, 119)];
     _phoneView.controlers=self;
-    _phoneView.labPhone.text=self.Entity.Phone;
+    //_phoneView.labPhone.text=self.Entity.Phone;
     [self.view addSubview:_phoneView];
     
     
@@ -100,46 +110,29 @@
 }
 //加载电话
 - (void)loadingPhones{
+    //NSString *num =CTSettingCopyMyPhoneNumber();
+    //[[NSUserDefaults standardUserDefaults] stringForKey:@"SBFormattedPhoneNumber"];
+    NSMutableArray *params=[NSMutableArray array];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"",@"simNo", nil]];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:self.Entity.ID,@"personId", nil]];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:self.Entity.DeviceCode,@"DeviceCode", nil]];
     
-    for (int i=2;i<4;i++) {
-        NSMutableArray *params=[NSMutableArray array];
-        [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:self.Entity.DeviceCode,@"DeviceCode", nil]];
-        [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%d",i],@"type", nil]];
-        
-        ServiceArgs *args=[[ServiceArgs alloc] init];
-        args.serviceURL=DataWebservice1;
-        args.serviceNameSpace=DataNameSpace1;
-        args.methodName=@"GetTelephone";
-        args.soapParams=params;
-        
-        ASIHTTPRequest *request=[ServiceHelper commonSharedRequest:args];
-        [request setUserInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"type%d",i],@"name", nil]];
-        [self.serviceHelper addQueue:request];
-        [args release];
-    }
-    [self.serviceHelper startQueue:nil failed:nil complete:^(NSArray *results) {
-        NSString *phone1=@"",*phone2=@"";
-        for (ServiceResult *result in results) {
-            NSString *name=[result.userInfo objectForKey:@"name"];//亲情号码
-            if ([name isEqualToString:@"type2"]) {
-                if (result.hasSuccess) {
-                    NSDictionary *dic=[result json];
-                    NSArray *arr=[dic objectForKey:@"PhoneNum"];
-                    if (arr&&[arr count]>0) {
-                        phone1=[[arr objectAtIndex:0] objectForKey:@"Phone"];
-                    }
-                }
-            }else{
-                if (result.hasSuccess) {
-                    NSDictionary *dic=[result json];
-                    NSArray *arr=[dic objectForKey:@"PhoneNum"];
-                    if (arr&&[arr count]>0) {
-                        phone2=[[arr objectAtIndex:0] objectForKey:@"Phone"];
-                    }
-                }
-            }
+    
+    ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
+    args.serviceURL=DataWebservice1;
+    args.serviceNameSpace=DataNameSpace1;
+    args.methodName=@"GetCanTeleNo";
+    args.soapParams=params;
+    NSLog(@"soap=%@",args.soapMessage);
+    [self.serviceHelper asynService:args success:^(ServiceResult *result) {
+        NSDictionary *dic=[result json];
+        if (dic!=nil) {
+            //_phoneView.labPhone.text=[dic objectForKey:@"Phone"];//要打出去的电话号码
+            //NSString *type=[dic objectForKey:@"Type"];//1 ： 表示亲情和监听号码都不能打，能左右活动的按钮
+            [_phoneView setCallPhone:[dic objectForKey:@"Phone"] type:[dic objectForKey:@"Type"]];
         }
-        [_phoneView setDataWithShipPhone:phone1 trajectoryTel:phone2];
+    } failed:^(NSError *error, NSDictionary *userInfo) {
+        
     }];
 
 }

@@ -59,6 +59,7 @@ typedef void (^finishBlockQueueComplete)(NSArray *results);
 +(ServiceResult*)syncMethodName:(NSString*)methodName error:(NSError**)error;
 /*****异步请求***/
 -(void)asynService:(ServiceArgs*)args;
+-(void)async:(ServiceArgs*)args success:(finishBlockRequest)finished failed:(failedBlockRequest)failed;
 -(void)asynService:(ServiceArgs*)args delegate:(id<ServiceHelperDelegate>)theDelegate;
 -(void)asynService:(ServiceArgs*)args success:(void(^)(ServiceResult* result))finished failed:(void(^)(NSError *error,NSDictionary *userInfo))failed;
 -(void)asynService:(ServiceArgs*)args progress:(void(^)(ASIHTTPRequest*))progress success:(void(^)(ServiceResult* result))finished failed:(void(^)(NSError *error,NSDictionary *userInfo))failed;

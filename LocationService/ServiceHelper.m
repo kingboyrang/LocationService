@@ -162,6 +162,15 @@
     
     
 }
+-(void)async:(ServiceArgs*)args success:(finishBlockRequest)finished failed:(failedBlockRequest)failed{
+    
+    Block_release(_failedBlock);
+    Block_release(_finishBlock);
+    _finishBlock=Block_copy(finished);
+    _failedBlock=Block_copy(failed);
+    [self asynService:args];
+   
+}
 -(void)asynService:(ServiceArgs*)args delegate:(id<ServiceHelperDelegate>)theDelegate{
     
     self.delegate=theDelegate;

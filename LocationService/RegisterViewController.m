@@ -27,11 +27,17 @@
     
     BOOL isExistsNumber;//帐号是否已存在
     BOOL isExistsPhone;//手机号码是否已存在
+    
+    LoginButtons *_toolBar;
+    
+    BOOL isKeyBoardShow;
+    //UIScrollView *_scrollView;
 }
-- (void)updateShowInfo;
+- (void)updateShowInfo:(NSString*)user;
 - (void)buttonSubmit;
 - (void)buttonCancel;
-- (void)checkPhone;
+- (void)checkPhone:(NSString*)phone;
+- (void)replacePhonestring;
 - (CGRect)fieldToRect:(UITextField*)field;
 @end
 
@@ -42,6 +48,8 @@
     [_tableView release];
     [_showInfo release];
     [_phoneShowInfo release];
+    [_toolBar release];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidChangeNotification object:nil];
 }
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -63,6 +71,8 @@
     isExistsPhone=NO;
     isExistsNumber=NO;
     
+    isKeyBoardShow=NO;
+    
    CGRect r=self.view.bounds;
     r.origin.y=44;
     r.size.height-=44*2;
@@ -78,28 +88,56 @@
     //_tableView.autoresizingMask=UIViewAutoresizingFlexibleWidth;
     [self.view addSubview:_tableView];
     
-    LoginButtons *buttons=[[LoginButtons alloc] initWithFrame:CGRectMake(0,self.view.bounds.size.height-44, self.view.bounds.size.width, 44)];
-    [buttons.submit addTarget:self action:@selector(buttonSubmit) forControlEvents:UIControlEventTouchUpInside];
-    [buttons.cancel addTarget:self action:@selector(buttonCancel) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:buttons];
-    [buttons release];
+    _toolBar=[[LoginButtons alloc] initWithFrame:CGRectMake(0,self.view.bounds.size.height-44, self.view.bounds.size.width, 44)];
+    [_toolBar.submit addTarget:self action:@selector(buttonSubmit) forControlEvents:UIControlEventTouchUpInside];
+    [_toolBar.cancel addTarget:self action:@selector(buttonCancel) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:_toolBar];
+    
     
     
     TKLabelCell *cell1=[[[TKLabelCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
     cell1.label.text=@"帐号";
     
+    _showInfo=[[UILabel alloc] initWithFrame:CGRectMake(50, 5, self.view.bounds.size.width-50, 20)];
+    _showInfo.textColor=[UIColor redColor];
+    _showInfo.font=[UIFont fontWithName:DeviceFontName size:DeviceFontSize];
+    _showInfo.backgroundColor=[UIColor clearColor];
+    [cell1.contentView addSubview:_showInfo];
+    
+    _accountImageView=[[UIImageView alloc] initWithFrame:CGRectMake(50, 0.5, 20, 29)];
+    [_accountImageView setImage:[UIImage imageNamed:@"ico19.png"]];
+    [cell1.contentView addSubview:_accountImageView];
+    _accountImageView.hidden=YES;
+    
+    
+    
     TKTextFieldCell *cell2=[[[TKTextFieldCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
     cell2.textField.placeholder=@"请输入帐号";
     cell2.textField.delegate=self;
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textUserChange:) name:UITextFieldTextDidChangeNotification object:nil];
+    [cell2.textField addTarget:self action:@selector(textUserChange:) forControlEvents:UIControlEventValueChanged];
     
     TKLabelCell *cell3=[[[TKLabelCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
     cell3.label.text=@"妮称";
     
     TKTextFieldCell *cell4=[[[TKTextFieldCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
     cell4.textField.placeholder=@"请输入妮称";
+    cell4.textField.delegate=self;
     
     TKLabelCell *cell5=[[[TKLabelCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
     cell5.label.text=@"手机号码";
+    
+    _phoneShowInfo=[[UILabel alloc] initWithFrame:CGRectMake(80, 5, self.view.bounds.size.width-80, 20)];
+    _phoneShowInfo.textColor=[UIColor redColor];
+    _phoneShowInfo.font=[UIFont fontWithName:DeviceFontName size:DeviceFontSize];
+    _phoneShowInfo.backgroundColor=[UIColor clearColor];
+    [cell5.contentView addSubview:_phoneShowInfo];
+    
+    _phoneImageView=[[UIImageView alloc] initWithFrame:CGRectMake(80, 0.5, 20, 29)];
+    [_phoneImageView setImage:[UIImage imageNamed:@"ico19.png"]];
+    [cell5.contentView addSubview:_phoneImageView];
+    _phoneImageView.hidden=YES;
+    
     
     TKTextFieldCell *cell6=[[[TKTextFieldCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
     cell6.textField.placeholder=@"请输入手机号码";
@@ -123,30 +161,6 @@
 
     self.cells=[NSMutableArray arrayWithObjects:cell1,cell2,cell3,cell4,cell5,cell6,cell7,cell8,cell9,cell10, nil];
     
-
-    _showInfo=[[UILabel alloc] initWithFrame:CGRectMake(50, 49, self.view.bounds.size.width-50, 20)];
-    _showInfo.textColor=[UIColor redColor];
-    _showInfo.font=[UIFont fontWithName:DeviceFontName size:DeviceFontSize];
-    _showInfo.backgroundColor=[UIColor clearColor];
-    [self.view addSubview:_showInfo];
-    
-    _accountImageView=[[UIImageView alloc] initWithFrame:CGRectMake(50, 44.5, 20, 29)];
-    [_accountImageView setImage:[UIImage imageNamed:@"ico19.png"]];
-    [self.view addSubview:_accountImageView];
-    _accountImageView.hidden=YES;
-    
-
-    _phoneShowInfo=[[UILabel alloc] initWithFrame:CGRectMake(80, 197, self.view.bounds.size.width-80, 20)];
-    _phoneShowInfo.textColor=[UIColor redColor];
-    _phoneShowInfo.font=[UIFont fontWithName:DeviceFontName size:DeviceFontSize];
-    _phoneShowInfo.backgroundColor=[UIColor clearColor];
-    [self.view addSubview:_phoneShowInfo];
-    
-    _phoneImageView=[[UIImageView alloc] initWithFrame:CGRectMake(80, 192.5, 20, 29)];
-    [_phoneImageView setImage:[UIImage imageNamed:@"ico19.png"]];
-    [self.view addSubview:_phoneImageView];
-    _phoneImageView.hidden=YES;
-
 }
 //注册
 - (void)buttonSubmit{
@@ -154,6 +168,12 @@
     TKTextFieldCell *cell1=self.cells[1];
     if (!cell1.hasValue) {
         [AlertHelper initWithTitle:@"提示" message:@"帐号不为空!"];
+        [cell1.textField becomeFirstResponder];
+        return;
+    }
+    if(isExistsNumber)
+    {
+        [AlertHelper initWithTitle:@"提示" message:@"帐号已被注册,请重新输入!"];
         [cell1.textField becomeFirstResponder];
         return;
     }
@@ -166,6 +186,23 @@
     TKTextFieldCell *cell3=self.cells[5];
     if (!cell3.hasValue) {
         [AlertHelper initWithTitle:@"提示" message:@"手机号码不为空!"];
+        [cell3.textField becomeFirstResponder];
+        return;
+    }
+    if (![cell3.textField.text isNumberString]) {
+        [AlertHelper initWithTitle:@"提示" message:@"手机号码只能为数字!"];
+        [cell3.textField becomeFirstResponder];
+        return;
+    }
+    if(strlen([cell3.textField.text UTF8String])<11)
+    {
+        [AlertHelper initWithTitle:@"提示" message:@"手机号码必须为11位！"];
+        [cell3.textField becomeFirstResponder];
+        return;
+    }
+    if(isExistsPhone)
+    {
+        [AlertHelper initWithTitle:@"提示" message:@"手机号码已被注册,请重新输入!"];
         [cell3.textField becomeFirstResponder];
         return;
     }
@@ -186,18 +223,8 @@
         [cell5.textField becomeFirstResponder];
         return;
     }
-    if(isExistsNumber)
-    {
-        [AlertHelper initWithTitle:@"提示" message:@"帐号已被注册,请重新输入!"];
-        [cell1.textField becomeFirstResponder];
-        return;
-    }
-    if(isExistsPhone)
-    {
-        [AlertHelper initWithTitle:@"提示" message:@"手机号码已被注册,请重新输入!"];
-        [cell3.textField becomeFirstResponder];
-        return;
-    }
+   
+   
     if (!self.hasNetWork) {
         [self showErrorNetWorkNotice:nil];
         return;
@@ -261,17 +288,60 @@
     [self dismissViewControllerAnimated:YES completion:nil];
      ***/
 }
-//判断帐号是否存在 
-- (void)updateShowInfo{
+//检测帐号
+- (void)textUserChange:(NSNotification*)notifice{
+    UITextField *field=[notifice object];
     TKTextFieldCell *cell=self.cells[1];
-    if ([cell.textField.text length]==0||strlen([cell.textField.text UTF8String])<11) {
+    if (cell.textField==field) {
+        //检测帐号
+        NSString *acc=[field.text Trim];
+        if([acc length]>0)
+        {
+            [self updateShowInfo:acc];
+        }else{
+            _showInfo.text=@"";
+            _accountImageView.hidden=YES;
+        }
+    }
+}
+//判断帐号是否存在
+- (void)updateShowInfo:(NSString*)user{
+   
+    //TKTextFieldCell *cell=self.cells[1];
+    if ([user length]==0) {
         _showInfo.text=@"";
         _accountImageView.hidden=YES;
         return;
     }
     ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
     args.methodName=@"IsExitsAccounts";
-    args.soapParams=[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:cell.textField.text,@"account", nil], nil];
+    args.soapParams=[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:user,@"account", nil], nil];
+    [self.serviceHelper async:args success:^(ServiceResult *result) {
+        if (result.hasSuccess) {
+            XmlNode *node=[result methodNode];
+            if ([node.Value isEqualToString:@"false"]) {
+                isExistsNumber=NO;
+                _showInfo.text=@"";
+                _accountImageView.hidden=NO;
+            }else{
+                isExistsNumber=YES;
+                _accountImageView.hidden=YES;
+                _showInfo.text=@"帐号已被注册!";
+                _showInfo.textColor=[UIColor redColor];
+            }
+        }else{
+            isExistsNumber=NO;
+            _accountImageView.hidden=YES;
+            _showInfo.text=@"帐号检测异常!";
+            _showInfo.textColor=[UIColor redColor];
+        }
+    } failed:^(NSError *error, NSDictionary *userInfo) {
+        isExistsNumber=NO;
+        _accountImageView.hidden=YES;
+        _showInfo.text=@"帐号检测异常!";
+        _showInfo.textColor=[UIColor redColor];
+    }];
+    /***
     [self.serviceHelper asynService:args success:^(ServiceResult *result) {
         if (result.hasSuccess) {
             XmlNode *node=[result methodNode];
@@ -297,17 +367,27 @@
         _showInfo.text=@"帐号检测异常!";
         _showInfo.textColor=[UIColor redColor];
     }];
+     ***/
 }
-- (void)checkPhone{
-    TKTextFieldCell *cell=self.cells[5];
-    if ([cell.textField.text length]==0) {
+- (void)replacePhonestring{
+    NSRegularExpression *regular;
+    regular = [[NSRegularExpression alloc] initWithPattern:@"[^0-9]+"
+                                                   options:NSRegularExpressionCaseInsensitive
+                                                     error:nil];
+    TKTextFieldCell *cell1=self.cells[5];
+    NSString *str=[cell1.textField.text Trim];
+    cell1.textField.text = [regular stringByReplacingMatchesInString:str options:NSRegularExpressionCaseInsensitive  range:NSMakeRange(0, [str length]) withTemplate:@""];
+}
+- (void)checkPhone:(NSString*)phone{
+   // TKTextFieldCell *cell=self.cells[5];
+    if ([phone length]==0||[phone length]<11) {
         _phoneShowInfo.text=@"";
         _phoneImageView.hidden=YES;
         return;
     }
     ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
     args.methodName=@"IsExitsMobileNo";
-    args.soapParams=[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:cell.textField.text,@"mobileNo", nil], nil];
+    args.soapParams=[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:phone,@"mobileNo", nil], nil];
     [self.serviceHelper asynService:args success:^(ServiceResult *result) {
         if (result.hasSuccess) {
             XmlNode *node=[result methodNode];
@@ -357,11 +437,24 @@
     TKTextFieldCell *cell=self.cells[1];
     TKTextFieldCell *cell3=self.cells[5];
     if (cell.textField==textField||cell3.textField==textField) {
-        if(strlen([textField.text UTF8String]) >= 11 && range.length != 1)
-            boo=NO;
+        if (cell3.textField==textField) {//手机号码
+            [self replacePhonestring];
+            //检测手机号码
+            if ([cell3.textField.text length]== 10&&[string isNumberString]) {
+                [self checkPhone:[NSString stringWithFormat:@"%@%@",cell3.textField.text,string]];
+            }else{
+                _phoneShowInfo.text=@"";
+                _phoneImageView.hidden=YES;
+            }
+            if(strlen([textField.text UTF8String]) >= 11 && range.length != 1)
+                boo=NO;
+        }else{//帐号
+            if(strlen([textField.text UTF8String]) >= 12 && range.length != 1)
+                boo=NO;
+            }
     }
-    TKTextFieldCell *cell1=self.cells[7];
-    TKTextFieldCell *cell2=self.cells[9];
+    TKTextFieldCell *cell1=self.cells[7];//密码
+    TKTextFieldCell *cell2=self.cells[9];//确认密码
     
     if (cell1.textField==textField||cell2.textField==textField) {
         if(strlen([textField.text UTF8String]) >= 12 && range.length != 1)
@@ -371,8 +464,22 @@
 }
 -(void)textFieldDidBeginEditing:(UITextField *)textField {
     
+    if (!isKeyBoardShow) {
+        isKeyBoardShow=YES;
+        CGRect r=_tableView.frame;
+        r.size.height-=216;
+        
+        CGRect r1=_toolBar.frame;
+        r1.origin.y-=216;
+        [UIView animateWithDuration:0.3f animations:^{
+            _tableView.frame=r;
+            _toolBar.frame=r1;
+        }];
+    }
+   
+    /***
     CGRect frame = [self fieldToRect:textField];
-    int offset = frame.origin.y + 36 - (self.view.frame.size.height - 216.0);//键盘高度216
+    int offset = frame.origin.y + 44 - (self.view.frame.size.height - 216.0);//键盘高度216
     
     NSTimeInterval animationDuration = 0.30f;
     [UIView beginAnimations:@"ResizeForKeyboard" context:nil];
@@ -382,23 +489,39 @@
     if(offset > 0)
         self.view.frame = CGRectMake(0.0f, -offset, self.view.frame.size.width, self.view.frame.size.height);
     [UIView commitAnimations];
+     ***/
 }
 - (void)textFieldDidEndEditing:(UITextField *)textField;
 {
-    self.view.frame =CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+    //self.view.frame =CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+
     
-    TKTextFieldCell *cell=self.cells[1];
+    /***
+     TKTextFieldCell *cell=self.cells[1];
+     if (cell.textField==textField) {
+     [self updateShowInfo];
+     }
     TKTextFieldCell *cell1=self.cells[5];
-    if (cell.textField==textField) {
-        [self updateShowInfo];
-    }
     if (cell1.textField==textField) {
         [self checkPhone];
     }
+     ***/
 }
-
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{
     [textField resignFirstResponder];
+    
+    isKeyBoardShow=NO;
+    CGRect r=_tableView.frame;
+    r.size.height+=216;
+    
+    
+    CGRect r1=_toolBar.frame;
+    r1.origin.y+=216;
+    [UIView animateWithDuration:0.3f animations:^{
+        _tableView.frame=r;
+        _toolBar.frame=r1;
+    }];
+    
     return YES;
 }
 

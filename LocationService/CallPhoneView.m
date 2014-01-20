@@ -85,23 +85,28 @@
     }
     return self;
 }
-- (void)setDataWithShipPhone:(NSString*)phone trajectoryTel:(NSString*)tel{
-    self.shipPhone=phone;//亲情号码
-    self.trajectoryPhone=tel;//监听号码
-    
-    if (!_switchPhone.on) {
-        _labPhone.text=phone;
+- (void)setCallPhone:(NSString*)phone type:(NSString*)type{
+   
+     _labPhone.text=phone;
+    if ([type isEqualToString:@"2"]) {//能打亲情号码 
+        _switchPhone.on=NO;
+    }
+    if ([type isEqualToString:@"3"]) {//能打监听号码
+        _switchPhone.on=YES;
+    }
+    if (![type isEqualToString:@"4"]) {
+        _switchPhone.userInteractionEnabled=NO;
     }else{
-       _labPhone.text=tel;
+       _switchPhone.userInteractionEnabled=YES;
+    }
+    if ([type isEqualToString:@"1"]) {//亲情与监听号码都不能拨打
+         [_button setTitle:@"无法拨打" forState:UIControlStateNormal];
+         _button.enabled=NO;
     }
 }
 -(void)valueChanged:(id)sender
 {
-    if (!_switchPhone.on) {
-        _labPhone.text=self.shipPhone;
-    }else{
-        _labPhone.text=self.trajectoryPhone;
-    }
+    
 }
 //拨打电话
 - (void)buttonCallClick{
