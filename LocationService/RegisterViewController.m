@@ -48,6 +48,8 @@
     [_tableView release];
     [_showInfo release];
     [_phoneShowInfo release];
+    [_accountImageView release];
+    [_phoneImageView release];
     [_toolBar release];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidChangeNotification object:nil];
 }
@@ -160,6 +162,8 @@
     cell10.textField.delegate=self;
 
     self.cells=[NSMutableArray arrayWithObjects:cell1,cell2,cell3,cell4,cell5,cell6,cell7,cell8,cell9,cell10, nil];
+    
+   
     
 }
 //注册

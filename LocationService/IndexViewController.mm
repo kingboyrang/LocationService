@@ -29,7 +29,6 @@
 #import "UIImageView+WebCache.h"
 #import "PinView.h"
 #import "BMKAnnotationView+TPCategory.h"
-#import "LocationGPS.h"
 @interface IndexViewController (){
     RecordView *_recordView;
     NSTimer *_updateTimer;
@@ -416,7 +415,7 @@
              newAnnotation.centerOffset = CGPointMake(0, -(newAnnotation.frame.size.height * 0.5));
              newAnnotation.annotation = annotation;
              //自定义气泡
-             TrajectoryPaoView *_areaPaoView=[[[TrajectoryPaoView alloc] initWithFrame:CGRectMake(0, 0, 290, 350)] autorelease];
+             TrajectoryPaoView *_areaPaoView=[[[TrajectoryPaoView alloc] initWithFrame:CGRectMake(0, 0, 280, 350)] autorelease];
              _areaPaoView.controls=self;
              [_areaPaoView setDataSource:self.cells[pos]];
              BMKActionPaopaoView *paopao=[[BMKActionPaopaoView alloc] initWithCustomView:_areaPaoView];

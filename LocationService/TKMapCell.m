@@ -78,8 +78,8 @@
     r.size.height=20;
     _labTitle.frame=r;
     
-    r.size.width=100;
-    r.origin.x=self.frame.size.width-10-90;
+    r.size.width=120;
+    r.origin.x=self.frame.size.width-10-r.size.width;
     _labprocess.frame=r;
     
     

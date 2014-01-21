@@ -62,6 +62,7 @@
     [btn addTarget:self action:@selector(buttonCancelClick) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:btn];
 }
+//5秒后登陆
 - (void)timerFireMethod:(NSTimer*)theTimer{
     total--;
     if (total==0) {
@@ -74,7 +75,9 @@
        _labelShowInfo.text=[NSString stringWithFormat:@"自动登录,%d秒后跳转到主画面...",total];
     }
 }
+//取消
 -(void)buttonCancelClick{
+    [Account closed];
     [self.navigationController popViewControllerAnimated:YES];
 }
 - (void)didReceiveMemoryWarning

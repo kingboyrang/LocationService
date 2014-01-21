@@ -94,7 +94,7 @@
         newAnnotation.annotation = annotation;
         
         //自定义气泡
-        ExceptionPaoView *_areaPaoView=[[[ExceptionPaoView alloc] initWithFrame:CGRectMake(0, 0, 290, 350)] autorelease];
+        ExceptionPaoView *_areaPaoView=[[[ExceptionPaoView alloc] initWithFrame:CGRectMake(0, 0, 280, 350)] autorelease];
         [_areaPaoView setDataSource:self.Entity];
         BMKActionPaopaoView *paopao=[[BMKActionPaopaoView alloc] initWithCustomView:_areaPaoView];
         newAnnotation.paopaoView=paopao;

@@ -13,12 +13,14 @@
 #import "TrajectoryMessage.h"
 #import "AppHelper.h"
 #import "ExceptionViewController.h"
+#import "AlertHelper.h"
 @interface ReadMessageViewController (){
    LoginButtons *_toolBar;
 }
 - (BOOL)existsFindyById:(NSString*)msgId;
 - (void)loadData;
 - (NSString*)findByMessageId:(NSString*)msgId;
+- (void)deleteMessagesWithButton:(UIButton*)btn;
 @end
 
 @implementation ReadMessageViewController
@@ -73,6 +75,8 @@
     
     CGFloat topY=self.view.bounds.size.height+44;
     _toolBar=[[LoginButtons alloc] initWithFrame:CGRectMake(0, topY, self.view.bounds.size.width, 44)];
+    _toolBar.cancel.hidden=YES;
+    _toolBar.submit.frame=CGRectMake(0, 0, _toolBar.frame.size.width, _toolBar.frame.size.height);
     [_toolBar.cancel setTitle:@"清空" forState:UIControlStateNormal];
     [_toolBar.submit setTitle:@"删除(0)" forState:UIControlStateNormal];
     [_toolBar.cancel addTarget:self action:@selector(buttonClearClick:) forControlEvents:UIControlEventTouchUpInside];
@@ -104,8 +108,8 @@
 	else {//取消
         if (self.removeList&&[self.removeList count]>0) {
             [self.removeList removeAllObjects];
-            [_toolBar.submit setTitle:@"删除(0)" forState:UIControlStateNormal];
         }
+        [_toolBar.submit setTitle:@"删除(0)" forState:UIControlStateNormal];
         [btn setTitle:@"编辑" forState:UIControlStateNormal];
         CGRect r=_toolBar.frame;
         r.origin.y=self.view.bounds.size.height+44;
@@ -131,57 +135,63 @@
     }
     return @"";
 }
+//删除信息
+- (void)deleteMessagesWithButton:(UIButton*)btn{
+    btn.enabled=NO;
+    
+    NSMutableArray *delSource=[NSMutableArray array];
+    for (NSIndexPath *item in [self.removeList allValues]) {
+        [delSource addObject:self.cells[item.row]];
+    }
+    NSMutableArray *ids=[NSMutableArray array];
+    for (NSString *msgid in self.removeList.allKeys) {
+        [ids addObject:[NSString stringWithFormat:@"%@,%@",msgid,[self findByMessageId:msgid]]];
+    }
+    
+    NSMutableArray *params=[NSMutableArray array];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[ids componentsJoinedByString:@"$"],@"idAndTime", nil]];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"2",@"type", nil]];
+    
+    ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
+    args.serviceURL=DataWebservice1;
+    args.serviceNameSpace=DataNameSpace1;
+    args.methodName=@"DelPersonMsg";
+    args.soapParams=params;
+    NSLog(@"soap=%@",args.soapMessage);
+    [self showLoadingAnimatedWithTitle:@"正在删除,请稍后..."];
+    [self.serviceHelper asynService:args success:^(ServiceResult *result) {
+        NSLog(@"xml=%@",result.request.responseString);
+        BOOL boo=NO;
+        if (result.hasSuccess) {
+            NSDictionary *dic=[result json];
+            if (dic!=nil&&[[dic objectForKey:@"Result"] isEqualToString:@"true"]) {
+                boo=YES;
+                [self.cells removeObjectsInArray:delSource];
+                [_tableView beginUpdates];
+                [_tableView deleteRowsAtIndexPaths:[self.removeList allValues] withRowAnimation:UITableViewRowAnimationFade];
+                [_tableView endUpdates];
+                //更新操作
+                [self.removeList removeAllObjects];
+                [_toolBar.submit setTitle:@"删除(0)" forState:UIControlStateNormal];//更新操作
+                [self hideLoadingSuccessWithTitle:@"删除成功!" completed:nil];
+            }
+        }
+        if (!boo) {
+            [self hideLoadingFailedWithTitle:@"删除失败!" completed:nil];
+        }
+        btn.enabled=YES;
+    } failed:^(NSError *error, NSDictionary *userInfo) {
+        btn.enabled=YES;
+        [self hideLoadingFailedWithTitle:@"删除失败!" completed:nil];
+    }];
+}
 //删除
 - (void)buttonRemoveClick:(id)sender{
     if (self.removeList&&[self.removeList count]>0) {
         UIButton *btn=(UIButton*)sender;
-         btn.enabled=NO;
-        
-        NSMutableArray *delSource=[NSMutableArray array];
-        for (NSIndexPath *item in [self.removeList allValues]) {
-            [delSource addObject:self.cells[item.row]];
-        }
-        NSMutableArray *ids=[NSMutableArray array];
-        for (NSString *msgid in self.removeList.allKeys) {
-            [ids addObject:[NSString stringWithFormat:@"%@,%@",msgid,[self findByMessageId:msgid]]];
-        }
-        
-        NSMutableArray *params=[NSMutableArray array];
-        [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[ids componentsJoinedByString:@"$"],@"idAndTime", nil]];
-        [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"2",@"type", nil]];
-        
-        ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
-        args.serviceURL=DataWebservice1;
-        args.serviceNameSpace=DataNameSpace1;
-        args.methodName=@"DelPersonMsg";
-        args.soapParams=params;
-        NSLog(@"soap=%@",args.soapMessage);
-        [self showLoadingAnimatedWithTitle:@"正在删除,请稍后..."];
-        [self.serviceHelper asynService:args success:^(ServiceResult *result) {
-            BOOL boo=NO;
-            if (result.hasSuccess) {
-                NSDictionary *dic=[result json];
-                if (dic!=nil&&[[dic objectForKey:@"Result"] isEqualToString:@"true"]) {
-                    boo=YES;
-                    [self.cells removeObjectsInArray:delSource];
-                    [_tableView beginUpdates];
-                    [_tableView deleteRowsAtIndexPaths:[self.removeList allValues] withRowAnimation:UITableViewRowAnimationFade];
-                    [_tableView endUpdates];
-                    //更新操作
-                    [self.removeList removeAllObjects];
-                    [_toolBar.submit setTitle:@"删除(0)" forState:UIControlStateNormal];//更新操作
-                    [self hideLoadingSuccessWithTitle:@"删除成功!" completed:nil];
-                }
-            }
-            if (!boo) {
-                [self hideLoadingFailedWithTitle:@"删除失败!" completed:nil];
-            }
-            btn.enabled=YES;
-        } failed:^(NSError *error, NSDictionary *userInfo) {
-             btn.enabled=YES;
-            [self hideLoadingFailedWithTitle:@"删除失败!" completed:nil];
-        }];
-        
+        [AlertHelper confirmWithTitle:@"删除" confirm:^{
+            [self deleteMessagesWithButton:btn];
+        } innnerView:self.view];
     }
 }
 //清空
@@ -216,6 +226,11 @@
 }
 //加载数据
 - (void)loadData{
+    //表示网络未连接
+    if (![self hasNetWork]) {
+        [self showErrorNetWorkNotice:nil];
+        return;
+    }
     curPage++;
     
     Account *acc=[Account unarchiverAccount];

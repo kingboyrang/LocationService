@@ -71,7 +71,6 @@
     cell2.textField.layer.borderWidth=2.0;
     cell2.textField.layer.cornerRadius=5.0;
     cell2.textField.layer.borderColor=[UIColor colorFromHexRGB:@"4a7ebb"].CGColor;
-    cell2.textField.textColor=[UIColor colorFromHexRGB:@"4a7ebb"];
     cell2.textField.delegate=self;
     
     TKLabelCell *cell3=[[[TKLabelCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
@@ -82,7 +81,6 @@
     cell4.textField.layer.borderWidth=2.0;
     cell4.textField.layer.cornerRadius=5.0;
     cell4.textField.layer.borderColor=[UIColor colorFromHexRGB:@"4a7ebb"].CGColor;
-    cell4.textField.textColor=[UIColor colorFromHexRGB:@"4a7ebb"];
      cell4.textField.delegate=self;
     [cell4.button addTarget:self action:@selector(buttonDynamicPwdClick) forControlEvents:UIControlEventTouchUpInside];
     

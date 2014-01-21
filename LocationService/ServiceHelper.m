@@ -122,7 +122,7 @@
 	//传soap信息
     [request appendPostData:[args.soapMessage dataUsingEncoding:NSUTF8StringEncoding]];
     [request setValidatesSecureCertificate:NO];
-    [request setTimeOutSeconds:30.0];//表示30秒请求超时
+    [request setTimeOutSeconds:60.0];//表示30秒请求超时
     [request setDefaultResponseEncoding:NSUTF8StringEncoding];
     return request;
 }

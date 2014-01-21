@@ -27,7 +27,11 @@
 @end
 
 @implementation AreaViewController
-
+- (void)dealloc{
+    [super dealloc];
+    [_toolBar release];
+    [_tableView release];
+}
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];

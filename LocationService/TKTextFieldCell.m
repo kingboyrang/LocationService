@@ -64,7 +64,7 @@
 	_textField.frame = CGRectInset(self.contentView.bounds, 10, 4);
 }
 
-
+/***
 - (void) _colorText:(BOOL)active{
 	_textField.textColor = active ? [UIColor whiteColor] : [UIColor blackColor];
 }
@@ -76,6 +76,6 @@
     [super setHighlighted:highlight animated:animated];
 	[self _colorText:highlight];
 }
-
+***/
 
 @end

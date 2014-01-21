@@ -15,7 +15,7 @@
 @interface EditPwdViewController ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>{
     UITableView *_tableView;
     LoginButtons *_buttons;
-    
+    BOOL isKeyBoardShow;
 }
 -(void)buttonCancel;
 -(void)buttonSubmit;
@@ -23,7 +23,11 @@
 @end
 
 @implementation EditPwdViewController
-
+- (void)dealloc{
+    [super dealloc];
+    [_tableView release];
+    [_buttons release];
+}
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -63,7 +67,6 @@
     cell2.textField.layer.borderWidth=2.0;
     cell2.textField.layer.cornerRadius=5.0;
     cell2.textField.layer.borderColor=[UIColor colorFromHexRGB:@"4a7ebb"].CGColor;
-    cell2.textField.textColor=[UIColor colorFromHexRGB:@"4a7ebb"];
     cell2.textField.delegate=self;
     cell2.textField.secureTextEntry=YES;
     
@@ -75,7 +78,6 @@
     cell4.textField.layer.borderWidth=2.0;
     cell4.textField.layer.cornerRadius=5.0;
     cell4.textField.layer.borderColor=[UIColor colorFromHexRGB:@"4a7ebb"].CGColor;
-    cell4.textField.textColor=[UIColor colorFromHexRGB:@"4a7ebb"];
     cell4.textField.secureTextEntry=YES;
     cell4.textField.delegate=self;
     
@@ -87,7 +89,6 @@
     cell6.textField.layer.borderWidth=2.0;
     cell6.textField.layer.cornerRadius=5.0;
     cell6.textField.layer.borderColor=[UIColor colorFromHexRGB:@"4a7ebb"].CGColor;
-    cell6.textField.textColor=[UIColor colorFromHexRGB:@"4a7ebb"];
     cell6.textField.secureTextEntry=YES;
     cell6.textField.delegate=self;
     
@@ -263,6 +264,21 @@
     }
     return boo;
 }
+-(void)textFieldDidBeginEditing:(UITextField *)textField {
+    
+    if (!isKeyBoardShow) {
+        isKeyBoardShow=YES;
+        CGRect r=_tableView.frame;
+        r.size.height-=216;
+        
+        CGRect r1=_buttons.frame;
+        r1.origin.y-=216;
+        [UIView animateWithDuration:0.3f animations:^{
+            _tableView.frame=r;
+            _buttons.frame=r1;
+        }];
+    }
+}
 - (void)textFieldDidEndEditing:(UITextField *)textField;
 {
     TKTextFieldCell *cell=self.cells[1];
@@ -276,6 +292,18 @@
 }
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{
     [textField resignFirstResponder];
+    isKeyBoardShow=NO;
+    CGRect r=_tableView.frame;
+    r.size.height+=216;
+    
+    
+    CGRect r1=_buttons.frame;
+    r1.origin.y+=216;
+    [UIView animateWithDuration:0.3f animations:^{
+        _tableView.frame=r;
+        _buttons.frame=r1;
+    }];
+
     return YES;
 }
 #pragma mark UITableViewDataSource Methods

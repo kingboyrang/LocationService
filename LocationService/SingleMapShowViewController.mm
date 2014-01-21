@@ -102,7 +102,7 @@
         newAnnotation.annotation = annotation;
         
         //自定义气泡
-        TrajectoryPaoView *_areaPaoView=[[[TrajectoryPaoView alloc] initWithFrame:CGRectMake(0, 0, 290, 350)] autorelease];
+        TrajectoryPaoView *_areaPaoView=[[[TrajectoryPaoView alloc] initWithFrame:CGRectMake(0, 0, 280, 350)] autorelease];
         [_areaPaoView setDataSourceHistory:self.Entity name:self.PersonName];
         _areaPaoView.controls=self;
         BMKActionPaopaoView *paopao=[[BMKActionPaopaoView alloc] initWithCustomView:_areaPaoView];

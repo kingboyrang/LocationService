@@ -31,6 +31,11 @@
 @implementation ModifyAreaViewController
 - (void)dealloc {
     [super dealloc];
+    [_silder release];
+    [_labDistance release];
+    if (_areaPaoView) {
+         [_areaPaoView release];
+    }
     if (_mapView) {
         [_mapView release];
         _mapView = nil;

@@ -221,9 +221,6 @@
 		01C913BA187111A200D9A926 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01C913B9187111A100D9A926 /* OpenGLES.framework */; };
 		01C913BC187111BB00D9A926 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01C913BB187111BB00D9A926 /* Security.framework */; };
 		01C913C018715DD000D9A926 /* TKMapCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 01C913BF18715DD000D9A926 /* TKMapCell.m */; };
-		01CBE379188A4B04006321CC /* LocationGPS.m in Sources */ = {isa = PBXBuildFile; fileRef = 01CBE378188A4B04006321CC /* LocationGPS.m */; };
-		01CBE37F188A4B19006321CC /* SVGeocoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 01CBE37C188A4B19006321CC /* SVGeocoder.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		01CBE380188A4B19006321CC /* SVPlacemark.m in Sources */ = {isa = PBXBuildFile; fileRef = 01CBE37E188A4B19006321CC /* SVPlacemark.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		01CBE382188A4D89006321CC /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01CBE381188A4D87006321CC /* MapKit.framework */; };
 		01CBE385188A85D6006321CC /* OfflineHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 01CBE384188A85D5006321CC /* OfflineHelper.m */; };
 		01E2C2FC1887C4D1008FAC4C /* pinCircule.png in Resources */ = {isa = PBXBuildFile; fileRef = 01E2C2FB1887C4D1008FAC4C /* pinCircule.png */; };
@@ -652,12 +649,6 @@
 		01C913BB187111BB00D9A926 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		01C913BE18715DD000D9A926 /* TKMapCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TKMapCell.h; sourceTree = "<group>"; };
 		01C913BF18715DD000D9A926 /* TKMapCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TKMapCell.m; sourceTree = "<group>"; };
-		01CBE377188A4B04006321CC /* LocationGPS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationGPS.h; sourceTree = "<group>"; };
-		01CBE378188A4B04006321CC /* LocationGPS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationGPS.m; sourceTree = "<group>"; };
-		01CBE37B188A4B19006321CC /* SVGeocoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVGeocoder.h; sourceTree = "<group>"; };
-		01CBE37C188A4B19006321CC /* SVGeocoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVGeocoder.m; sourceTree = "<group>"; };
-		01CBE37D188A4B19006321CC /* SVPlacemark.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVPlacemark.h; sourceTree = "<group>"; };
-		01CBE37E188A4B19006321CC /* SVPlacemark.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVPlacemark.m; sourceTree = "<group>"; };
 		01CBE381188A4D87006321CC /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		01CBE383188A85D4006321CC /* OfflineHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OfflineHelper.h; sourceTree = "<group>"; };
 		01CBE384188A85D5006321CC /* OfflineHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OfflineHelper.m; sourceTree = "<group>"; };
@@ -1352,7 +1343,6 @@
 		01BE4000185EAF97005C25D9 /* Class */ = {
 			isa = PBXGroup;
 			children = (
-				01CBE376188A4AF5006321CC /* Location */,
 				0169249C18618CAD0040E0C9 /* NetWork */,
 				01B40B4118614EC1004A0133 /* WebService */,
 				01B40B0918614CAB004A0133 /* lib */,
@@ -1542,27 +1532,6 @@
 				01C913BF18715DD000D9A926 /* TKMapCell.m */,
 			);
 			name = UI;
-			sourceTree = "<group>";
-		};
-		01CBE376188A4AF5006321CC /* Location */ = {
-			isa = PBXGroup;
-			children = (
-				01CBE37A188A4B0D006321CC /* SVGeocoder */,
-				01CBE377188A4B04006321CC /* LocationGPS.h */,
-				01CBE378188A4B04006321CC /* LocationGPS.m */,
-			);
-			name = Location;
-			sourceTree = "<group>";
-		};
-		01CBE37A188A4B0D006321CC /* SVGeocoder */ = {
-			isa = PBXGroup;
-			children = (
-				01CBE37B188A4B19006321CC /* SVGeocoder.h */,
-				01CBE37C188A4B19006321CC /* SVGeocoder.m */,
-				01CBE37D188A4B19006321CC /* SVPlacemark.h */,
-				01CBE37E188A4B19006321CC /* SVPlacemark.m */,
-			);
-			name = SVGeocoder;
 			sourceTree = "<group>";
 		};
 		01F994BD1867E73700FEC0F2 /* More */ = {
@@ -1911,9 +1880,6 @@
 				014419CE18867F1A00203B87 /* ExceptionViewController.m in Sources */,
 				014419D118867FD100203B87 /* ExceptionPaoView.m in Sources */,
 				013BE7641887908000D75589 /* PinView.m in Sources */,
-				01CBE379188A4B04006321CC /* LocationGPS.m in Sources */,
-				01CBE37F188A4B19006321CC /* SVGeocoder.m in Sources */,
-				01CBE380188A4B19006321CC /* SVPlacemark.m in Sources */,
 				01CBE385188A85D6006321CC /* OfflineHelper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -233,6 +233,9 @@
     if (self.operateType==2) {//修改
         if (_imageCropper) {
             [self uploadImageWithId:self.Entity.ID completed:^(NSString *fileName) {
+                if (self.delegate&&[self.delegate respondsToSelector:@selector(finishSelectedImage:)]) {
+                    [self.delegate performSelector:@selector(finishSelectedImage:) withObject:[_imageCropper getCroppedImage]];
+                }
                 if (self.delegate&&[self.delegate respondsToSelector:@selector(finishUploadFileName:)]) {
                     [self.delegate performSelector:@selector(finishUploadFileName:) withObject:fileName];
                 }

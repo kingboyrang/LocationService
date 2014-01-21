@@ -17,7 +17,7 @@
 	_showLabel.backgroundColor = [UIColor clearColor];
     _showLabel.textColor = [UIColor grayColor];
 	_showLabel.highlightedTextColor = [UIColor whiteColor];
-    _showLabel.font = [UIFont fontWithName:DeviceFontName size:DeviceFontSize];
+    _showLabel.font = [UIFont fontWithName:DeviceFontName size:14];
     _showLabel.numberOfLines = 0;
     _showLabel.lineBreakMode=NSLineBreakByWordWrapping;
 	[self.contentView addSubview:_showLabel];
@@ -33,13 +33,19 @@
 
 - (void) layoutSubviews {
     [super layoutSubviews];
+    
+    NSString *str=[self.label.text Trim];
+    CGSize size1=[str textSize:[UIFont fontWithName:DeviceFontName size:14] withWidth:self.frame.size.width];
     CGRect r=self.label.frame;
     r.origin.y=5;
+    r.size=size1;
     self.label.frame=r;
+    self.label.font=[UIFont fontWithName:DeviceFontName size:14];
+    //NSLog(@"frame=%@",NSStringFromCGRect(self.label.frame));
     
     r.origin.x=self.label.frame.origin.x+self.label.frame.size.width+2;
     r.size.width=self.frame.size.width-5-r.origin.x;
-    CGSize size=[_showLabel.text textSize:[UIFont fontWithName:DeviceFontName size:DeviceFontSize] withWidth:r.size.width];
+    CGSize size=[_showLabel.text textSize:[UIFont fontWithName:DeviceFontName size:14] withWidth:r.size.width];
     r.size=size;
     _showLabel.frame=r;
 }

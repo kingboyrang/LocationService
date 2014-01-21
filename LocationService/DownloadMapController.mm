@@ -40,6 +40,8 @@
         [_arraySearchCityData release];
         _arraySearchCityData = nil;
     }
+    [_tableView release];
+    [_searchView release];
 }
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {

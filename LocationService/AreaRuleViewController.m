@@ -36,7 +36,11 @@
 @end
 
 @implementation AreaRuleViewController
-
+- (void)dealloc{
+    [super dealloc];
+    [_ruleSelect release];
+    [_tableView release];
+}
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];

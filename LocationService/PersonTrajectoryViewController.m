@@ -160,7 +160,11 @@
     }
 }
 - (void)loadingHistory{
-
+    //表示网络未连接
+    if (![self hasNetWork]) {
+        [self showErrorNetWorkNotice:nil];
+        return;
+    }
     Account *acc=[Account unarchiverAccount];
     NSMutableArray *params=[NSMutableArray array];
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:acc.WorkNo,@"workno", nil]];

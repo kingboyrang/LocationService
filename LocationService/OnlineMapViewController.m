@@ -39,12 +39,12 @@
         [_offlineMap release];
         _offlineMap = nil;
     }
-   
+   /***
     if (_mapView) {
         [_mapView release];
         _mapView = nil;
     }
-     
+     ***/
     [_tableView release];
 }
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -66,12 +66,8 @@
     }
     //_mapView.delegate=self;
     
-       //初始化离线地图服务
-    _offlineMap = [[BMKOfflineMap alloc] init];
-    //获取各城市离线地图更新信息
-    _arraylocalDownLoadMapInfo = [[NSMutableArray arrayWithArray:[_offlineMap getAllUpdateInfo]] retain];
-    _offlineMap.delegate = self;
-    [_tableView reloadData];
+    
+    
     if (self.downloadRecord) {
         [self downloadMapWithEntity:self.downloadRecord];
     }
@@ -86,16 +82,9 @@
 }
 -(void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-     [_mapView viewWillDisappear];
-    _mapView.delegate=nil;
+    // [_mapView viewWillDisappear];
+    //_mapView.delegate=nil;
     //_offlineMap.delegate = nil; // 不用时，置nil
-    if (_offlineMap) {
-        _offlineMap.delegate=nil;
-        [_offlineMap release];
-        _offlineMap = nil;
-        NSLog(@"fdsafdsfdsaf");
-    }
-     
 }
 - (void)viewDidLoad
 {
@@ -104,8 +93,8 @@
     r.size.height-=44*2;
     r.origin.y=44;
         
-    _mapView=[[BMKMapView alloc] initWithFrame:r];
-    [self.view addSubview:_mapView];
+   // _mapView=[[BMKMapView alloc] initWithFrame:r];
+   // [self.view addSubview:_mapView];
     
     _tableView=[[UITableView alloc] initWithFrame:r style:UITableViewStylePlain];
     _tableView.delegate=self;
@@ -132,7 +121,11 @@
     [self.view addSubview:buttons];
     [buttons release];
     
-    
+    //初始化离线地图服务
+    _offlineMap = [[BMKOfflineMap alloc] init];
+    //获取各城市离线地图更新信息
+    _arraylocalDownLoadMapInfo = [[NSMutableArray arrayWithArray:[_offlineMap getAllUpdateInfo]] retain];
+    _offlineMap.delegate = self;
     currentDownloadCityId=-1;
 }
 //下载地图

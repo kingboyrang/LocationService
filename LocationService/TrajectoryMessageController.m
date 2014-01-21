@@ -15,6 +15,7 @@
 #import "AppUI.h"
 #import "ReadMessageViewController.h"
 #import "ExceptionViewController.h"
+#import "AlertHelper.h"
 @interface TrajectoryMessageController (){
     LoginButtons *_toolBar;
 }
@@ -137,100 +138,101 @@
 //删除
 - (void)buttonRemoveClick:(id)sender{
     if (self.removeList&&[self.removeList count]>0) {
-        
-        NSMutableArray *delSource=[NSMutableArray array];
-        for (NSIndexPath *item in [self.removeList allValues]) {
-            [delSource addObject:self.cells[item.row]];
-        }
-        
-        NSMutableArray *ids=[NSMutableArray array];
-        for (NSString *msgid in self.removeList.allKeys) {
-            [ids addObject:[NSString stringWithFormat:@"%@,%@",msgid,[self findByMessageId:msgid]]];
-        }
-        
-        NSMutableArray *params=[NSMutableArray array];
-        [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[ids componentsJoinedByString:@"$"],@"idAndTime", nil]];
-        [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"1",@"type", nil]];
-        //[params addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"",@"time", nil]];
-        
-        ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
-        args.serviceURL=DataWebservice1;
-        args.serviceNameSpace=DataNameSpace1;
-        args.methodName=@"DelPersonMsg";
-        args.soapParams=params;
-        [self showLoadingAnimatedWithTitle:@"正在删除,请稍后..."];
-        [self.serviceHelper asynService:args success:^(ServiceResult *result) {
-            BOOL boo=NO;
-            if (result.hasSuccess) {
-                NSDictionary *dic=[result json];
-                if (dic!=nil&&[[dic objectForKey:@"Result"] isEqualToString:@"true"]) {
-                    boo=YES;
-                    [self.cells removeObjectsInArray:delSource];
-                    [_tableView beginUpdates];
-                    [_tableView deleteRowsAtIndexPaths:[self.removeList allValues] withRowAnimation:UITableViewRowAnimationFade];
-                    [_tableView endUpdates];
-                    //更新操作
-                    [self.readList removeAllObjects];
-                    [self.removeList removeAllObjects];
-                    [_toolBar.submit setTitle:@"标记已读(0)" forState:UIControlStateNormal];//更新操作
-                    [_toolBar.cancel setTitle:@"删除(0)" forState:UIControlStateNormal];//更新操作
-                    [self hideLoadingSuccessWithTitle:@"删除成功!" completed:nil];
+        [AlertHelper confirmWithTitle:@"删除" confirm:^{
+            NSMutableArray *delSource=[NSMutableArray array];
+            for (NSIndexPath *item in [self.removeList allValues]) {
+                [delSource addObject:self.cells[item.row]];
+            }
+            
+            NSMutableArray *ids=[NSMutableArray array];
+            for (NSString *msgid in self.removeList.allKeys) {
+                [ids addObject:[NSString stringWithFormat:@"%@,%@",msgid,[self findByMessageId:msgid]]];
+            }
+            
+            NSMutableArray *params=[NSMutableArray array];
+            [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[ids componentsJoinedByString:@"$"],@"idAndTime", nil]];
+            [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"1",@"type", nil]];
+            //[params addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"",@"time", nil]];
+            
+            ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
+            args.serviceURL=DataWebservice1;
+            args.serviceNameSpace=DataNameSpace1;
+            args.methodName=@"DelPersonMsg";
+            args.soapParams=params;
+            [self showLoadingAnimatedWithTitle:@"正在删除,请稍后..."];
+            [self.serviceHelper asynService:args success:^(ServiceResult *result) {
+                BOOL boo=NO;
+                if (result.hasSuccess) {
+                    NSDictionary *dic=[result json];
+                    if (dic!=nil&&[[dic objectForKey:@"Result"] isEqualToString:@"true"]) {
+                        boo=YES;
+                        [self.cells removeObjectsInArray:delSource];
+                        [_tableView beginUpdates];
+                        [_tableView deleteRowsAtIndexPaths:[self.removeList allValues] withRowAnimation:UITableViewRowAnimationFade];
+                        [_tableView endUpdates];
+                        //更新操作
+                        [self.readList removeAllObjects];
+                        [self.removeList removeAllObjects];
+                        [_toolBar.submit setTitle:@"标记已读(0)" forState:UIControlStateNormal];//更新操作
+                        [_toolBar.cancel setTitle:@"删除(0)" forState:UIControlStateNormal];//更新操作
+                        [self hideLoadingSuccessWithTitle:@"删除成功!" completed:nil];
+                    }
                 }
-            }
-            if (!boo) {
+                if (!boo) {
+                    [self hideLoadingFailedWithTitle:@"删除失败!" completed:nil];
+                }
+            } failed:^(NSError *error, NSDictionary *userInfo) {
                 [self hideLoadingFailedWithTitle:@"删除失败!" completed:nil];
-            }
-        } failed:^(NSError *error, NSDictionary *userInfo) {
-             [self hideLoadingFailedWithTitle:@"删除失败!" completed:nil];
-        }];
-
+            }];
+            
+        } innnerView:self.view];
     }
 }
 //标记已读
 - (void)buttonReadClick:(id)sender{
     if (self.readList&&[self.readList count]>0) {
-        NSMutableArray *delSource=[NSMutableArray array];
-        for (NSIndexPath *item in [self.removeList allValues]) {
-            [delSource addObject:self.cells[item.row]];
-        }
-        
-        
-        UIButton *btn=(UIButton*)sender;
-        btn.enabled=NO;
-        ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
-        args.serviceURL=DataWebservice1;
-        args.serviceNameSpace=DataNameSpace1;
-        args.methodName=@"BatchHandleAlarmData";
-        args.soapParams=[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:[self.readList.allKeys componentsJoinedByString:@","],@"id", nil], nil];
-        [self showLoadingAnimatedWithTitle:@"正在标记已读操作,请稍后..."];
-        [self.serviceHelper asynService:args success:^(ServiceResult *result) {
-            btn.enabled=YES;
-            BOOL boo=NO;
-            if (result.hasSuccess) {
-                NSDictionary *dic=(NSDictionary*)[result json];
-                if (dic!=nil&&[[dic objectForKey:@"Result"] isEqualToString:@"true"]) {
-                    boo=YES;
+        [AlertHelper confirmWithTitle:@"标记已读" confirm:^{
+            NSMutableArray *delSource=[NSMutableArray array];
+            for (NSIndexPath *item in [self.removeList allValues]) {
+                [delSource addObject:self.cells[item.row]];
+            }
+            UIButton *btn=(UIButton*)sender;
+            btn.enabled=NO;
+            ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
+            args.serviceURL=DataWebservice1;
+            args.serviceNameSpace=DataNameSpace1;
+            args.methodName=@"BatchHandleAlarmData";
+            args.soapParams=[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:[self.readList.allKeys componentsJoinedByString:@","],@"id", nil], nil];
+            [self showLoadingAnimatedWithTitle:@"正在标记已读操作,请稍后..."];
+            [self.serviceHelper asynService:args success:^(ServiceResult *result) {
+                btn.enabled=YES;
+                BOOL boo=NO;
+                if (result.hasSuccess) {
+                    NSDictionary *dic=(NSDictionary*)[result json];
+                    if (dic!=nil&&[[dic objectForKey:@"Result"] isEqualToString:@"true"]) {
+                        boo=YES;
+                    }
                 }
-            }
-            if (boo) {
-                [self.cells removeObjectsInArray:delSource];
-                [_tableView beginUpdates];
-                [_tableView deleteRowsAtIndexPaths:[self.readList allValues] withRowAnimation:UITableViewRowAnimationFade];
-                [_tableView endUpdates];
+                if (boo) {
+                    [self.cells removeObjectsInArray:delSource];
+                    [_tableView beginUpdates];
+                    [_tableView deleteRowsAtIndexPaths:[self.readList allValues] withRowAnimation:UITableViewRowAnimationFade];
+                    [_tableView endUpdates];
+                    
+                    [self.readList removeAllObjects];
+                    [self.removeList removeAllObjects];
+                    [_toolBar.submit setTitle:@"标记已读(0)" forState:UIControlStateNormal];//更新操作
+                    [_toolBar.cancel setTitle:@"删除(0)" forState:UIControlStateNormal];//更新操作
+                    [self hideLoadingSuccessWithTitle:@"标记已读操作成功!" completed:nil];
+                }else{
+                    [self hideLoadingFailedWithTitle:@"标记已读操作失败!" completed:nil];
+                }
                 
-                [self.readList removeAllObjects];
-                [self.removeList removeAllObjects];
-                [_toolBar.submit setTitle:@"标记已读(0)" forState:UIControlStateNormal];//更新操作
-                [_toolBar.cancel setTitle:@"删除(0)" forState:UIControlStateNormal];//更新操作
-                [self hideLoadingSuccessWithTitle:@"标记已读操作成功!" completed:nil];
-            }else{
+            } failed:^(NSError *error, NSDictionary *userInfo) {
+                btn.enabled=YES;
                 [self hideLoadingFailedWithTitle:@"标记已读操作失败!" completed:nil];
-            }
-            
-        } failed:^(NSError *error, NSDictionary *userInfo) {
-            btn.enabled=YES;
-            [self hideLoadingFailedWithTitle:@"标记已读操作失败!" completed:nil];
-        }];
+            }];
+        } innnerView:self.view];
     }
 }
 //编辑
@@ -255,12 +257,12 @@
 	else {//取消
         if (self.readList&&[self.readList count]>0) {
             [self.readList removeAllObjects];
-            [_toolBar.submit setTitle:@"标记已读(0)" forState:UIControlStateNormal];
         }
         if (self.removeList&&[self.removeList count]>0) {
             [self.removeList removeAllObjects];
-            [_toolBar.cancel setTitle:@"删除(0)" forState:UIControlStateNormal];
         }
+        [_toolBar.submit setTitle:@"标记已读(0)" forState:UIControlStateNormal];
+        [_toolBar.cancel setTitle:@"删除(0)" forState:UIControlStateNormal];
         
         [btn setTitle:@"编辑" forState:UIControlStateNormal];
         CGRect r=_toolBar.frame;
@@ -279,6 +281,11 @@
 }
 //加载数据
 - (void)loadData{
+    //表示网络未连接
+    if (![self hasNetWork]) {
+        [self showErrorNetWorkNotice:nil];
+        return;
+    }
     curPage++;
     
     Account *acc=[Account unarchiverAccount];

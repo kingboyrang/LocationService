@@ -139,7 +139,11 @@
     }
 }
 - (void)loadingHistory{
-    
+    //表示网络未连接
+    if (![self hasNetWork]) {
+        [self showErrorNetWorkNotice:nil];
+        return;
+    }
     Account *acc=[Account unarchiverAccount];
     NSMutableArray *params=[NSMutableArray array];
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:acc.WorkNo,@"workno", nil]];
@@ -266,7 +270,7 @@
         
         
         //自定义气泡
-        TrajectoryPaoView *_areaPaoView=[[[TrajectoryPaoView alloc] initWithFrame:CGRectMake(0, 0, 290, 350)] autorelease];
+        TrajectoryPaoView *_areaPaoView=[[[TrajectoryPaoView alloc] initWithFrame:CGRectMake(0, 0, 280, 350)] autorelease];
         [_areaPaoView setDataSourceHistory:self.list[index] name:self.Entity.Name];
         _areaPaoView.controls=self;
         BMKActionPaopaoView *paopao=[[BMKActionPaopaoView alloc] initWithCustomView:_areaPaoView];

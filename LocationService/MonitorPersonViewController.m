@@ -19,7 +19,10 @@
 @end
 
 @implementation MonitorPersonViewController
-
+- (void)dealloc{
+    [super dealloc];
+    [_tableView release];
+}
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];

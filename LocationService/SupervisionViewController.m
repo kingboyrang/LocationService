@@ -34,7 +34,11 @@
 @end
 
 @implementation SupervisionViewController
-
+- (void)dealloc{
+    [super dealloc];
+    [_tableView release];
+    [_toolBar release];
+}
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];

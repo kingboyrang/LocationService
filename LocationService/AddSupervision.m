@@ -18,9 +18,12 @@
 #import "AlertHelper.h"
 #import "AppUI.h"
 #import "SupervisionViewController.h"
+#import "TKEmptyCell.h"
 @interface AddSupervision ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>{
     UITableView *_tableView;
     UIImageView *_imageHead;
+    LoginButtons *_toolBar;
+    BOOL isKeyBoardShow;
 }
 - (void)buttonSubmit;
 - (void)buttonCancel;
@@ -40,6 +43,7 @@
     [super dealloc];
     [_tableView release];
     [_imageHead release];
+    [_toolBar release];
 }
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -90,17 +94,31 @@
     //_tableView.autoresizingMask=UIViewAutoresizingFlexibleWidth;
     [self.view addSubview:_tableView];
     
-    LoginButtons *buttons=[[LoginButtons alloc] initWithFrame:CGRectMake(0,self.view.bounds.size.height-44, self.view.bounds.size.width, 44)];
-    buttons.cancel.frame=CGRectMake(self.view.bounds.size.width*2/3, 0, self.view.bounds.size.width/3, 44);
-    buttons.submit.frame=CGRectMake(self.view.bounds.size.width/3, 0, self.view.bounds.size.width/3, 44);
-    [buttons.cancel setTitle:@"下一步" forState:UIControlStateNormal];
-    [buttons.submit setTitle:@"完成" forState:UIControlStateNormal];
-    [buttons.submit addTarget:self action:@selector(buttonSubmit) forControlEvents:UIControlEventTouchUpInside];
-    [buttons.cancel addTarget:self action:@selector(buttonCancel) forControlEvents:UIControlEventTouchUpInside];
+    _toolBar=[[LoginButtons alloc] initWithFrame:CGRectMake(0,self.view.bounds.size.height-44, self.view.bounds.size.width, 44)];
+    _toolBar.cancel.frame=CGRectMake(self.view.bounds.size.width*2/3, 0, self.view.bounds.size.width/3, 44);
+    _toolBar.submit.frame=CGRectMake(self.view.bounds.size.width/3, 0, self.view.bounds.size.width/3, 44);
+    [_toolBar.cancel setTitle:@"下一步" forState:UIControlStateNormal];
+    [_toolBar.submit setTitle:@"完成" forState:UIControlStateNormal];
+    [_toolBar.submit addTarget:self action:@selector(buttonSubmit) forControlEvents:UIControlEventTouchUpInside];
+    [_toolBar.cancel addTarget:self action:@selector(buttonCancel) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:_toolBar];
     
+    //头像
+    TKEmptyCell *cell9=[[[TKEmptyCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
+    UIView *bgView=[[[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 110)] autorelease];
+    bgView.backgroundColor=[UIColor clearColor];
+    UIImage *image=[UIImage imageNamed:@"bg03.png"];
+    _imageHead=[[UIImageView alloc] initWithFrame:CGRectMake((self.view.bounds.size.width-image.size.width)/2,bgView.frame.size.height-image.size.height, image.size.width, image.size.height)];
+    [_imageHead setImage:image];
+    [bgView addSubview:_imageHead];
     
-    [self.view addSubview:buttons];
-    [buttons release];
+    UIButton *btn=[UIButton buttonWithType:UIButtonTypeCustom];
+    btn.frame=_imageHead.frame;
+    [btn addTarget:self action:@selector(buttonChooseImage) forControlEvents:UIControlEventTouchUpInside];
+    [bgView addSubview:btn];
+    [cell9.contentView addSubview:bgView];
+    [bgView release];
+
     
     TKLabelCell *cell1=[[[TKLabelCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
     cell1.label.text=@"名称";
@@ -131,7 +149,7 @@
     cell8.textField.secureTextEntry=YES;
     cell8.textField.delegate=self;
     
-    self.cells=[NSMutableArray arrayWithObjects:cell1,cell2,cell3,cell4,cell5,cell6,cell7,cell8, nil];
+    self.cells=[NSMutableArray arrayWithObjects:cell9,cell1,cell2,cell3,cell4,cell5,cell6,cell7,cell8, nil];
 }
 //修改时，加载信息
 - (void)loadingPersonInfo{
@@ -152,16 +170,16 @@
                     NSDictionary *item=[source objectAtIndex:0];
                     self.PhoneName=[item objectForKey:@"Photo"];
                     
-                    TKTextFieldCell *cell1=self.cells[1];
+                    TKTextFieldCell *cell1=self.cells[2];
                     cell1.textField.text=[item objectForKey:@"Name"];
                     
-                    TKTextFieldCell *cell2=self.cells[3];
+                    TKTextFieldCell *cell2=self.cells[4];
                     cell2.textField.text=[item objectForKey:@"DeviceID"];
                     
-                    TKTextFieldCell *cell3=self.cells[5];
+                    TKTextFieldCell *cell3=self.cells[6];
                     cell3.textField.text=[item objectForKey:@"SimNo"];
                     
-                    TKTextFieldCell *cell4=self.cells[7];
+                    TKTextFieldCell *cell4=self.cells[8];
                     cell4.textField.text=[item objectForKey:@"Password"];
                     
                 }
@@ -173,7 +191,7 @@
 - (void)finishAddTrajectory:(void(^)(NSString *personId,NSString *code))completed{
    
     Account *acc=[Account unarchiverAccount];
-    TKTextFieldCell *cell1=self.cells[1];
+    TKTextFieldCell *cell1=self.cells[2];
     
     if (!cell1.hasValue) {
         [AlertHelper initWithTitle:@"提示" message:@"请输入名称!"];
@@ -181,19 +199,31 @@
         return;
     }
     
-    TKTextFieldCell *cell2=self.cells[3];
+    TKTextFieldCell *cell2=self.cells[4];
     if (!cell2.hasValue) {
         [AlertHelper initWithTitle:@"提示" message:@"请输入IMEI号码!"];
         [cell2.textField becomeFirstResponder];
         return;
     }
-    TKTextFieldCell *cell3=self.cells[5];
+    TKTextFieldCell *cell3=self.cells[6];
     if (!cell3.hasValue) {
         [AlertHelper initWithTitle:@"提示" message:@"请输入SIM卡号!"];
         [cell3.textField becomeFirstResponder];
         return;
     }
-    TKTextFieldCell *cell4=self.cells[7];
+    if (![cell3.textField.text isNumberString]) {
+        [AlertHelper initWithTitle:@"提示" message:@"SIM卡号只能为数字!"];
+        [cell3.textField becomeFirstResponder];
+        return;
+    }
+    if(strlen([cell3.textField.text UTF8String])<11)
+    {
+        [AlertHelper initWithTitle:@"提示" message:@"SIM卡号必须为11位！"];
+        [cell3.textField becomeFirstResponder];
+        return;
+    }
+
+    TKTextFieldCell *cell4=self.cells[8];
     if (!cell4.hasValue) {
         [AlertHelper initWithTitle:@"提示" message:@"请输入密码!"];
         [cell4.textField becomeFirstResponder];
@@ -259,27 +289,38 @@
 - (void)finishEditTrajectory:(void(^)(NSString *personId))completed{
     
     Account *acc=[Account unarchiverAccount];
-    TKTextFieldCell *cell1=self.cells[1];
-    
+    TKTextFieldCell *cell1=self.cells[2];
     if (!cell1.hasValue) {
         [AlertHelper initWithTitle:@"提示" message:@"请输入名称!"];
         [cell1.textField becomeFirstResponder];
         return;
     }
     
-    TKTextFieldCell *cell2=self.cells[3];
+    TKTextFieldCell *cell2=self.cells[4];
     if (!cell2.hasValue) {
         [AlertHelper initWithTitle:@"提示" message:@"请输入IMEI号码!"];
         [cell2.textField becomeFirstResponder];
         return;
     }
-    TKTextFieldCell *cell3=self.cells[5];
+    TKTextFieldCell *cell3=self.cells[6];
     if (!cell3.hasValue) {
         [AlertHelper initWithTitle:@"提示" message:@"请输入SIM卡号!"];
         [cell3.textField becomeFirstResponder];
         return;
     }
-    TKTextFieldCell *cell4=self.cells[7];
+    if (![cell3.textField.text isNumberString]) {
+        [AlertHelper initWithTitle:@"提示" message:@"SIM卡号只能为数字!"];
+        [cell3.textField becomeFirstResponder];
+        return;
+    }
+    if(strlen([cell3.textField.text UTF8String])<11)
+    {
+        [AlertHelper initWithTitle:@"提示" message:@"SIM卡号必须为11位！"];
+        [cell3.textField becomeFirstResponder];
+        return;
+    }
+    
+    TKTextFieldCell *cell4=self.cells[8];
     if (!cell4.hasValue) {
         [AlertHelper initWithTitle:@"提示" message:@"请输入密码!"];
         [cell4.textField becomeFirstResponder];
@@ -461,43 +502,65 @@
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
     // return NO to not change text
-   BOOL boo=YES;
-    TKTextFieldCell *cell1=self.cells[7];
+    BOOL boo=YES;
+    TKTextFieldCell *cell1=self.cells[8];
     if (cell1.textField==textField) {
         if(strlen([textField.text UTF8String]) >= 12 && range.length != 1)
             boo=NO;
     }
-    TKTextFieldCell *cell2=self.cells[3];
-    TKTextFieldCell *cell3=self.cells[5];
-    if (cell2.textField==textField||cell3.textField==textField) {
+    //TKTextFieldCell *cell2=self.cells[3];
+    TKTextFieldCell *cell3=self.cells[6];
+    if (cell3.textField==textField) {
         [self replacePhonestring:textField];
         if(strlen([textField.text UTF8String]) >= 11 && range.length != 1)
             boo=NO;
     }
-    
     return boo;
 }
 -(void)textFieldDidBeginEditing:(UITextField *)textField {
-
+    if (!isKeyBoardShow) {
+        isKeyBoardShow=YES;
+        CGRect r=_tableView.frame;
+        r.size.height-=216;
+        
+        CGRect r1=_toolBar.frame;
+        r1.origin.y-=216;
+        [UIView animateWithDuration:0.3f animations:^{
+            _tableView.frame=r;
+            _toolBar.frame=r1;
+        }];
+    }
+    /***
     CGRect frame = [self fieldToRect:textField];
     int offset = frame.origin.y + 36 - (self.view.frame.size.height - 216.0);//键盘高度216
-    
     NSTimeInterval animationDuration = 0.30f;
     [UIView beginAnimations:@"ResizeForKeyboard" context:nil];
     [UIView setAnimationDuration:animationDuration];
-    
     //将视图的Y坐标向上移动offset个单位，以使下面腾出地方用于软键盘的显示
     if(offset > 0)
         self.view.frame = CGRectMake(0.0f, -offset, self.view.frame.size.width, self.view.frame.size.height);
     [UIView commitAnimations];
+     ***/
 }
 - (void)textFieldDidEndEditing:(UITextField *)textField;
 {
-    self.view.frame =CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+    //self.view.frame =CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{
     [textField resignFirstResponder];
+    isKeyBoardShow=NO;
+    CGRect r=_tableView.frame;
+    r.size.height+=216;
+    
+    
+    CGRect r1=_toolBar.frame;
+    r1.origin.y+=216;
+    [UIView animateWithDuration:0.3f animations:^{
+        _tableView.frame=r;
+        _toolBar.frame=r1;
+    }];
+
     return YES;
 }
 #pragma mark UITableViewDataSource Methods
@@ -514,11 +577,15 @@
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     id cell=self.cells[indexPath.row];
+    if ([cell isKindOfClass:[TKEmptyCell class]]) {
+        return 110.0;
+    }
     if ([cell isKindOfClass:[TKLabelCell class]]) {
         return 30.0;
     }
     return 44.0;
 }
+/***
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
     return 110;
 }
@@ -536,4 +603,5 @@
     [bgView addSubview:btn];
     return bgView;
 }
+ ***/
 @end
