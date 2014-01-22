@@ -84,8 +84,10 @@
 - (BOOL)compareToDate{
     //两个时间的比较
     if ([_startCalendar.popoverText.popoverTextField.text length]>0&&[_endCalendar.popoverText.popoverTextField.text length]>0) {
-        NSDate *dateA=_startCalendar.datePicker.date;
-        NSDate *dateB=_endCalendar.datePicker.date;
+        //NSDate *dateA=_startCalendar.datePicker.date;
+        // NSDate *dateB=_endCalendar.datePicker.date;
+        NSDate *dateA=[NSDate dateFromString:_startCalendar.popoverText.popoverTextField.text withFormat:@"yyyy/MM/dd HH:mm"];
+        NSDate *dateB=[NSDate dateFromString:_endCalendar.popoverText.popoverTextField.text withFormat:@"yyyy/MM/dd HH:mm"];
         NSComparisonResult result = [dateA compare:dateB];
         if (result == NSOrderedDescending)
         {

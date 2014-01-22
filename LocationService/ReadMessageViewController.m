@@ -157,10 +157,10 @@
     args.serviceNameSpace=DataNameSpace1;
     args.methodName=@"DelPersonMsg";
     args.soapParams=params;
-    NSLog(@"soap=%@",args.soapMessage);
+    //NSLog(@"soap=%@",args.soapMessage);
     [self showLoadingAnimatedWithTitle:@"正在删除,请稍后..."];
     [self.serviceHelper asynService:args success:^(ServiceResult *result) {
-        NSLog(@"xml=%@",result.request.responseString);
+        //NSLog(@"xml=%@",result.request.responseString);
         BOOL boo=NO;
         if (result.hasSuccess) {
             NSDictionary *dic=[result json];

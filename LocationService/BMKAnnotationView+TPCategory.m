@@ -15,11 +15,11 @@
         self.image=[UIImage imageNamed:@"circule.png"];
          [self setNeedsDisplay];
     }else{ 
-        PinView *bgView=[[[PinView alloc] initWithFrame:CGRectMake(0, 0, 90, 164)] autorelease];
+        PinView *bgView=[[[PinView alloc] initWithFrame:CGRectMake(0, 0, 90, 174)] autorelease];
         self.image=[bgView getPinImageWithSource:entity];
         [self setNeedsDisplay];
         [bgView setDataSource:entity completed:^(UIImage *image) {
-            self.image=[UIImage getImageFromView:bgView];;
+            self.image=[UIImage getImageFromView:bgView];
             [self setNeedsDisplay];
         }];
         

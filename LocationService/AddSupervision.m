@@ -117,7 +117,7 @@
     [btn addTarget:self action:@selector(buttonChooseImage) forControlEvents:UIControlEventTouchUpInside];
     [bgView addSubview:btn];
     [cell9.contentView addSubview:bgView];
-    [bgView release];
+    
 
     
     TKLabelCell *cell1=[[[TKLabelCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];

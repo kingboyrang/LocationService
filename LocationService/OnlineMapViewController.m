@@ -66,7 +66,7 @@
     }
     //_mapView.delegate=self;
     
-    
+     _offlineMap.delegate = self;
     
     if (self.downloadRecord) {
         [self downloadMapWithEntity:self.downloadRecord];
@@ -125,7 +125,7 @@
     _offlineMap = [[BMKOfflineMap alloc] init];
     //获取各城市离线地图更新信息
     _arraylocalDownLoadMapInfo = [[NSMutableArray arrayWithArray:[_offlineMap getAllUpdateInfo]] retain];
-    _offlineMap.delegate = self;
+   
     currentDownloadCityId=-1;
 }
 //下载地图
@@ -330,6 +330,7 @@
 }
 //添加地图
 - (void)buttonAddClick:(id)sender{
+   
     self.downloadRecord=nil;
     DownloadMapController *map=[[DownloadMapController alloc] init];
     //map.controler=self;

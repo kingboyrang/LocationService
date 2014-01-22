@@ -250,32 +250,35 @@
 }
 - (BMKAnnotationView *)mapView:(BMKMapView *)mapView viewForAnnotation:(id <BMKAnnotation>)annotation
 {
-    int index=0;
-    NSString *annotaionIdentifier=@"route_node";
+   
+    NSString *annotaionIdentifier=[NSString createGUID];
     if ([annotation isKindOfClass:[KYPointAnnotation class]]) {
-        KYPointAnnotation *kypoint=(KYPointAnnotation*)annotation;
-        index=kypoint.tag-100;
-        annotaionIdentifier=[NSString stringWithFormat:@"route_node%d",kypoint.tag];
+        annotaionIdentifier=[NSString stringWithFormat:@"%@%d",[NSString createGUID],[(KYPointAnnotation*)annotation tag]];
     }
 	BMKAnnotationView* view = nil;
     view = [mapView dequeueReusableAnnotationViewWithIdentifier:annotaionIdentifier];
     if (view == nil) {
         view = [[[BMKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:annotaionIdentifier] autorelease];
-        view.canShowCallout = TRUE;
+        //view.canShowCallout = TRUE;
         
         //自定义图片
         UIImage* image = [UIImage imageNamed:@"mapapi.bundle/images/icon_direction.png"];
         view.image = image;
         view.annotation = annotation;
         
-        
+         int pos=0;
+        if ([annotation isKindOfClass:[KYPointAnnotation class]]) {
+            KYPointAnnotation *p=(KYPointAnnotation*)annotation;
+            pos=p.tag-100;
+            
+        }
         //自定义气泡
         TrajectoryPaoView *_areaPaoView=[[[TrajectoryPaoView alloc] initWithFrame:CGRectMake(0, 0, 280, 350)] autorelease];
-        [_areaPaoView setDataSourceHistory:self.list[index] name:self.Entity.Name];
+        [_areaPaoView setDataSourceHistory:self.list[pos] name:self.Entity.Name];
         _areaPaoView.controls=self;
-        BMKActionPaopaoView *paopao=[[BMKActionPaopaoView alloc] initWithCustomView:_areaPaoView];
+        BMKActionPaopaoView *paopao=[[[BMKActionPaopaoView alloc] initWithCustomView:_areaPaoView] autorelease];
         view.paopaoView=paopao;
-        [paopao release];
+        
     }
    	return view;
 }
