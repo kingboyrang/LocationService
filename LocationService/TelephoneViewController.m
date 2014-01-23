@@ -10,9 +10,10 @@
 #import "UIImageView+WebCache.h"
 #import <CoreTelephony/CTCallCenter.h>
 #import <CoreTelephony/CTCall.h>
-@interface TelephoneViewController (){
+@interface TelephoneViewController ()<UIWebViewDelegate>{
     UILabel *_labInfo;
     UIWebView *phoneCallWebView;
+    CTCallCenter *_callCenter;
 }
 - (void)createLabelWithTitle:(NSString*)title frame:(CGRect)frame;
 - (void) callBack;
@@ -24,6 +25,10 @@
     [_labInfo release];
     if (phoneCallWebView) {
         [phoneCallWebView release], phoneCallWebView = nil;
+    }
+    if(_callCenter)
+    {
+        [_callCenter release];
     }
     
 }
@@ -68,57 +73,68 @@
     _labInfo.font=[UIFont fontWithName:DeviceFontName size:DeviceFontSize];
     _labInfo.backgroundColor=[UIColor colorFromHexRGB:@"131313"];
     _labInfo.textAlignment=NSTextAlignmentCenter;
-    _labInfo.text=@"呼叫中";
+    _labInfo.text=@"呼叫";
     [self.view addSubview:_labInfo];
+    
+    UIButton *btn=[UIButton buttonWithType:UIButtonTypeCustom];
+    btn.frame=_labInfo.frame;
+    [btn addTarget:self action:@selector(recallClick) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:btn];
     
     //拨打电话
     if (self.Phone&&[self.Phone length]>0) {
         [self callBack];
     }
 }
+//重拨
+- (void)recallClick{
+    [self callBack];
+}
 - (void) callBack{
-    NSLog(@"呼叫");
+    //NSLog(@"呼叫");
    
     //实现呼叫之后到app中
     NSURL *phoneURL = [NSURL URLWithString:[NSString stringWithFormat:@"tel:%@",self.Phone]];
     if ( !phoneCallWebView ) {
         phoneCallWebView = [[UIWebView alloc] initWithFrame:CGRectZero];
+        //phoneCallWebView.delegate=self;
     }
     [phoneCallWebView loadRequest:[NSURLRequest requestWithURL:phoneURL]];
     
-    CTCallCenter *callCenter = [[CTCallCenter alloc] init];
-    callCenter.callEventHandler=^(CTCall* call)
-    {
-        
-        if (call.callState == CTCallStateDisconnected)
+    if (!_callCenter) {
+        _callCenter= [[CTCallCenter alloc] init];
+        _callCenter.callEventHandler=^(CTCall* call)
         {
-            NSLog(@"Call has been disconnected");
-            _labInfo.text=@"接通中";
-        }
-        else if (call.callState == CTCallStateConnected)
-        {
-            NSLog(@"Call has just been connected");
-             _labInfo.text=@"通话中";
-        }
-        
-        else if(call.callState == CTCallStateIncoming)
-        {
-            NSLog(@"Call is incoming");
-            _labInfo.text=@"来电中";
-            //self.viewController.signalStatus=NO;
-        }
-        else if (call.callState ==CTCallStateDialing)
-        {
-            //NSLog(@"call is dialing");
-            _labInfo.text=@"拨号中";
-        }
-        else
-        {
-             _labInfo.text=@"通话结束";
-            NSLog(@"Nothing is done");
-        }
-    };
-    
+            NSLog(@"stats=%@",call.callState);
+            if (call.callState == CTCallStateDisconnected)
+            {
+                NSLog(@"接通中");
+                // _labInfo.text=@"接通中";
+            }
+            else if (call.callState == CTCallStateConnected)
+            {
+                NSLog(@"通话中");
+                //  _labInfo.text=@"通话中";
+            }
+            
+            else if(call.callState == CTCallStateIncoming)
+            {
+                NSLog(@"来电中");
+                //_labInfo.text=@"来电中";
+                //self.viewController.signalStatus=NO;
+            }
+            else if (call.callState ==CTCallStateDialing)
+            {
+                NSLog(@"拨号中");
+                //_labInfo.text=@"拨号中";
+            }
+            else
+            {
+                // _labInfo.text=@"通话结束";
+                NSLog(@"通话结束");
+            }
+        };
+    }
 }
 - (void)createLabelWithTitle:(NSString *)title frame:(CGRect)frame{
     UILabel *_labPhone=[[UILabel alloc] initWithFrame:frame];

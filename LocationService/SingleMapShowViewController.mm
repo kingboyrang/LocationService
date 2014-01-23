@@ -32,7 +32,7 @@
 }
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    [self.navBarView setNavBarTitle:[NSString stringWithFormat:@"%@ %@",self.PersonName,self.Entity.formatDateText]];
+    [self.navBarView setNavBarTitle:[NSString stringWithFormat:@"%@ %@",self.PersonName,self.Entity.pctime]];
     
     [_mapView viewWillAppear];
     _mapView.delegate = self; // 此处记得不用的时候需要置nil，否则影响内存的释放

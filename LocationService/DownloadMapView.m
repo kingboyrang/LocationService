@@ -1,0 +1,351 @@
+//
+//  DownloadMapView.m
+//  LocationService
+//
+//  Created by aJia on 2014/1/23.
+//  Copyright (c) 2014年 lz. All rights reserved.
+//
+
+#import "DownloadMapView.h"
+#import "OfflineHelper.h"
+#import "LoginButtons.h"
+#import "TKMapCell.h"
+@interface DownloadMapView ()<UITableViewDataSource,UITableViewDelegate>{
+    UITableView *_tableView;
+    int currentDownloadCityId;//当前正在下载的城市id
+}
+- (void)buttonPauseClick:(id)sender;
+- (void)buttonDownloadClick:(id)sender;
+- (void)buttonUpdateClick:(id)sender;
+- (BOOL)isLoadingSection;
+- (void)viewerDownloadWithEntity:(BMKOLSearchRecord*)entity withRow:(int)row;
+- (void)viewerlocalMapWithEntity:(BMKOLUpdateElement*)entity withRow:(int)row;
+- (BOOL)existsDownloadSourceByCityId:(int)cityId;
+- (BOOL)existslocalSourceByCityId:(int)cityId;
+- (NSMutableArray*)getUpdateMapsWithCompleted:(void(^)(NSMutableArray *indexPaths,NSMutableArray *delSource))completed;
+@end
+
+@implementation DownloadMapView
+- (void)dealloc {
+    [super dealloc];
+    [_tableView release];
+}
+- (id)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        CGRect r=self.bounds;
+        r.size.height-=44.0;
+        _tableView=[[UITableView alloc] initWithFrame:r style:UITableViewStylePlain];
+        _tableView.delegate=self;
+        _tableView.dataSource=self;
+        [self addSubview:_tableView];
+        
+        LoginButtons *buttons=[[LoginButtons alloc] initWithFrame:CGRectMake(0, self.bounds.size.height-44, self.bounds.size.width, 44)];
+        buttons.cancel.frame=CGRectMake(0, 0, self.bounds.size.width/3, 44);
+        [buttons.cancel setTitle:@"全部暂停" forState:UIControlStateNormal];
+        [buttons.cancel addTarget:self action:@selector(buttonPauseClick:) forControlEvents:UIControlEventTouchUpInside];
+        buttons.submit.frame=CGRectMake(self.bounds.size.width/3, 0, self.bounds.size.width/3, 44);
+        [buttons.submit setTitle:@"全部下载" forState:UIControlStateNormal];
+        [buttons.submit addTarget:self action:@selector(buttonDownloadClick:) forControlEvents:UIControlEventTouchUpInside];
+        UIButton  *downBtn=[UIButton buttonWithType:UIButtonTypeCustom];
+        downBtn.frame=CGRectMake(self.bounds.size.width*2/3, 0, self.bounds.size.width/3,44);
+        [downBtn setTitle:@"全部更新" forState:UIControlStateNormal];
+        [downBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        downBtn.titleLabel.font=[UIFont fontWithName:DeviceFontName size:DeviceFontSize];
+        downBtn.showsTouchWhenHighlighted = YES;  //指定按钮被按下时发光
+        [downBtn setTitleColor:[UIColor colorFromHexRGB:@"4a7ebb"] forState:UIControlStateHighlighted];
+        [downBtn addTarget:self action:@selector(buttonUpdateClick:) forControlEvents:UIControlEventTouchUpInside];
+        [buttons addSubview:downBtn];
+        
+        [self addSubview:buttons];
+        [buttons release];
+
+    }
+    return self;
+}
+#pragma mark private Methods
+//全部暂停
+- (void)buttonPauseClick:(id)sender{
+    if ([self isLoadingSection]&&currentDownloadCityId!=-1) {
+        if (self.delegate&&[self.delegate respondsToSelector:@selector(pauseDownloadWithCityId:)]) {
+            [self.delegate pauseDownloadWithCityId:currentDownloadCityId];
+        }
+    }
+}
+//全部下载
+- (void)buttonDownloadClick:(id)sender{
+    [self buttonUpdateClick:nil];
+    if ([self isLoadingSection]&&currentDownloadCityId!=-1) {
+        if (self.delegate&&[self.delegate respondsToSelector:@selector(downloadMapWithCityId:)]) {
+            [self.delegate downloadMapWithCityId:currentDownloadCityId];
+        }
+    }
+    
+}
+//全部更新
+- (void)buttonUpdateClick:(id)sender{
+    NSMutableArray *result=[self getUpdateMapsWithCompleted:^(NSMutableArray *indexPaths, NSMutableArray *delSource) {
+        [self.localMaps removeObjectsInArray:delSource];
+        [_tableView beginUpdates];
+        [_tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationFade];
+        [_tableView endUpdates];
+    }];
+    if (result!=nil&&[result count]>0) {
+        if (!self.downloadMaps) {
+            self.downloadMaps=[[NSMutableArray alloc] init];
+        }
+        //插入分区
+        int start=self.downloadMaps.count;
+        BOOL boo=NO;
+        if (self.downloadMaps.count==0) {
+            start=0;
+            boo=YES;//判断是否添加选区
+        }
+        [self.downloadMaps addObjectsFromArray:result];
+        NSMutableArray *indexPaths=[NSMutableArray array];
+        for (int i=start;i<start+result.count; i++) {
+            [indexPaths addObject:[NSIndexPath indexPathForRow:start inSection:0]];
+        }
+        [_tableView beginUpdates];
+        if (boo) {
+            [_tableView insertSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
+        }
+        [_tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationFade];
+        [_tableView endUpdates];
+    }
+}
+//取得有更新的地图
+- (NSMutableArray*)getUpdateMapsWithCompleted:(void(^)(NSMutableArray *indexPaths,NSMutableArray *delSource))completed{
+    if (self.localMaps&&[self.localMaps count]>0) {
+        NSMutableArray *result=[NSMutableArray array];
+        NSMutableArray *delSource=[NSMutableArray array];
+        NSMutableArray *indexPaths=[NSMutableArray array];
+        int sec=0;
+        if ([self isLoadingSection]) {
+            sec=1;
+        }
+        int total=0;
+        for (BMKOLUpdateElement *item in self.localMaps) {
+            BOOL boo=[self existsDownloadSourceByCityId:item.cityID];
+            if (!boo) {
+                BMKOLSearchRecord *entity=[[BMKOLSearchRecord alloc] init];
+                entity.cityID=item.cityID;
+                entity.cityName=item.cityName;
+                entity.size=item.size;
+                [result addObject:entity];
+                [entity release];
+                
+                [delSource addObject:item];
+                [indexPaths addObject:[NSIndexPath indexPathForRow:total inSection:sec]];
+            }
+            total++;
+        }
+        if (completed) {
+            completed(indexPaths,delSource);
+        }
+        return result;
+    }
+    return nil;
+    
+}
+//获取下载行
+- (int)getDownloadMapRowWithCityId:(int)cityId{
+    if ([self isLoadingSection]) {
+        NSString *match=[NSString stringWithFormat:@"SELF.cityID ==%d",cityId];
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:match];
+        NSArray *results = [self.downloadMaps filteredArrayUsingPredicate:predicate];
+        if (results&&[results count]>0) {
+            return [self.downloadMaps indexOfObject:[results objectAtIndex:0]];
+        }
+    }
+    return -1;
+}
+//判断更新项是否存在下载列表中
+- (BOOL)existsDownloadSourceByCityId:(int)cityId{
+    if ([self isLoadingSection]) {
+        NSString *match=[NSString stringWithFormat:@"SELF.cityID ==%d",cityId];
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:match];
+        NSArray *results = [self.downloadMaps filteredArrayUsingPredicate:predicate];
+        if (results&&[results count]>0) {
+            return YES;
+        }
+    }
+    return NO;
+}
+//判断是否已下载的地图
+- (BOOL)existslocalSourceByCityId:(int)cityId{
+    /***
+    NSArray *arr=[_offlineMap getAllUpdateInfo];
+    if (arr&&[arr count]>0) {
+        NSString *match=[NSString stringWithFormat:@"SELF.cityID ==%d",cityId];
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:match];
+        NSArray *results = [arr filteredArrayUsingPredicate:predicate];
+        if (results&&[results count]>0) {
+            return YES;
+        }
+    }
+    return NO;
+     ***/
+    return NO;
+}
+- (BOOL)isLoadingSection{
+    if (self.downloadMaps&&[self.downloadMaps count]>0) {
+        return YES;
+    }
+    return NO;
+}
+//删除正在下载的地图
+- (void)viewerDownloadWithEntity:(BMKOLSearchRecord*)entity withRow:(int)row{
+    [OfflineHelper viewerDownloadMapInView:self viewAction:^{//查看地图
+        if (self.delegate&&[self.delegate respondsToSelector:@selector(viewerMapWithCityId:)]) {
+            [self.delegate viewerMapWithCityId:entity.cityID];
+        }
+        
+    } pauseAction:^{//暂停下载
+        if (self.delegate&&[self.delegate respondsToSelector:@selector(pauseDownloadWithCityId:)]) {
+            [self.delegate pauseDownloadWithCityId:entity.cityID];
+        }
+        
+    } deleteAction:^{//删除地图
+        if (self.delegate&&[self.delegate respondsToSelector:@selector(removeMapWithCityId:)]) {
+            [self.delegate removeMapWithCityId:entity.cityID];//删除正在下载的地图
+        }
+        //删除数据源与数据行
+        BOOL boo=NO;
+        if (entity.cityID==currentDownloadCityId) {
+            boo=YES;
+        }
+        if (self.downloadMaps.count==1) {
+            [self.downloadMaps removeAllObjects];
+            [_tableView beginUpdates];
+            [_tableView deleteSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
+            [_tableView endUpdates];
+            currentDownloadCityId=-1;
+        }else{
+            [self.downloadMaps removeObjectAtIndex:row];
+            [_tableView beginUpdates];
+            [_tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:[NSIndexPath indexPathForRow:row inSection:0], nil] withRowAnimation:UITableViewRowAnimationFade];
+            [_tableView endUpdates];
+        }
+        //删除正在下载的离线地图
+        if (boo&&[self isLoadingSection]) {
+            BMKOLSearchRecord *item=self.downloadMaps[0];
+            if (self.delegate&&[self.delegate respondsToSelector:@selector(downloadMapWithCityId:)]) {
+                [self.delegate downloadMapWithCityId:item.cityID];
+            }
+        }
+        
+    }];
+}
+//查看或删除已下载的地图
+- (void)viewerlocalMapWithEntity:(BMKOLUpdateElement*)entity withRow:(int)row{
+    [OfflineHelper viewerMapInView:self viewAction:^{//查看地图
+        if(self.delegate&&[self.delegate respondsToSelector:@selector(viewerMapWithCityId:)])
+        {
+            [self.delegate viewerMapWithCityId:entity.cityID];
+        }
+        
+    } deleteAction:^{//删除
+        int sec=0;
+        if ([self isLoadingSection]) {
+            sec=1;
+        }
+        //删除数据源
+        [self.localMaps removeObjectAtIndex:row];
+        //删除离线包
+        if (self.delegate&&[self.delegate respondsToSelector:@selector(removeMapWithCityId:)]) {
+            [self.delegate removeMapWithCityId:entity.cityID];
+        }
+        //更新资料行
+        [_tableView beginUpdates];
+        [_tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:[NSIndexPath indexPathForRow:row inSection:sec], nil] withRowAnimation:UITableViewRowAnimationFade];
+        [_tableView endUpdates];
+    }];
+}
+#pragma mark tableView datasource methods
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+    if ([self isLoadingSection]) {
+        return 2;
+    }
+    return 1;
+}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    if ([self isLoadingSection]) {
+        if (section==0) {
+            return [self.downloadMaps count];
+        }
+    }
+    return  [self.localMaps count];
+}
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    static NSString *cellIdentifier1=@"downloadmapcell";
+    if ([self isLoadingSection]) {
+        if (indexPath.section==0) {
+            TKMapCell *cell=[tableView dequeueReusableCellWithIdentifier:cellIdentifier1];
+            if (cell==nil||[cell isKindOfClass:[UITableViewCell class]]) {
+                cell=[[[TKMapCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier1] autorelease];
+                cell.controlers=self;
+            }
+            BMKOLSearchRecord *entity=self.downloadMaps[indexPath.row];
+            [cell setDataSource:entity];
+            return cell;
+        }
+    }
+    static NSString *cellIdentifier=@"mapcell";
+    UITableViewCell *cell=[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    if (cell==nil||[cell isKindOfClass:[TKMapCell class]]) {
+        cell=[[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier] autorelease];
+    }
+    BMKOLUpdateElement* item = [self.localMaps objectAtIndex:indexPath.row];
+    
+    NSString *memo=item.update?[NSString stringWithFormat:@"有更新包 %@",[OfflineHelper getDataSizeString:item.serversize]]:@"完成";
+    CGSize size=[memo textSize:[UIFont fontWithName:DeviceFontName size:DeviceFontSize] withWidth:self.bounds.size.width];
+    
+    cell.textLabel.text = [NSString stringWithFormat:@"%@(%d)", item.cityName, item.cityID];
+    cell.textLabel.font=[UIFont fontWithName:DeviceFontName size:DeviceFontSize];
+    UILabel *sizelabel =[[[UILabel alloc] initWithFrame:CGRectMake(self.bounds.size.width-10-size.width, 0, size.width, size.height)]autorelease];
+    sizelabel.autoresizingMask =UIViewAutoresizingFlexibleLeftMargin;
+    sizelabel.font=[UIFont fontWithName:DeviceFontName size:DeviceFontSize];
+    sizelabel.text = memo;
+    sizelabel.textColor=item.update?[UIColor blueColor]:[UIColor blackColor];
+    sizelabel.backgroundColor = [UIColor clearColor];
+    cell.accessoryView = sizelabel;
+    return cell;
+}
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    NSString *title=@"已下载";
+    if ([self isLoadingSection]) {
+        if (section==0) {
+            title=@"正在下载";
+        }
+    }
+    UIView* myView = [[[UIView alloc] init] autorelease];
+    myView.backgroundColor = [UIColor colorFromHexRGB:@"f2f2f2"];
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, 90, 22)];
+    titleLabel.textColor=[UIColor blackColor];
+    titleLabel.backgroundColor = [UIColor clearColor];
+    titleLabel.font=[UIFont fontWithName:DeviceFontName size:DeviceFontSize];
+    titleLabel.text=title;
+    [myView addSubview:titleLabel];
+    [titleLabel release];
+    return myView;
+}
+//选中
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    if ([self isLoadingSection]) {
+        if (indexPath.section==0) {
+            BMKOLSearchRecord *entity=self.downloadMaps[indexPath.row];
+            [self viewerDownloadWithEntity:entity withRow:indexPath.row];
+        }else{
+            BMKOLUpdateElement *entity=self.localMaps[indexPath.row];
+            [self viewerlocalMapWithEntity:entity withRow:indexPath.row];
+        }
+    }else{
+        BMKOLUpdateElement *entity=self.localMaps[indexPath.row];
+        [self viewerlocalMapWithEntity:entity withRow:indexPath.row];
+    }
+}
+@end

@@ -222,6 +222,7 @@
 		01C913C018715DD000D9A926 /* TKMapCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 01C913BF18715DD000D9A926 /* TKMapCell.m */; };
 		01CBE382188A4D89006321CC /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01CBE381188A4D87006321CC /* MapKit.framework */; };
 		01CBE385188A85D6006321CC /* OfflineHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 01CBE384188A85D5006321CC /* OfflineHelper.m */; };
+		01D7657F1890E6F200A377CE /* DownloadMapView.m in Sources */ = {isa = PBXBuildFile; fileRef = 01D7657E1890E6F200A377CE /* DownloadMapView.m */; };
 		01D8A70A188FCF2800975F3F /* load02.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 01D8A708188FCF2800975F3F /* load02.jpg */; };
 		01D8A70B188FCF2800975F3F /* load02@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 01D8A709188FCF2800975F3F /* load02@2x.jpg */; };
 		01E2C2FC1887C4D1008FAC4C /* pinCircule.png in Resources */ = {isa = PBXBuildFile; fileRef = 01E2C2FB1887C4D1008FAC4C /* pinCircule.png */; };
@@ -653,6 +654,8 @@
 		01CBE381188A4D87006321CC /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		01CBE383188A85D4006321CC /* OfflineHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OfflineHelper.h; sourceTree = "<group>"; };
 		01CBE384188A85D5006321CC /* OfflineHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OfflineHelper.m; sourceTree = "<group>"; };
+		01D7657D1890E6F200A377CE /* DownloadMapView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadMapView.h; sourceTree = "<group>"; };
+		01D7657E1890E6F200A377CE /* DownloadMapView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadMapView.m; sourceTree = "<group>"; };
 		01D8A708188FCF2800975F3F /* load02.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = load02.jpg; sourceTree = "<group>"; };
 		01D8A709188FCF2800975F3F /* load02@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "load02@2x.jpg"; sourceTree = "<group>"; };
 		01DDCAC61886585B00E4DFFE /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
@@ -1535,6 +1538,8 @@
 				01C913BF18715DD000D9A926 /* TKMapCell.m */,
 				017F2C64188FAC000067E4C6 /* HotCityView.h */,
 				017F2C65188FAC000067E4C6 /* HotCityView.m */,
+				01D7657D1890E6F200A377CE /* DownloadMapView.h */,
+				01D7657E1890E6F200A377CE /* DownloadMapView.m */,
 			);
 			name = UI;
 			sourceTree = "<group>";
@@ -1887,6 +1892,7 @@
 				013BE7641887908000D75589 /* PinView.m in Sources */,
 				01CBE385188A85D6006321CC /* OfflineHelper.m in Sources */,
 				017F2C66188FAC000067E4C6 /* HotCityView.m in Sources */,
+				01D7657F1890E6F200A377CE /* DownloadMapView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

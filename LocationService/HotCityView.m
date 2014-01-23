@@ -89,11 +89,14 @@
     if (city.count > 0) {
         _arraySearchCityData=[city retain];
     }
-    [_searchView reloadData];
+   
      ***/
+    if(self.delegate&&[self.delegate respondsToSelector:@selector(searchOfflineCitys:)])
+    {
+        self.searchResultCitys=[self.delegate searchOfflineCitys:searchText];
+    }
+    [_searchView reloadData];
 }
-
-
 -(void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar{
     //searchBar.text=@"";
     
@@ -231,19 +234,10 @@
     }
     BOOL boo=[self findByIdUpdate:entity.cityID];
     if (!boo) {//可下载
-        /***
-        if([self.navigationController.viewControllers[2] isKindOfClass:[OnlineMapViewController class]])
-        {
-            OnlineMapViewController *online=(OnlineMapViewController*)self.navigationController.viewControllers[2];
-            online.downloadRecord=entity;
-        }
-        [self.navigationController popViewControllerAnimated:YES];
-         ***/
-        /***
-         if (self.controler&&[self.controler respondsToSelector:@selector(downloadMapWithEntity:)]) {
-         [self.controler downloadMapWithEntity:entity];
+         if (self.delegate&&[self.delegate respondsToSelector:@selector(addOfflineMapDownload:)]) {
+             [self.delegate addOfflineMapDownload:entity];
          }
-         ***/
+         
     }
 }
 #pragma mark private  methods

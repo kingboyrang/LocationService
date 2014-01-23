@@ -225,7 +225,7 @@
         cell.address.textColor=[UIColor grayColor];
     }
     TrajectoryHistory *entity=self.cells[indexPath.row];
-    cell.label.text=entity.formatDateText;
+    cell.label.text=entity.pctime;
     cell.address.text=entity.address;
     return cell;
 }

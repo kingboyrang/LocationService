@@ -131,7 +131,7 @@
     cell1.showLabel.text=name;
     
     TKLabelLabelCell *cell2=self.cells[1];
-    cell2.showLabel.text=[entity formatDateText];
+    cell2.showLabel.text=entity.pctime;
     
     TKLabelLabelCell *cell3=self.cells[2];
     cell3.showLabel.text=entity.address;
@@ -183,7 +183,7 @@
     UITableViewCell *cell=self.cells[indexPath.row];
     if (indexPath.row==self.cells.count-1) {
         cell.detailTextLabel.text=@"详细信息";
-        cell.detailTextLabel.font=[UIFont fontWithName:DeviceFontName size:DeviceFontSize];
+        cell.detailTextLabel.font=[UIFont fontWithName:DeviceFontName size:14];
         cell.accessoryType=UITableViewCellAccessoryDisclosureIndicator;
         cell.detailTextLabel.textColor=[UIColor colorFromHexRGB:@"7030a0"];
     }else{

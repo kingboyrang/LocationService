@@ -191,14 +191,16 @@
 }
 //修改时，设置选中项
 - (void)handlerShipResult:(ServiceResult*)result{
+    //NSLog(@"xml=%@",result.request.responseString);
     if (result.hasSuccess) {
         NSDictionary *dic=[result json];
         NSArray *source=[dic objectForKey:@"CarList"];
+        
         NSArray *items=[AppHelper arrayWithSource:source className:@"AreaCar"];
         if (items&&[items count]>0) {
             for (AreaCar *item in items) {
                 int row=[self getRowFindbyId:item.ID];
-                if (row>0&&self.sourceData&&row<[self.sourceData count]) {
+                if (row>=0&&self.sourceData&&row<[self.sourceData count]) {
                     NSIndexPath *indexPath=[NSIndexPath indexPathForRow:row inSection:0];
                     //设置checkbox选中
                     [_tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
@@ -229,7 +231,7 @@
     args.serviceNameSpace=DataNameSpace1;
     args.methodName=@"GetAreaCar";
     args.soapParams=[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:self.AreaId,@"areaID", nil], nil];
-   
+   NSLog(@"soap=%@",args.soapMessage);
     ASIHTTPRequest *request1=[ServiceHelper commonSharedRequest:args];
     [request1 setUserInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"car",@"name", nil]];
     [self.serviceHelper addQueue:request1];

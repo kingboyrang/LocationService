@@ -9,10 +9,18 @@
 #import <UIKit/UIKit.h>
 #import "NavBarView.h"
 #import "BMapKit.h"
+
+@protocol HotCityViewDelegate <NSObject>
+@optional
+- (NSArray*)searchOfflineCitys:(NSString*)city;//搜索离线城市
+- (void)addOfflineMapDownload:(BMKOLSearchRecord*)entity;//新增一笔地图下载 
+@end
+
 @interface HotCityView : UIView
 @property (nonatomic,retain) NSArray *hotCitys;//热门城市
 @property (nonatomic,retain) NSArray *countryCitys;//全国城市
 @property (nonatomic,retain) NSArray *searchResultCitys;//搜索城市
 @property (nonatomic,retain) NSArray *localMaps;//本地下载的离线地图
 @property (nonatomic,retain) NSArray *downloadMaps;//正在下载的离线地图
+@property (nonatomic,assign) id<HotCityViewDelegate> delegate;
 @end

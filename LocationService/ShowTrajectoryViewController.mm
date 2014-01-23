@@ -13,7 +13,10 @@
 #import "AppHelper.h"
 #import "MeterViewController.h"
 #import "NSDate+TPCategory.h"
-@interface ShowTrajectoryViewController ()
+#import "UIImage+TPCategory.h"
+@interface ShowTrajectoryViewController (){
+    BOOL isFirstLoad;
+}
 - (void)cleanMap;
 - (void)loadingHistory;
 - (void)loadingPointAnnotations;
@@ -68,8 +71,12 @@
     [_mapView viewWillAppear];
     _mapView.delegate = self; // 此处记得不用的时候需要置nil，否则影响内存的释放
     
-    [self cleanMap];
-    [self loadingHistory];
+    if (isFirstLoad) {
+        isFirstLoad=NO;
+        [self cleanMap];
+        [self loadingHistory];
+    }
+    
 }
 - (void)viewDidLoad
 {
@@ -86,7 +93,7 @@
     r.size.height-=TabHeight;
     _mapView= [[BMKMapView alloc]initWithFrame:r];
     [self.view addSubview:_mapView];
-    
+    isFirstLoad=YES;
     
 }
 -(void)viewWillDisappear:(BOOL)animated {
@@ -260,21 +267,24 @@
     if (view == nil) {
         view = [[[BMKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:annotaionIdentifier] autorelease];
         //view.canShowCallout = TRUE;
-        
-        //自定义图片
-        UIImage* image = [UIImage imageNamed:@"mapapi.bundle/images/icon_direction.png"];
-        view.image = image;
-        view.annotation = annotation;
-        
-         int pos=0;
+        int pos=0;
         if ([annotation isKindOfClass:[KYPointAnnotation class]]) {
             KYPointAnnotation *p=(KYPointAnnotation*)annotation;
             pos=p.tag-100;
             
         }
+        TrajectoryHistory *entity=self.list[pos];
+        //自定义图片
+        UIImage* image = [UIImage imageNamed:@"mapapi.bundle/images/icon_direction@2x.png"];
+        if (entity.angle&&[entity.angle length]>0) {
+            view.image = [image imageRotatedByDegrees:[entity.angle floatValue]];
+        }else{
+             view.image = image;
+        }
+        view.annotation = annotation;
         //自定义气泡
         TrajectoryPaoView *_areaPaoView=[[[TrajectoryPaoView alloc] initWithFrame:CGRectMake(0, 0, 280, 350)] autorelease];
-        [_areaPaoView setDataSourceHistory:self.list[pos] name:self.Entity.Name];
+        [_areaPaoView setDataSourceHistory:entity name:self.Entity.Name];
         _areaPaoView.controls=self;
         BMKActionPaopaoView *paopao=[[[BMKActionPaopaoView alloc] initWithCustomView:_areaPaoView] autorelease];
         view.paopaoView=paopao;

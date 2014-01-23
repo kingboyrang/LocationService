@@ -54,11 +54,16 @@
 
 - (void) layoutSubviews {
     [super layoutSubviews];
+    NSString *str=[self.label.text Trim];
+    CGSize size1=[str textSize:[UIFont fontWithName:DeviceFontName size:14] withWidth:self.frame.size.width];
     CGRect r=self.label.frame;
     r.origin.y=5;
+    r.size=size1;
     self.label.frame=r;
+    //NSLog(@"frame=%@",NSStringFromCGRect(self.label.frame));
     
     r.origin.x=self.frame.size.width/2+self.label.frame.origin.x;
+    r.size=size1;
     _label2.frame=r;
     
     r.origin.x=self.label.frame.origin.x+self.label.frame.size.width+2;
