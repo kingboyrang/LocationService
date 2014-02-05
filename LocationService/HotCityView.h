@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "NavBarView.h"
 #import "BMapKit.h"
-
+#import "OnlineBackDelegate.h"
 @protocol HotCityViewDelegate <NSObject>
 @optional
 - (NSArray*)searchOfflineCitys:(NSString*)city;//搜索离线城市
@@ -23,4 +23,6 @@
 @property (nonatomic,retain) NSArray *localMaps;//本地下载的离线地图
 @property (nonatomic,retain) NSArray *downloadMaps;//正在下载的离线地图
 @property (nonatomic,assign) id<HotCityViewDelegate> delegate;
+@property (nonatomic,assign) id<OnlineBackDelegate> backDelegate;
+- (void)reloadDataSource;//重截数据UITableView
 @end

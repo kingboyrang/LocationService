@@ -19,7 +19,11 @@
 @end
 
 @implementation HotCityView
-
+- (void)dealloc{
+    [super dealloc];
+    [_tableView release];
+    [_searchView release];
+}
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -70,7 +74,12 @@
 }
 //返回操作
 - (void)buttonHideView{
-
+    if (self.backDelegate&&[self.backDelegate respondsToSelector:@selector(viewBackToControl:)]) {
+        [self.backDelegate viewBackToControl:self];
+    }
+}
+- (void)reloadDataSource{
+    [_tableView reloadData];
 }
 #pragma  mark -searchbar
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText{

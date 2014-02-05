@@ -12,4 +12,5 @@
 +(NSString *)getDataSizeString:(int) nSize;
 +(void)viewerMapInView:(UIView*)view viewAction:(void(^)())viewerAct deleteAction:(void(^)())deleteAct;
 +(void)viewerDownloadMapInView:(UIView*)view viewAction:(void(^)())viewerAct pauseAction:(void(^)())pauseAct deleteAction:(void(^)())deleteAct;
++(void)viewerDownloadMapInView:(UIView*)view viewAction:(void(^)())viewerAct pauseTitle:(NSString*)title pauseAction:(void(^)())pauseAct deleteAction:(void(^)())deleteAct;
 @end

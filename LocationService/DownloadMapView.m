@@ -9,10 +9,10 @@
 #import "DownloadMapView.h"
 #import "OfflineHelper.h"
 #import "LoginButtons.h"
-#import "TKMapCell.h"
+#import "AppUI.h"
 @interface DownloadMapView ()<UITableViewDataSource,UITableViewDelegate>{
     UITableView *_tableView;
-    int currentDownloadCityId;//当前正在下载的城市id
+    //int currentDownloadCityId;//当前正在下载的城市id
 }
 - (void)buttonPauseClick:(id)sender;
 - (void)buttonDownloadClick:(id)sender;
@@ -21,7 +21,7 @@
 - (void)viewerDownloadWithEntity:(BMKOLSearchRecord*)entity withRow:(int)row;
 - (void)viewerlocalMapWithEntity:(BMKOLUpdateElement*)entity withRow:(int)row;
 - (BOOL)existsDownloadSourceByCityId:(int)cityId;
-- (BOOL)existslocalSourceByCityId:(int)cityId;
+- (int)getDownloadMapRowWithCityId:(int)cityId;//获取下载行
 - (NSMutableArray*)getUpdateMapsWithCompleted:(void(^)(NSMutableArray *indexPaths,NSMutableArray *delSource))completed;
 @end
 
@@ -34,7 +34,19 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
+        _navBarView=[[NavBarView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, 44)];
+        [_navBarView setNavBarTitle:@"离线地图"];
+        [_navBarView setBackButtonWithTarget:self action:@selector(buttonHideView)];
+        UIButton *btn=[AppUI createhighlightButtonWithTitle:@"添加" frame:CGRectMake(self.bounds.size.width-50, (44-35)/2, 50, 35)];
+        btn.tag=301;
+        [btn addTarget:self action:@selector(buttonAddClick) forControlEvents:UIControlEventTouchUpInside];
+        [_navBarView addSubview:btn];
+        [self addSubview:_navBarView];
+        
+       
+        
         CGRect r=self.bounds;
+        r.origin.y=44.0;
         r.size.height-=44.0;
         _tableView=[[UITableView alloc] initWithFrame:r style:UITableViewStylePlain];
         _tableView.delegate=self;
@@ -64,24 +76,124 @@
     }
     return self;
 }
+//返回操作
+- (void)buttonHideView{
+    if (self.backDelegate&&[self.backDelegate respondsToSelector:@selector(viewBackToControl:)]) {
+        [self.backDelegate viewBackToControl:self];
+    }
+}
+//添加地图下载
+- (void)buttonAddClick{
+    if (self.backDelegate&&[self.backDelegate respondsToSelector:@selector(viewToDownloadControl)]) {
+        [self.backDelegate viewToDownloadControl];
+    }
+}
+//添加一个城市地图下载
+- (void)addMapDownloadItem:(BMKOLSearchRecord*)entity{
+     if (!self.downloadMaps) {
+         self.downloadMaps=[[NSMutableArray alloc] init];
+     }
+     [self.downloadMaps addObject:entity];
+     if (self.downloadMaps.count==1) {
+     //新增下载行
+     NSIndexPath *indexPath=[NSIndexPath indexPathForRow:0 inSection:0];
+     
+     [_tableView beginUpdates];
+     [_tableView insertSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationTop];
+     [_tableView insertRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationFade];
+     [_tableView endUpdates];
+     if (self.delegate&&[self.delegate respondsToSelector:@selector(downloadMapWithCityId:)]) {
+        [self.delegate downloadMapWithCityId:entity.cityID];//开始下载地图
+     }
+      return;
+     }
+     NSIndexPath *indexPath=[NSIndexPath indexPathForRow:self.downloadMaps.count-1 inSection:0];
+     [_tableView beginUpdates];
+     [_tableView insertRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationFade];
+     [_tableView endUpdates];
+}
+//更新显示下载进度条
+- (void)updateMapDownloadProcess:(BMKOLUpdateElement*)entity{
+    int row=[self getDownloadMapRowWithCityId:entity.cityID];
+    if (row!=-1) {
+        NSIndexPath *indexPath=[NSIndexPath indexPathForRow:row inSection:0];
+        TKMapCell *cell=(TKMapCell*)[_tableView cellForRowAtIndexPath:indexPath];
+        [cell updateProgressInfo:entity];   
+    }
+}
+//暂停地图下载时，更新状态
+- (void)updateCellStatusWithCityId:(int)cityId{
+    int row=[self getDownloadMapRowWithCityId:cityId];
+    if (row!=-1) {
+        NSIndexPath *indexPath=[NSIndexPath indexPathForRow:row inSection:0];
+        TKMapCell *cell=(TKMapCell*)[_tableView cellForRowAtIndexPath:indexPath];
+        cell.isPause=YES;
+    }
+}
+//下载完成一项地图
+- (void)finishedDownloadWithRow:(TKMapCell*)cell element:(BMKOLUpdateElement*)entity{
+    self.currentDownloadCityId=-1;//下载完成
+    
+    NSIndexPath *indexPath=[_tableView indexPathForCell:cell];
+    int sec=1;
+    if (self.downloadMaps&&[self.downloadMaps count]==1) {
+        [self.downloadMaps removeAllObjects];
+        [_tableView beginUpdates];
+        [_tableView deleteSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
+        [_tableView endUpdates];
+        sec=0;
+    }else{
+        [_tableView beginUpdates];
+        [_tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationFade];
+        [_tableView endUpdates];
+    }
+    [self.localMaps insertObject:entity atIndex:0];
+    [_tableView beginUpdates];
+    [_tableView insertRowsAtIndexPaths:[NSArray arrayWithObjects:[NSIndexPath indexPathForRow:0 inSection:sec], nil] withRowAnimation:UITableViewRowAnimationFade];
+    [_tableView endUpdates];
+    
+    //执行下一个地图下载
+    if ([self isLoadingSection]) {
+        for (int i=0; i<self.downloadMaps.count; i++) {
+            NSIndexPath *indexPath=[NSIndexPath indexPathForRow:i inSection:0];
+            TKMapCell *cell=(TKMapCell*)[_tableView cellForRowAtIndexPath:indexPath];
+            if (!cell.isPause) {//未暂停
+                BMKOLSearchRecord *entity=self.downloadMaps[i];
+                if (self.delegate&&[self.delegate respondsToSelector:@selector(downloadMapWithCityId:)]) {
+                    [self.delegate downloadMapWithCityId:entity.cityID];
+                }
+                break;
+            }
+        }
+    }
+}
 #pragma mark private Methods
 //全部暂停
 - (void)buttonPauseClick:(id)sender{
-    if ([self isLoadingSection]&&currentDownloadCityId!=-1) {
+    if ([self isLoadingSection]&&self.currentDownloadCityId!=-1) {
         if (self.delegate&&[self.delegate respondsToSelector:@selector(pauseDownloadWithCityId:)]) {
-            [self.delegate pauseDownloadWithCityId:currentDownloadCityId];
+            [self.delegate pauseDownloadWithCityId:self.currentDownloadCityId];
+        }
+        for (int i=0; i<self.downloadMaps.count; i++) {
+            NSIndexPath *indexPath=[NSIndexPath indexPathForRow:i inSection:0];
+            TKMapCell *cell=(TKMapCell*)[_tableView cellForRowAtIndexPath:indexPath];
+            cell.isPause=YES;//暂停
         }
     }
 }
 //全部下载
 - (void)buttonDownloadClick:(id)sender{
     [self buttonUpdateClick:nil];
-    if ([self isLoadingSection]&&currentDownloadCityId!=-1) {
+    if ([self isLoadingSection]&&self.currentDownloadCityId!=-1) {
         if (self.delegate&&[self.delegate respondsToSelector:@selector(downloadMapWithCityId:)]) {
-            [self.delegate downloadMapWithCityId:currentDownloadCityId];
+            [self.delegate downloadMapWithCityId:self.currentDownloadCityId];
         }
     }
-    
+    for (int i=0; i<self.downloadMaps.count; i++) {
+        NSIndexPath *indexPath=[NSIndexPath indexPathForRow:i inSection:0];
+        TKMapCell *cell=(TKMapCell*)[_tableView cellForRowAtIndexPath:indexPath];
+        cell.isPause=NO;//取消暂停
+    }
 }
 //全部更新
 - (void)buttonUpdateClick:(id)sender{
@@ -175,19 +287,11 @@
 }
 //判断是否已下载的地图
 - (BOOL)existslocalSourceByCityId:(int)cityId{
-    /***
-    NSArray *arr=[_offlineMap getAllUpdateInfo];
-    if (arr&&[arr count]>0) {
-        NSString *match=[NSString stringWithFormat:@"SELF.cityID ==%d",cityId];
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:match];
-        NSArray *results = [arr filteredArrayUsingPredicate:predicate];
-        if (results&&[results count]>0) {
-            return YES;
-        }
+    BOOL boo=NO;
+    if (self.delegate&&[self.delegate respondsToSelector:@selector(existsLocalMapsWithCityId:)]) {
+        boo=[self.delegate existsLocalMapsWithCityId:cityId];
     }
-    return NO;
-     ***/
-    return NO;
+    return boo;
 }
 - (BOOL)isLoadingSection{
     if (self.downloadMaps&&[self.downloadMaps count]>0) {
@@ -197,23 +301,35 @@
 }
 //删除正在下载的地图
 - (void)viewerDownloadWithEntity:(BMKOLSearchRecord*)entity withRow:(int)row{
+    NSIndexPath *indexPath=[NSIndexPath indexPathForRow:row inSection:0];
+    TKMapCell *cell=(TKMapCell*)[_tableView cellForRowAtIndexPath:indexPath];
+    NSString *memo=cell.isPause?@"恢复下载":@"暂停";
+    
     [OfflineHelper viewerDownloadMapInView:self viewAction:^{//查看地图
         if (self.delegate&&[self.delegate respondsToSelector:@selector(viewerMapWithCityId:)]) {
             [self.delegate viewerMapWithCityId:entity.cityID];
         }
-        
-    } pauseAction:^{//暂停下载
-        if (self.delegate&&[self.delegate respondsToSelector:@selector(pauseDownloadWithCityId:)]) {
-            [self.delegate pauseDownloadWithCityId:entity.cityID];
+    } pauseTitle:memo pauseAction:^{
+        if ([memo isEqualToString:@"暂停"]) {//暂停下载
+            if (self.delegate&&[self.delegate respondsToSelector:@selector(pauseDownloadWithCityId:)]) {
+                [self.delegate pauseDownloadWithCityId:entity.cityID];
+            }
+        }else{//开始下载
+            if (self.currentDownloadCityId!=-1) {//有正在下载地图
+                cell.isPause=NO;//表示可以下载
+            }else{//没有正在下载地图
+                if (self.delegate&&[self.delegate respondsToSelector:@selector(downloadMapWithCityId:)]) {
+                    [self.delegate downloadMapWithCityId:entity.cityID];
+                }
+            }
         }
-        
     } deleteAction:^{//删除地图
         if (self.delegate&&[self.delegate respondsToSelector:@selector(removeMapWithCityId:)]) {
             [self.delegate removeMapWithCityId:entity.cityID];//删除正在下载的地图
         }
         //删除数据源与数据行
         BOOL boo=NO;
-        if (entity.cityID==currentDownloadCityId) {
+        if (entity.cityID==self.currentDownloadCityId) {
             boo=YES;
         }
         if (self.downloadMaps.count==1) {
@@ -221,7 +337,7 @@
             [_tableView beginUpdates];
             [_tableView deleteSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
             [_tableView endUpdates];
-            currentDownloadCityId=-1;
+            self.currentDownloadCityId=-1;
         }else{
             [self.downloadMaps removeObjectAtIndex:row];
             [_tableView beginUpdates];
@@ -235,7 +351,6 @@
                 [self.delegate downloadMapWithCityId:item.cityID];
             }
         }
-        
     }];
 }
 //查看或删除已下载的地图

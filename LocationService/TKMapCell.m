@@ -59,11 +59,8 @@
     if (self.isPause) {
         self.isPause=NO;
     }
-    
     _labprocess.text=[NSString stringWithFormat:@"正在下载 %d%%",updateInfo.ratio];
-    NSLog(@"text=%@",_labprocess.text);
     _progressView.progress=updateInfo.ratio/100.0;
-    //[_progressView setProgress:updateInfo.ratio animated:YES];
     if (updateInfo.ratio==100) {//表示下载完成
         isFinished=YES;
         if (self.controlers&&[self.controlers respondsToSelector:@selector(finishedDownloadWithRow:element:)]) {

@@ -125,4 +125,25 @@
     [sheet showInView:view];
     [sheet release];
 }
++(void)viewerDownloadMapInView:(UIView*)view viewAction:(void(^)())viewerAct pauseTitle:(NSString*)title pauseAction:(void(^)())pauseAct deleteAction:(void(^)())deleteAct{
+    RIButtonItem *canBtn=[RIButtonItem item];
+    canBtn.label=@"取消";
+    canBtn.action=nil;
+    
+    RIButtonItem *viewerBtn=[RIButtonItem item];
+    viewerBtn.label=@"查看地图";
+    viewerBtn.action=viewerAct;
+    
+    RIButtonItem *pauseBtn=[RIButtonItem item];
+    pauseBtn.label=title;
+    pauseBtn.action=pauseAct;
+    
+    RIButtonItem *delBtn=[RIButtonItem item];
+    delBtn.label=@"删除";
+    delBtn.action=deleteAct;
+    UIActionSheet *sheet=[[UIActionSheet alloc] initWithTitle:nil cancelButtonItem:canBtn destructiveButtonItem:nil otherButtonItems:viewerBtn,pauseBtn,delBtn, nil];
+    [sheet showInView:view];
+    [sheet release];
+
+}
 @end

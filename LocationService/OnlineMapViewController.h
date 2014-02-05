@@ -8,24 +8,17 @@
 
 #import <UIKit/UIKit.h>
 #import "BMapKit.h"
-@interface OnlineMapViewController : BasicViewController<BMKOfflineMapDelegate>{
+#import "HotCityView.h"
+#import "ViewerMapView.h"
+#import "DownloadMapView.h"
+#import "OnlineBackDelegate.h"
+#import "TKMapCell.h"
+@interface OnlineMapViewController : BasicViewController<BMKOfflineMapDelegate,BMKMapViewDelegate,OnlineBackDelegate,HotCityViewDelegate,DownloadMapViewDelegate>{
    BMKOfflineMap* _offlineMap;
-   NSMutableArray * _arraylocalDownLoadMapInfo;//本地下载的离线地图
-    
-    int currentDownloadCityId;//当前正在下载的城市id
-   // BMKMapView* _mapView;
+   BMKMapView* _mapView;
 }
+@property (nonatomic,strong) ViewerMapView *viewerMap;
+@property (nonatomic,strong) HotCityView *cityMapView;
+@property (nonatomic,strong) DownloadMapView *downloadMapView;
 
-@property(nonatomic,strong) NSMutableArray *arraylDownLoadSource;//下载地图
-@property(nonatomic,retain) BMKOLSearchRecord *downloadRecord;//保存当前要下载的地图
-//添加一个地图下载
-- (void)downloadMapWithEntity:(BMKOLSearchRecord*)entity;
-//下载完成
-- (void)finishedDownloadWithRow:(UITableViewCell*)cell element:(BMKOLUpdateElement*)elem;
-//下载地图
-- (void)startDownloadWithCityId:(int)cityId;
-//暂停地图
-- (void)pauseDownloadWithCityId:(int)cityId;
-//删除下载地图
-- (void)removeDownloadWithCityId:(int)cityId;
 @end
