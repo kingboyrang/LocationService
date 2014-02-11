@@ -116,6 +116,8 @@
     TKTextFieldCell *cell2=self.cells[5];
     cell1.textField.text=acc.Phone;
     cell2.textField.text=acc.Name;
+    [self textFieldShouldReturn:cell1.textField];
+    [self textFieldShouldReturn:cell2.textField];
 }
 //提交
 - (void)buttonSubmit{
@@ -138,6 +140,8 @@
         [cell1.textField becomeFirstResponder];
         return;
     }
+    [self textFieldShouldReturn:cell1.textField];
+    [self textFieldShouldReturn:cell2.textField];
     if (!self.hasNetWork) {
         [self showErrorNetWorkNotice:nil];
         return;
@@ -227,18 +231,19 @@
 }
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{
     [textField resignFirstResponder];
-    isKeyBoardShow=NO;
-    CGRect r=_tableView.frame;
-    r.size.height+=216;
-    
-    
-    CGRect r1=_buttons.frame;
-    r1.origin.y+=216;
-    [UIView animateWithDuration:0.3f animations:^{
-        _tableView.frame=r;
-        _buttons.frame=r1;
-    }];
-
+    if (isKeyBoardShow) {
+        isKeyBoardShow=NO;
+        CGRect r=_tableView.frame;
+        r.size.height+=216;
+        
+        
+        CGRect r1=_buttons.frame;
+        r1.origin.y+=216;
+        [UIView animateWithDuration:0.3f animations:^{
+            _tableView.frame=r;
+            _buttons.frame=r1;
+        }];
+    }
     return YES;
 }
 

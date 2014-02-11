@@ -85,6 +85,8 @@
     _trajectorySearch=[[TrajectorySearch alloc] initWithFrame:CGRectMake(0, 44-79, self.view.bounds.size.width, 79)];
     [_trajectorySearch.button addTarget:self action:@selector(buttonSearchClick) forControlEvents:UIControlEventTouchUpInside];
     _trajectorySearch.backgroundColor=[UIColor whiteColor];
+    _trajectorySearch.startCalendar.popoverText.popoverTextField.text=self.startTime;
+    _trajectorySearch.endCalendar.popoverText.popoverTextField.text=self.endTime;
     [self.view addSubview:_trajectorySearch];
     [self.view sendSubviewToBack:_trajectorySearch];
     

@@ -143,6 +143,7 @@
         [_tableView endUpdates];
         sec=0;
     }else{
+        [self.downloadMaps removeObjectAtIndex:indexPath.row];
         [_tableView beginUpdates];
         [_tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationFade];
         [_tableView endUpdates];
@@ -299,6 +300,19 @@
     }
     return NO;
 }
+//判断是否所有的地图都暂停
+- (BOOL)downloadMapsAllPause{
+    BOOL boo=YES;
+    for (int i=0; i<self.downloadMaps.count; i++) {
+        NSIndexPath *indexPath=[NSIndexPath indexPathForRow:i inSection:0];
+        TKMapCell *cell=(TKMapCell*)[_tableView cellForRowAtIndexPath:indexPath];
+        if (!cell.isPause) {
+            boo=NO;
+            break;
+        }
+    }
+    return boo;
+}
 //删除正在下载的地图
 - (void)viewerDownloadWithEntity:(BMKOLSearchRecord*)entity withRow:(int)row{
     NSIndexPath *indexPath=[NSIndexPath indexPathForRow:row inSection:0];
@@ -317,6 +331,12 @@
         }else{//开始下载
             if (self.currentDownloadCityId!=-1) {//有正在下载地图
                 cell.isPause=NO;//表示可以下载
+                if (cell.Entity.cityID==self.currentDownloadCityId) {//表示当前暂停项等于当前的下载项
+                    if (self.delegate&&[self.delegate respondsToSelector:@selector(downloadMapWithCityId:)]) {
+                        [self.delegate downloadMapWithCityId:self.currentDownloadCityId];
+                    }
+                }
+                
             }else{//没有正在下载地图
                 if (self.delegate&&[self.delegate respondsToSelector:@selector(downloadMapWithCityId:)]) {
                     [self.delegate downloadMapWithCityId:entity.cityID];

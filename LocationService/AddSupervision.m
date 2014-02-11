@@ -229,6 +229,10 @@
         [cell4.textField becomeFirstResponder];
         return;
     }
+     [self textFieldShouldReturn:cell1.textField];
+     [self textFieldShouldReturn:cell2.textField];
+     [self textFieldShouldReturn:cell3.textField];
+     [self textFieldShouldReturn:cell4.textField];
     if (!self.hasNetWork) {
         [self showErrorNetWorkNotice:nil];
         return;
@@ -326,6 +330,10 @@
         [cell4.textField becomeFirstResponder];
         return;
     }
+    [self textFieldShouldReturn:cell1.textField];
+    [self textFieldShouldReturn:cell2.textField];
+    [self textFieldShouldReturn:cell3.textField];
+    [self textFieldShouldReturn:cell4.textField];
     if (!self.hasNetWork) {
         [self showErrorNetWorkNotice:nil];
         return;
@@ -549,18 +557,19 @@
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{
     [textField resignFirstResponder];
-    isKeyBoardShow=NO;
-    CGRect r=_tableView.frame;
-    r.size.height+=216;
-    
-    
-    CGRect r1=_toolBar.frame;
-    r1.origin.y+=216;
-    [UIView animateWithDuration:0.3f animations:^{
-        _tableView.frame=r;
-        _toolBar.frame=r1;
-    }];
-
+    if (isKeyBoardShow) {
+        isKeyBoardShow=NO;
+        CGRect r=_tableView.frame;
+        r.size.height+=216;
+        
+        
+        CGRect r1=_toolBar.frame;
+        r1.origin.y+=216;
+        [UIView animateWithDuration:0.3f animations:^{
+            _tableView.frame=r;
+            _toolBar.frame=r1;
+        }];
+    }
     return YES;
 }
 #pragma mark UITableViewDataSource Methods

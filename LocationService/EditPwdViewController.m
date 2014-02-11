@@ -184,10 +184,16 @@
         [cell3.textField becomeFirstResponder];
         return;
     }
+    [self textFieldShouldReturn:cell1.textField];
+    [self textFieldShouldReturn:cell2.textField];
+    [self textFieldShouldReturn:cell3.textField];
     if (!self.hasNetWork) {
         [self showErrorNetWorkNotice:nil];
         return;
     }
+    
+    
+    
     [self showLoadingAnimatedWithTitle:@"正在修改密码,请稍后..."];
     NSMutableArray *params=[NSMutableArray arrayWithCapacity:2];
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:acc.WorkNo,@"userId", nil]];
@@ -232,13 +238,17 @@
 -(void)buttonCancel{
     TKTextFieldCell *cell=self.cells[1];
     cell.textField.text=@"";
-    [cell.textField resignFirstResponder];
+    //[cell.textField resignFirstResponder];
+    [self textFieldShouldReturn:cell.textField];
+    
     TKTextFieldCell *cell1=self.cells[3];
     cell1.textField.text=@"";
-    [cell1.textField resignFirstResponder];
+    //[cell1.textField resignFirstResponder];
+    [self textFieldShouldReturn:cell1.textField];
     TKTextFieldCell *cell2=self.cells[5];
     cell2.textField.text=@"";
-    [cell2.textField resignFirstResponder];
+    //[cell2.textField resignFirstResponder];
+     [self textFieldShouldReturn:cell2.textField];
     
 }
 - (void)didReceiveMemoryWarning
@@ -292,18 +302,19 @@
 }
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{
     [textField resignFirstResponder];
-    isKeyBoardShow=NO;
-    CGRect r=_tableView.frame;
-    r.size.height+=216;
-    
-    
-    CGRect r1=_buttons.frame;
-    r1.origin.y+=216;
-    [UIView animateWithDuration:0.3f animations:^{
-        _tableView.frame=r;
-        _buttons.frame=r1;
-    }];
-
+    if (isKeyBoardShow) {
+        isKeyBoardShow=NO;
+        CGRect r=_tableView.frame;
+        r.size.height+=216;
+        
+        
+        CGRect r1=_buttons.frame;
+        r1.origin.y+=216;
+        [UIView animateWithDuration:0.3f animations:^{
+            _tableView.frame=r;
+            _buttons.frame=r1;
+        }];
+    }
     return YES;
 }
 #pragma mark UITableViewDataSource Methods

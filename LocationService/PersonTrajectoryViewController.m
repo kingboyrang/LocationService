@@ -113,6 +113,8 @@
        ShowTrajectoryViewController *show=[[ShowTrajectoryViewController alloc] init];
        show.list=self.cells;
        show.Entity=self.Entity;
+       show.startTime=_trajectorySearch.startCalendar.popoverText.popoverTextField.text;
+       show.endTime=_trajectorySearch.endCalendar.popoverText.popoverTextField.text;
        [self.navigationController pushViewController:show animated:YES];
        [show release];
    }

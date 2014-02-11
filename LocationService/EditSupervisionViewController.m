@@ -195,10 +195,7 @@
 }
 //修改
 - (void)finishEditTrajectory:(void(^)(NSString *personId))completed{
-    if (!self.hasNetWork) {
-        [self showErrorNetWorkNotice:nil];
-        return;
-    }
+   
     Account *acc=[Account unarchiverAccount];
     TKTextFieldCell *cell1=self.cells[2];
     
@@ -238,7 +235,14 @@
         [cell4.textField becomeFirstResponder];
         return;
     }
-    
+    [self textFieldShouldReturn:cell1.textField];
+    [self textFieldShouldReturn:cell2.textField];
+    [self textFieldShouldReturn:cell3.textField];
+    [self textFieldShouldReturn:cell4.textField];
+    if (!self.hasNetWork) {
+        [self showErrorNetWorkNotice:nil];
+        return;
+    }
     [self showLoadingAnimatedWithTitle:@"修改监管目标,请稍后..."];
     
         NSMutableArray *params=[NSMutableArray arrayWithCapacity:6];
@@ -385,17 +389,20 @@
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{
     [textField resignFirstResponder];
-    isKeyBoardShow=NO;
-    CGRect r=_tableView.frame;
-    r.size.height+=216;
+    if (isKeyBoardShow) {
+        isKeyBoardShow=NO;
+        CGRect r=_tableView.frame;
+        r.size.height+=216;
+        
+        
+        CGRect r1=_toolBar.frame;
+        r1.origin.y+=216;
+        [UIView animateWithDuration:0.3f animations:^{
+            _tableView.frame=r;
+            _toolBar.frame=r1;
+        }];
+    }
     
-    
-    CGRect r1=_toolBar.frame;
-    r1.origin.y+=216;
-    [UIView animateWithDuration:0.3f animations:^{
-        _tableView.frame=r;
-        _toolBar.frame=r1;
-    }];
     return YES;
 }
 #pragma mark UITableViewDataSource Methods

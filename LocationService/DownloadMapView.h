@@ -32,4 +32,6 @@
 - (void)updateCellStatusWithCityId:(int)cityId;//暂停地图下载时，更新状态
 //地图下载完成
 - (void)finishedDownloadWithRow:(TKMapCell*)cell element:(BMKOLUpdateElement*)updateInfo;
+//判断是否所有的地图都暂停
+- (BOOL)downloadMapsAllPause;
 @end

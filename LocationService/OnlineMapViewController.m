@@ -125,6 +125,12 @@
     _downloadMapView.currentDownloadCityId=cityId;
     [_offlineMap pause:cityId];
     [_downloadMapView updateCellStatusWithCityId:cityId];//更新暂停状态
+    
+    //以防万一
+    if ([_downloadMapView downloadMapsAllPause]) {
+        _downloadMapView.currentDownloadCityId=-1;
+    }
+    
 }
 //删除地图
 - (void)removeMapWithCityId:(int)cityId{
@@ -141,7 +147,7 @@
 }
 //判断是否为已下载的地图
 - (BOOL)existsLocalMapsWithCityId:(int)cityId{
-    NSArray *arr=[_offlineMap getAllUpdateInfo];
+    NSMutableArray *arr=_downloadMapView.localMaps;
     if (arr&&[arr count]>0) {
         NSString *match=[NSString stringWithFormat:@"SELF.cityID ==%d",cityId];
         NSPredicate *predicate = [NSPredicate predicateWithFormat:match];
@@ -171,7 +177,7 @@
 #pragma mark BMKOfflineMapDelegate methods
 - (void)onGetOfflineMapState:(int)type withState:(int)state{
     
-    NSLog(@"type=%d state=%d",type,state);
+    //NSLog(@"type=%d state=%d",type,state);
     if (type == TYPE_OFFLINE_UPDATE) {
         //id为state的城市正在下载或更新，start后会毁掉此类型
         BMKOLUpdateElement* updateInfo;

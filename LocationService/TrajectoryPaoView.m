@@ -23,7 +23,8 @@
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
-    if (self) {        
+    if (self) {
+        self.backgroundColor=[UIColor clearColor];
         //气泡view的背景图片 － 被分为左边背景和右边背景两个部分
         //UIEdgeInsets insets = UIEdgeInsetsMake(13,8, 13, 8);
         UIImage *imageNormal, *imageHighlighted;
@@ -56,6 +57,9 @@
         _tableView.dataSource=self;
         _tableView.separatorStyle=UITableViewCellSeparatorStyleNone;
         _tableView.separatorColor=[UIColor clearColor];
+        //UIView *bgView=[[[UIView alloc] init] autorelease];
+        //bgView.backgroundColor=[UIColor redColor];
+        //_tableView.backgroundView = bgView;
         _tableView.backgroundColor=[UIColor clearColor];
         _tableView.bounces=NO;
         [self addSubview:_tableView];
@@ -181,6 +185,9 @@
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     UITableViewCell *cell=self.cells[indexPath.row];
+//    UIView *bgView=[[[UIView alloc] init] autorelease];
+//    bgView.backgroundColor=[UIColor clearColor];
+//    cell.backgroundView=bgView;
     if (indexPath.row==self.cells.count-1) {
         cell.detailTextLabel.text=@"详细信息";
         cell.detailTextLabel.font=[UIFont fontWithName:DeviceFontName size:14];
