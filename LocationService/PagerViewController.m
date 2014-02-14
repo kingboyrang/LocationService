@@ -38,11 +38,11 @@
     self.scrollView.autoresizingMask=UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
     self.scrollView.backgroundColor=[UIColor clearColor];
 	// Do any additional setup after loading the view, typically from a nib.
-	[self.scrollView setPagingEnabled:NO];
-	[self.scrollView setScrollEnabled:NO];
+	[self.scrollView setPagingEnabled:YES];
+	[self.scrollView setScrollEnabled:YES];
 	[self.scrollView setShowsHorizontalScrollIndicator:NO];
 	[self.scrollView setShowsVerticalScrollIndicator:NO];
-	//[self.scrollView setDelegate:self];
+	[self.scrollView setDelegate:self];
     
     self.pageControl=[[UIPageControl alloc] initWithFrame:CGRectMake((self.view.bounds.size.width-200)/2.0, self.view.bounds.size.height-40-5, 200, 30)];
     self.pageControl.hidden=YES;
@@ -74,13 +74,13 @@
 }
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
                                          duration:(NSTimeInterval)duration{
-    NSLog(@"1=====1");
+    
     
 	UIViewController *viewController = [self.childViewControllers objectAtIndex:self.pageControl.currentPage];
 	[viewController willAnimateRotationToInterfaceOrientation:toInterfaceOrientation duration:duration];
 	
 	self.scrollView.contentSize = CGSizeMake(scrollView.frame.size.width * [self.childViewControllers count], scrollView.frame.size.height);
-    NSLog(@"size=%@\n",NSStringFromCGSize(self.scrollView.contentSize));
+    //NSLog(@"size=%@\n",NSStringFromCGSize(self.scrollView.contentSize));
     
 	NSUInteger page = 0;
 	for (viewController in self.childViewControllers) {
@@ -259,7 +259,7 @@
     _pageControlUsed = YES;
 }
 - (void)handChangePageIndex:(int)index{
-
+   
 }
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
 	UIViewController *oldViewController = [self.childViewControllers objectAtIndex:_page];
@@ -268,12 +268,14 @@
 	[newViewController viewDidAppear:YES];
 	
 	_page = self.pageControl.currentPage;
+     
 }
 
 #pragma mark -
 #pragma mark UIScrollViewDelegate methods
 
 - (void)scrollViewDidScroll:(UIScrollView *)sender {
+    
     // We don't want a "feedback loop" between the UIPageControl and the scroll delegate in
     // which a scroll event generated from the user hitting the page control triggers updates from
     // the delegate method. We use a boolean to disable the delegate logic when the page control is used.
@@ -294,7 +296,7 @@
 		[oldViewController viewDidDisappear:YES];
 		[newViewController viewDidAppear:YES];
 		_page = page;
-        [self handChangePageIndex:_page];
+       [self handChangePageIndex:_page];
 	}
 }
 

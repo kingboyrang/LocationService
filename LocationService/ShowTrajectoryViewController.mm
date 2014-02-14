@@ -95,6 +95,7 @@
     r.size.height-=TabHeight;
     _mapView= [[BMKMapView alloc]initWithFrame:r];
     [self.view addSubview:_mapView];
+    _mapView.zoomLevel=16;
     isFirstLoad=YES;
     
 }
@@ -277,7 +278,9 @@
         }
         TrajectoryHistory *entity=self.list[pos];
         //自定义图片
-        UIImage* image = [UIImage imageNamed:@"mapapi.bundle/images/icon_direction@2x.png"];
+        //UIImage* image = [UIImage imageNamed:@"mapapi.bundle/images/icon_direction.png"];
+        UIImage* image = [UIImage imageNamed:@"dirce1.png"];
+        //direction.png
         if (entity.angle&&[entity.angle length]>0) {
             view.image = [image imageRotatedByDegrees:[entity.angle floatValue]];
         }else{
@@ -285,7 +288,7 @@
         }
         view.annotation = annotation;
         //自定义气泡
-        TrajectoryPaoView *_areaPaoView=[[[TrajectoryPaoView alloc] initWithFrame:CGRectMake(0, 0, 280, 350)] autorelease];
+        TrajectoryPaoView *_areaPaoView=[[[TrajectoryPaoView alloc] initWithFrame:CGRectMake(0, 0, 250, 350)] autorelease];
         [_areaPaoView setDataSourceHistory:entity name:self.Entity.Name];
         _areaPaoView.controls=self;
         BMKActionPaopaoView *paopao=[[[BMKActionPaopaoView alloc] initWithCustomView:_areaPaoView] autorelease];

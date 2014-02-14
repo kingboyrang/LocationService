@@ -10,5 +10,6 @@
 
 @interface LoginWay : UIView
 - (void)setSelectedItemIndex:(int)index;
+- (void)setWaySelectedItemIndex:(int)index;
 @property(nonatomic,assign) id controlers;
 @end

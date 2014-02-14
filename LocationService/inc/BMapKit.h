@@ -21,7 +21,6 @@
 #import "BMKPointAnnotation.h"
 #import "BMKPinAnnotationView.h"
 #import "BMKMultiPoint.h"
-#import "BMKArcline.h"
 #import "BMKPolyline.h"
 #import "BMKPolygon.h"
 #import "BMKCircle.h"
@@ -30,7 +29,6 @@
 #import "BMKPolygonView.h"
 #import "BMKPolylineView.h"
 #import "BMKCircleView.h"
-#import "BMKArclineView.h"
 #import "BMKGroundOverlay.h"
 #import "BMKGroundOverlayView.h"
 //

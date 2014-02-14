@@ -15,8 +15,8 @@
 @interface UserInfoViewController ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>{
     UITableView *_tableView;
     LoginButtons *_buttons;
-    BOOL isKeyBoardShow;
 }
+@property (nonatomic,assign) CGRect tableRect;
 -(void)buttonCancel;
 -(void)buttonSubmit;
 - (void)replacePhonestring;
@@ -27,6 +27,7 @@
     [super dealloc];
     [_tableView release];
     [_buttons release];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -52,6 +53,7 @@
     _tableView.separatorStyle=UITableViewCellSeparatorStyleNone;
     _tableView.separatorColor=[UIColor clearColor];
     _tableView.bounces=NO;
+    self.tableRect=r;
     [self.view addSubview:_tableView];
     
     Account *acc=[Account unarchiverAccount];
@@ -97,8 +99,47 @@
     _buttons.submit.enabled=YES;
     [self.view addSubview:_buttons];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleKeyboardWillShowHideNotification:)
+                                                 name:UIKeyboardDidShowNotification
+                                               object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleKeyboardWillShowHideNotification:)
+                                                 name:UIKeyboardDidHideNotification
+                                               object:nil];
 	
+}
+#pragma mark - Notifications
+- (void)handleKeyboardWillShowHideNotification:(NSNotification *)notification
+{
+    NSDictionary *info = [notification userInfo];
+    //取得键盘的大小
+    CGRect kbFrame = [[info valueForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    if ([notification.name isEqualToString:UIKeyboardDidShowNotification]) {//显示键盘
+        CGRect r=_tableView.frame;
+        CGRect r1=_buttons.frame;
+        r.size.height=self.tableRect.size.height-kbFrame.size.height;
+        
+        
+        r1.origin.y=r.origin.y+r.size.height;
+        [UIView animateWithDuration:[[info valueForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue] animations:^{
+            _tableView.frame=r;
+            _buttons.frame=r1;
+        }];
+        
+    }
+    else if ([notification.name isEqualToString:UIKeyboardDidHideNotification]) {//隐藏键盘
+        CGRect r=_tableView.frame;
+        CGRect r1=_buttons.frame;
+        r.size.height=self.tableRect.size.height;
+        
+        r1.origin.y=self.tableRect.origin.y+r.size.height;
+        [UIView animateWithDuration:[[info valueForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue] animations:^{
+            _tableView.frame=r;
+            _buttons.frame=r1;
+        }];
+    }
 }
 - (void)replacePhonestring{
     NSRegularExpression *regular;
@@ -204,21 +245,6 @@
     }
     return boo;
 }
--(void)textFieldDidBeginEditing:(UITextField *)textField {
-    
-    if (!isKeyBoardShow) {
-        isKeyBoardShow=YES;
-        CGRect r=_tableView.frame;
-        r.size.height-=216;
-        
-        CGRect r1=_buttons.frame;
-        r1.origin.y-=216;
-        [UIView animateWithDuration:0.3f animations:^{
-            _tableView.frame=r;
-            _buttons.frame=r1;
-        }];
-    }
-}
 - (void)textFieldDidEndEditing:(UITextField *)textField;
 {
     TKTextFieldCell *cell1=self.cells[3];
@@ -231,19 +257,6 @@
 }
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{
     [textField resignFirstResponder];
-    if (isKeyBoardShow) {
-        isKeyBoardShow=NO;
-        CGRect r=_tableView.frame;
-        r.size.height+=216;
-        
-        
-        CGRect r1=_buttons.frame;
-        r1.origin.y+=216;
-        [UIView animateWithDuration:0.3f animations:^{
-            _tableView.frame=r;
-            _buttons.frame=r1;
-        }];
-    }
     return YES;
 }
 

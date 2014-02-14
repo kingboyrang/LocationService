@@ -51,7 +51,7 @@
     [_accountImageView release];
     [_phoneImageView release];
     [_toolBar release];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidChangeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -163,7 +163,8 @@
 
     self.cells=[NSMutableArray arrayWithObjects:cell1,cell2,cell3,cell4,cell5,cell6,cell7,cell8,cell9,cell10, nil];
     
-   
+    
+
     
 }
 //注册
@@ -470,7 +471,7 @@
     return boo;
 }
 -(void)textFieldDidBeginEditing:(UITextField *)textField {
-    
+   
     if (!isKeyBoardShow) {
         isKeyBoardShow=YES;
         CGRect r=_tableView.frame;
@@ -483,39 +484,11 @@
             _toolBar.frame=r1;
         }];
     }
-   
-    /***
-    CGRect frame = [self fieldToRect:textField];
-    int offset = frame.origin.y + 44 - (self.view.frame.size.height - 216.0);//键盘高度216
     
-    NSTimeInterval animationDuration = 0.30f;
-    [UIView beginAnimations:@"ResizeForKeyboard" context:nil];
-    [UIView setAnimationDuration:animationDuration];
-    
-    //将视图的Y坐标向上移动offset个单位，以使下面腾出地方用于软键盘的显示
-    if(offset > 0)
-        self.view.frame = CGRectMake(0.0f, -offset, self.view.frame.size.width, self.view.frame.size.height);
-    [UIView commitAnimations];
-     ***/
-}
-- (void)textFieldDidEndEditing:(UITextField *)textField;
-{
-    //self.view.frame =CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
-
-    
-    /***
-     TKTextFieldCell *cell=self.cells[1];
-     if (cell.textField==textField) {
-     [self updateShowInfo];
-     }
-    TKTextFieldCell *cell1=self.cells[5];
-    if (cell1.textField==textField) {
-        [self checkPhone];
-    }
-     ***/
 }
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{
     [textField resignFirstResponder];
+    
     if (isKeyBoardShow) {
         isKeyBoardShow=NO;
         CGRect r=_tableView.frame;
@@ -529,6 +502,7 @@
             _toolBar.frame=r1;
         }];
     }
+    
     return YES;
 }
 

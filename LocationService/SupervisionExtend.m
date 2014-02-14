@@ -106,6 +106,7 @@
     TKTextFieldCell *cell2=[[[TKTextFieldCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
     cell2.textField.placeholder=@"请输入信号发送频率";
     cell2.textField.delegate=self;
+    cell2.textField.enabled=NO;
    
     
     TKLabelCell *cell3=[[[TKLabelCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
@@ -249,17 +250,20 @@
  
     Account *acc=[Account unarchiverAccount];
   
-    TKTextFieldCell *cell1=self.cells[1];
+    //TKTextFieldCell *cell1=self.cells[1];
+    /***
     if (!cell1.hasValue) {
         [AlertHelper initWithTitle:@"提示" message:@"请输入信号发送频率!"];
         [cell1.textField becomeFirstResponder];
         return;
     }
+    
     if (![cell1.textField.text isNumberString]) {
         [AlertHelper initWithTitle:@"提示" message:@"信号发送频率只能为数字!"];
         [cell1.textField becomeFirstResponder];
         return;
     }
+      ***/
     TKTextFieldCell *cell2=self.cells[3];
     if (!cell2.hasValue) {
         [AlertHelper initWithTitle:@"提示" message:@"请输入SOS号!"];
@@ -325,7 +329,7 @@
         [cell6.textField becomeFirstResponder];
         return;
     }
-    [self textFieldShouldReturn:cell1.textField];
+    //[self textFieldShouldReturn:cell1.textField];
     [self textFieldShouldReturn:cell2.textField];
     [self textFieldShouldReturn:cell3.textField];
     [self textFieldShouldReturn:cell4.textField];
@@ -348,7 +352,7 @@
         affection=[NSString stringWithFormat:@"%@|%@,3",affection,cell6.textField.text];
     }
     NSMutableArray *params=[NSMutableArray arrayWithCapacity:6];
-    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[cell1.textField.text Trim],@"OperateValue", nil]];
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"15",@"OperateValue", nil]];
     //[params addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"15",@"OperateValue", nil]];
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:self.SysID,@"SysID", nil]];
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%@,1",[cell2.textField.text Trim]],@"SOS_Order", nil]];//sos号码+顺序
@@ -364,11 +368,11 @@
     args.serviceNameSpace=DataNameSpace1;
     args.methodName=@"SaveTeleAndFreqIn";
     args.soapParams=params;
-    NSLog(@"soap=%@",args.soapMessage);
+    //NSLog(@"soap=%@",args.soapMessage);
     NSString *memo=self.operateType==1?@"新增":@"修改";
     [self showLoadingAnimatedWithTitle:[NSString stringWithFormat:@"正在%@,请稍后...",memo]];
     [self.serviceHelper asynService:args success:^(ServiceResult *result) {
-        NSLog(@"xml=%@",result.request.responseString);
+       // NSLog(@"xml=%@",result.request.responseString);
         BOOL boo=NO;
         if (result.hasSuccess) {
             NSDictionary *dic=(NSDictionary*)[result json];
@@ -503,5 +507,11 @@
     UITableViewCell *cell=self.cells[indexPath.row];
     cell.selectionStyle=UITableViewCellSelectionStyleNone;
     return cell;
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.row==0||indexPath.row==1) {
+        return 0;
+    }
+    return 44.0;
 }
 @end

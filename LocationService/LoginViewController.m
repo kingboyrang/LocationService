@@ -10,11 +10,16 @@
 #import "LoginWay.h"
 #import "GeneralLoginViewController.h"
 #import "DynamicLoginViewController.h"
-@interface LoginViewController ()
+@interface LoginViewController (){
+    LoginWay *_way;
+}
 @end
 
 @implementation LoginViewController
-
+- (void)dealloc{
+    [super dealloc];
+    [_way release];
+}
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -31,10 +36,9 @@
     
     [self.navigationController setNavigationBarHidden:YES animated:NO];
     
-    LoginWay *way=[[LoginWay alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 44)];
-    way.controlers=self;
-    [self.view addSubview:way];
-    [way release];
+    _way=[[LoginWay alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 44)];
+    _way.controlers=self;
+    [self.view addSubview:_way];
     
     GeneralLoginViewController *_general=[[[GeneralLoginViewController alloc] init] autorelease];
     DynamicLoginViewController *_dynamic=[[[DynamicLoginViewController alloc] init] autorelease];
@@ -46,6 +50,10 @@
 -(void)selectedMenuItemIndex:(NSNumber*)number{
     int index=[number intValue];
     [self changePageIndex:index];
+}
+//左右切换
+- (void)handChangePageIndex:(int)index{
+    [_way setWaySelectedItemIndex:index];
 }
 - (void)didReceiveMemoryWarning
 {

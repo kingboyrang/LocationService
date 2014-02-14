@@ -190,7 +190,7 @@
 //    cell.backgroundView=bgView;
     if (indexPath.row==self.cells.count-1) {
         cell.detailTextLabel.text=@"详细信息";
-        cell.detailTextLabel.font=[UIFont fontWithName:DeviceFontName size:14];
+        cell.detailTextLabel.font=[UIFont fontWithName:DeviceFontName size:12];
         cell.accessoryType=UITableViewCellAccessoryDisclosureIndicator;
         cell.detailTextLabel.textColor=[UIColor colorFromHexRGB:@"7030a0"];
     }else{
@@ -201,25 +201,28 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     if ([self.cells[indexPath.row] isKindOfClass:[TKLabelLabelCell class]]) {
         TKLabelLabelCell *cell=self.cells[indexPath.row];
-        CGSize size=[cell.showLabel.text textSize:[UIFont fontWithName:DeviceFontName size:14] withWidth:self.frame.size.width-(10+33+2+5)];
-        if (size.height+5>25) {
+        CGSize size=[cell.showLabel.text textSize:[UIFont fontWithName:DeviceFontName size:12] withWidth:self.frame.size.width-(10+33+2+5)];
+        if (size.height+5>20) {
             return size.height+5;
         }
-        return 25;
+        return 20;
     }
     TKTrajectoryPaoCell *cell=self.cells[indexPath.row];
-    CGSize size1=[cell.showLabel1.text textSize:[UIFont fontWithName:DeviceFontName size:14] withWidth:self.frame.size.width/2-(4+10+33)];
-    CGSize size2=[cell.showLabel2.text textSize:[UIFont fontWithName:DeviceFontName size:14] withWidth:self.frame.size.width-(self.frame.size.width/2+33+10)-7];
+    CGSize size1=[cell.showLabel1.text textSize:[UIFont fontWithName:DeviceFontName size:12] withWidth:self.frame.size.width/2-(4+10+33)];
+    CGSize size2=[cell.showLabel2.text textSize:[UIFont fontWithName:DeviceFontName size:12] withWidth:self.frame.size.width-(self.frame.size.width/2+33+10)-7];
     CGFloat w=size1.height>size2.height?size1.height:size2.height;
-    if (w+5>25) {
+    if (w+5>20) {
         return w+5;
     }
-    return 25;
+    return 20;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if (self.controls&&[self.controls respondsToSelector:@selector(selectedMetaWithEntity:)]) {
-        [self.controls performSelector:@selector(selectedMetaWithEntity:) withObject:self.Entity];
+    if (indexPath.row==self.cells.count-1) {
+        if (self.controls&&[self.controls respondsToSelector:@selector(selectedMetaWithEntity:)]) {
+            [self.controls performSelector:@selector(selectedMetaWithEntity:) withObject:self.Entity];
+        }
     }
+   
 }
 @end

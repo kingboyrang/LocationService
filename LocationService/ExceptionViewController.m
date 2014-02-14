@@ -44,8 +44,9 @@
     item.coordinate =coor;
     item.title=@"当前位置";
     [_mapView addAnnotation:item];
-    [item release];
     [_mapView setCenterCoordinate:coor animated:YES];
+    [_mapView selectAnnotation:item animated:YES];
+    [item release];
     
 }
 
@@ -88,13 +89,13 @@
         // 设置颜色
         ((BMKPinAnnotationView*)newAnnotation).pinColor = BMKPinAnnotationColorRed;
         // 从天上掉下效果
-        ((BMKPinAnnotationView*)newAnnotation).animatesDrop = YES;
+        //((BMKPinAnnotationView*)newAnnotation).animatesDrop = YES;
         
         newAnnotation.centerOffset = CGPointMake(0, -(newAnnotation.frame.size.height * 0.5));
         newAnnotation.annotation = annotation;
         
         //自定义气泡
-        ExceptionPaoView *_areaPaoView=[[[ExceptionPaoView alloc] initWithFrame:CGRectMake(0, 0, 280, 350)] autorelease];
+        ExceptionPaoView *_areaPaoView=[[[ExceptionPaoView alloc] initWithFrame:CGRectMake(0, 0, 250, 350)] autorelease];
         [_areaPaoView setDataSource:self.Entity];
         BMKActionPaopaoView *paopao=[[BMKActionPaopaoView alloc] initWithCustomView:_areaPaoView];
         newAnnotation.paopaoView=paopao;

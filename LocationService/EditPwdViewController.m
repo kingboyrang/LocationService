@@ -15,8 +15,9 @@
 @interface EditPwdViewController ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>{
     UITableView *_tableView;
     LoginButtons *_buttons;
-    BOOL isKeyBoardShow;
+    
 }
+@property (nonatomic,assign) CGRect tableRect;
 -(void)buttonCancel;
 -(void)buttonSubmit;
 - (void)pwdDesEncrypWithCompleted:(void(^)(NSString *pwd))completed;
@@ -27,6 +28,7 @@
     [super dealloc];
     [_tableView release];
     [_buttons release];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -57,6 +59,7 @@
     _tableView.bounces=NO;
     //_tableView.backgroundView = [[UIView alloc] init];
     //_tableView.backgroundColor = [UIColor colorFromHexRGB:@"f5f5f5"];
+    self.tableRect=r;
     [self.view addSubview:_tableView];
     
     TKLabelCell *cell1=[[[TKLabelCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
@@ -102,7 +105,48 @@
     _buttons.submit.enabled=NO;
     [_buttons.submit setTitle:@"完成" forState:UIControlStateNormal];
     [self.view addSubview:_buttons];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleKeyboardWillShowHideNotification:)
+                                                 name:UIKeyboardDidShowNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleKeyboardWillShowHideNotification:)
+                                                 name:UIKeyboardDidHideNotification
+                                               object:nil];
 
+}
+#pragma mark - Notifications
+- (void)handleKeyboardWillShowHideNotification:(NSNotification *)notification
+{
+    NSDictionary *info = [notification userInfo];
+    //取得键盘的大小
+    CGRect kbFrame = [[info valueForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    if ([notification.name isEqualToString:UIKeyboardDidShowNotification]) {//显示键盘
+        CGRect r=_tableView.frame;
+        CGRect r1=_buttons.frame;
+        r.size.height=self.tableRect.size.height-kbFrame.size.height;
+        
+        
+        r1.origin.y=r.origin.y+r.size.height;
+        [UIView animateWithDuration:[[info valueForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue] animations:^{
+            _tableView.frame=r;
+            _buttons.frame=r1;
+        }];
+        
+    }
+    else if ([notification.name isEqualToString:UIKeyboardDidHideNotification]) {//隐藏键盘
+        CGRect r=_tableView.frame;
+        CGRect r1=_buttons.frame;
+        r.size.height=self.tableRect.size.height;
+        
+        r1.origin.y=self.tableRect.origin.y+r.size.height;
+        [UIView animateWithDuration:[[info valueForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue] animations:^{
+            _tableView.frame=r;
+            _buttons.frame=r1;
+        }];
+    }
 }
 - (void)pwdDesEncrypWithCompleted:(void(^)(NSString *pwd))completed{
     TKTextFieldCell *cell=self.cells[3];
@@ -238,17 +282,16 @@
 -(void)buttonCancel{
     TKTextFieldCell *cell=self.cells[1];
     cell.textField.text=@"";
-    //[cell.textField resignFirstResponder];
-    [self textFieldShouldReturn:cell.textField];
-    
+    [cell.textField resignFirstResponder];
+   
     TKTextFieldCell *cell1=self.cells[3];
     cell1.textField.text=@"";
-    //[cell1.textField resignFirstResponder];
+    [cell1.textField resignFirstResponder];
     [self textFieldShouldReturn:cell1.textField];
     TKTextFieldCell *cell2=self.cells[5];
     cell2.textField.text=@"";
-    //[cell2.textField resignFirstResponder];
-     [self textFieldShouldReturn:cell2.textField];
+    [cell2.textField resignFirstResponder];
+     
     
 }
 - (void)didReceiveMemoryWarning
@@ -274,21 +317,6 @@
     }
     return boo;
 }
--(void)textFieldDidBeginEditing:(UITextField *)textField {
-    
-    if (!isKeyBoardShow) {
-        isKeyBoardShow=YES;
-        CGRect r=_tableView.frame;
-        r.size.height-=216;
-        
-        CGRect r1=_buttons.frame;
-        r1.origin.y-=216;
-        [UIView animateWithDuration:0.3f animations:^{
-            _tableView.frame=r;
-            _buttons.frame=r1;
-        }];
-    }
-}
 - (void)textFieldDidEndEditing:(UITextField *)textField;
 {
     TKTextFieldCell *cell=self.cells[1];
@@ -302,19 +330,6 @@
 }
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{
     [textField resignFirstResponder];
-    if (isKeyBoardShow) {
-        isKeyBoardShow=NO;
-        CGRect r=_tableView.frame;
-        r.size.height+=216;
-        
-        
-        CGRect r1=_buttons.frame;
-        r1.origin.y+=216;
-        [UIView animateWithDuration:0.3f animations:^{
-            _tableView.frame=r;
-            _buttons.frame=r1;
-        }];
-    }
     return YES;
 }
 #pragma mark UITableViewDataSource Methods

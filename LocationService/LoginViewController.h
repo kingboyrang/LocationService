@@ -9,5 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "PagerViewController.h"
 @interface LoginViewController : PagerViewController
--(void)selectedMenuItemIndex:(NSNumber*)number;
+- (void)selectedMenuItemIndex:(NSNumber*)number;
+- (void)handChangePageIndex:(int)index;
 @end

@@ -90,4 +90,13 @@
     UIButton *btn=(UIButton*)[self viewWithTag:pos];
     [self changeLoginWay:btn];
 }
+- (void)setWaySelectedItemIndex:(int)index{
+    int pos=100+index;
+    UIButton *btn=(UIButton*)[self viewWithTag:pos];
+    CGRect r=_lineLabel.frame;
+    r.origin.x=btn.tag==100?0:_lineLabel.frame.size.width;
+    [UIView animateWithDuration:0.5f animations:^{
+        _lineLabel.frame=r;
+    }];
+}
 @end
