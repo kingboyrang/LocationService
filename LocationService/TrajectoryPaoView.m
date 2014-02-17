@@ -201,15 +201,15 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     if ([self.cells[indexPath.row] isKindOfClass:[TKLabelLabelCell class]]) {
         TKLabelLabelCell *cell=self.cells[indexPath.row];
-        CGSize size=[cell.showLabel.text textSize:[UIFont fontWithName:DeviceFontName size:12] withWidth:self.frame.size.width-(10+33+2+5)];
+        CGSize size=[cell.showLabel.text textSize:[UIFont fontWithName:DeviceFontName size:12] withWidth:self.frame.size.width-(10+28+2+5)];
         if (size.height+5>20) {
             return size.height+5;
         }
         return 20;
     }
     TKTrajectoryPaoCell *cell=self.cells[indexPath.row];
-    CGSize size1=[cell.showLabel1.text textSize:[UIFont fontWithName:DeviceFontName size:12] withWidth:self.frame.size.width/2-(4+10+33)];
-    CGSize size2=[cell.showLabel2.text textSize:[UIFont fontWithName:DeviceFontName size:12] withWidth:self.frame.size.width-(self.frame.size.width/2+33+10)-7];
+    CGSize size1=[cell.showLabel1.text textSize:[UIFont fontWithName:DeviceFontName size:12] withWidth:self.frame.size.width/2-(4+10+28)];
+    CGSize size2=[cell.showLabel2.text textSize:[UIFont fontWithName:DeviceFontName size:12] withWidth:self.frame.size.width-(self.frame.size.width/2+28+10)-7];
     CGFloat w=size1.height>size2.height?size1.height:size2.height;
     if (w+5>20) {
         return w+5;

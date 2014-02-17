@@ -68,6 +68,7 @@
 		016924CF1862A33C0040E0C9 /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 016924CE1862A33C0040E0C9 /* Entitlements.plist */; };
 		0171E32D1887753C0090E02B /* ico14.png in Resources */ = {isa = PBXBuildFile; fileRef = 0171E32B1887753C0090E02B /* ico14.png */; };
 		0171E32E1887753C0090E02B /* ico13.png in Resources */ = {isa = PBXBuildFile; fileRef = 0171E32C1887753C0090E02B /* ico13.png */; };
+		0173DFE218B1E93300215FBE /* dirce1.png in Resources */ = {isa = PBXBuildFile; fileRef = 0173DFE118B1E93300215FBE /* dirce1.png */; };
 		017C2292187511DF00FBF95D /* KYPointAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 017C228F187511DF00FBF95D /* KYPointAnnotation.m */; };
 		017F2C66188FAC000067E4C6 /* HotCityView.m in Sources */ = {isa = PBXBuildFile; fileRef = 017F2C65188FAC000067E4C6 /* HotCityView.m */; };
 		0189889A185FD8E10073B253 /* LoginWay.m in Sources */ = {isa = PBXBuildFile; fileRef = 01898899185FD8E10073B253 /* LoginWay.m */; };
@@ -226,7 +227,6 @@
 		01D7657F1890E6F200A377CE /* DownloadMapView.m in Sources */ = {isa = PBXBuildFile; fileRef = 01D7657E1890E6F200A377CE /* DownloadMapView.m */; };
 		01D8A70A188FCF2800975F3F /* load02.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 01D8A708188FCF2800975F3F /* load02.jpg */; };
 		01D8A70B188FCF2800975F3F /* load02@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 01D8A709188FCF2800975F3F /* load02@2x.jpg */; };
-		01D9F4F518B19DF000BA2E9E /* dirce1.png in Resources */ = {isa = PBXBuildFile; fileRef = 01D9F4F418B19DF000BA2E9E /* dirce1.png */; };
 		01E2C2FC1887C4D1008FAC4C /* pinCircule.png in Resources */ = {isa = PBXBuildFile; fileRef = 01E2C2FB1887C4D1008FAC4C /* pinCircule.png */; };
 		01E9CBA5187566A3005F330A /* CVUISelect.m in Sources */ = {isa = PBXBuildFile; fileRef = 01E9CBA4187566A3005F330A /* CVUISelect.m */; };
 		01E9CBA818756B44005F330A /* AreaCar.m in Sources */ = {isa = PBXBuildFile; fileRef = 01E9CBA718756B44005F330A /* AreaCar.m */; };
@@ -359,6 +359,7 @@
 		016924CE1862A33C0040E0C9 /* Entitlements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Entitlements.plist; sourceTree = "<group>"; };
 		0171E32B1887753C0090E02B /* ico14.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ico14.png; sourceTree = "<group>"; };
 		0171E32C1887753C0090E02B /* ico13.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ico13.png; sourceTree = "<group>"; };
+		0173DFE118B1E93300215FBE /* dirce1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dirce1.png; sourceTree = "<group>"; };
 		017C228E187511DF00FBF95D /* KYPointAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KYPointAnnotation.h; sourceTree = "<group>"; };
 		017C228F187511DF00FBF95D /* KYPointAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KYPointAnnotation.m; sourceTree = "<group>"; };
 		017F2C64188FAC000067E4C6 /* HotCityView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HotCityView.h; sourceTree = "<group>"; };
@@ -658,7 +659,6 @@
 		01D7657E1890E6F200A377CE /* DownloadMapView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadMapView.m; sourceTree = "<group>"; };
 		01D8A708188FCF2800975F3F /* load02.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = load02.jpg; sourceTree = "<group>"; };
 		01D8A709188FCF2800975F3F /* load02@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "load02@2x.jpg"; sourceTree = "<group>"; };
-		01D9F4F418B19DF000BA2E9E /* dirce1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dirce1.png; sourceTree = "<group>"; };
 		01DDCAC61886585B00E4DFFE /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		01E2C2FB1887C4D1008FAC4C /* pinCircule.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pinCircule.png; sourceTree = "<group>"; };
 		01E9CBA3187566A3005F330A /* CVUISelect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVUISelect.h; sourceTree = "<group>"; };
@@ -1331,8 +1331,8 @@
 		01BE4002185EAFD2005C25D9 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				0173DFE118B1E93300215FBE /* dirce1.png */,
 				012B10AE18B1B084008B76AF /* pinArrow.png */,
-				01D9F4F418B19DF000BA2E9E /* dirce1.png */,
 				01466B5918AE226700F146DC /* direction.png */,
 				01D8A708188FCF2800975F3F /* load02.jpg */,
 				01D8A709188FCF2800975F3F /* load02@2x.jpg */,
@@ -1682,11 +1682,11 @@
 				012097D0185ECA6600437EA3 /* load01@2x.jpg in Resources */,
 				016924BD18618DE60040E0C9 /* NoticeView.bundle in Resources */,
 				01D8A70B188FCF2800975F3F /* load02@2x.jpg in Resources */,
+				0173DFE218B1E93300215FBE /* dirce1.png in Resources */,
 				0195139E18852997003255D5 /* bottomico.png in Resources */,
 				01A4C78E187BE54E00B3963D /* ico04f.png in Resources */,
 				018988A0185FE1710073B253 /* logintop.jpg in Resources */,
 				01A4C78B187BE54E00B3963D /* ico03.png in Resources */,
-				01D9F4F518B19DF000BA2E9E /* dirce1.png in Resources */,
 				01A4C789187BE54E00B3963D /* ico02.png in Resources */,
 				01D3910418AB767B00132667 /* mapapi.bundle in Resources */,
 				016924BB18618DE60040E0C9 /* icon-info.png in Resources */,

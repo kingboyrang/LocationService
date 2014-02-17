@@ -23,7 +23,6 @@
              self.image=image;
             [self setNeedsDisplay];
         }];
-        
     }
 }
 @end

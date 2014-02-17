@@ -239,7 +239,7 @@
         CLLocationCoordinate2D *points = (CLLocationCoordinate2D*)malloc( numPoints * sizeof( CLLocationCoordinate2D));
         for (int i=0; i<self.list.count; i++) {
             TrajectoryHistory *entity=self.list[i];
-            
+            //NSLog(@"time=%@",entity.pctime);
             CLLocationCoordinate2D coor;
             coor.latitude=[entity.Latitude floatValue];
             coor.longitude=[entity.Longitude floatValue];
@@ -294,14 +294,22 @@
             
         }
         TrajectoryHistory *entity=self.list[pos];
-        //自定义图片
-        //UIImage* image = [UIImage imageNamed:@"mapapi.bundle/images/icon_direction.png"];
-        UIImage* image = [UIImage imageNamed:@"dirce1.png"];
-        //direction.png
-        if (entity.angle&&[entity.angle length]>0) {
-            view.image = [image imageRotatedByDegrees:[entity.angle floatValue]];
+        if (pos==0) {
+            view.image=[UIImage imageNamed:@"mapapi.bundle/images/icon_nav_start.png"];
+            view.centerOffset = CGPointMake(0, -(view.frame.size.height * 0.5));
+        }else if(pos==self.list.count-1)
+        {
+            view.image=[UIImage imageNamed:@"mapapi.bundle/images/icon_nav_end.png"];
+            view.centerOffset = CGPointMake(0, -(view.frame.size.height * 0.5));
         }else{
-             view.image = image;
+            //自定义图片
+            //UIImage* image = [UIImage imageNamed:@"mapapi.bundle/images/icon_direction.png"];
+            UIImage* image = [UIImage imageNamed:@"dirce1.png"];
+            if (entity.angle&&[entity.angle length]>0) {
+                view.image = [image imageRotatedByDegrees:[entity.angle floatValue]];
+            }else{
+                view.image = image;
+            }
         }
         view.annotation = annotation;
         //view.centerOffset = CGPointMake((view.frame.size.height * 7/26), 0);

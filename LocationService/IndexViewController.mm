@@ -79,8 +79,10 @@
     self.navigationController.delegate=self;
     
     isFirstLoad=YES;
-   // _pinView=[[PinView alloc] initWithFrame:CGRectMake(0, 44, 90, 164)];
-    //NSLog(@"lat=%f,log=%f",currentCenterCoor.latitude,currentCenterCoor.longitude);
+//    NSString *str=@"名称:";
+//    CGSize size=[str textSize:[UIFont fontWithName:DeviceFontName size:12] withWidth:self.view.bounds.size.width];
+//    NSLog(@"size=%@",NSStringFromCGSize(size));
+
     
     CGRect r=self.view.bounds;
     r.origin.y=44;
