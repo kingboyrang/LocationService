@@ -10,12 +10,20 @@
 #import "UIImageView+WebCache.h"
 #import "UIImage+TPCategory.h"
 #import <QuartzCore/QuartzCore.h>
+
+@interface PinView ()
+-(bool)checkDevice:(NSString*)name;
+@end
+
 @implementation PinView
 
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
+        
+        //字体为14 高度为18
+        
         self.backgroundColor=[UIColor clearColor];
         CGFloat topY=0;
         _label=[[UILabel alloc] initWithFrame:CGRectMake(0, topY,frame.size.width,20)];
@@ -32,8 +40,9 @@
         [_headView setImage:image1];
         [self addSubview:_headView];
         
-        topY+=image1.size.height-10;
-        UIImage *image2=[UIImage imageNamed:@"pinCircule.png"];
+        //topY+=image1.size.height-10;
+        topY+=image1.size.height;
+        UIImage *image2=[UIImage imageNamed:@"pinArrow.png"];
         _circuleView=[[UIImageView alloc] initWithFrame:CGRectMake((frame.size.width-image2.size.width)/2, topY, image2.size.width, image2.size.height)];
         [_circuleView setImage:image2];
         [self addSubview:_circuleView];
@@ -55,12 +64,18 @@
         _headView.frame=r;
         
         r=_circuleView.frame;
-        r.origin.y=_headView.frame.origin.y+_headView.frame.size.height-10;
+        //r.origin.y=_headView.frame.origin.y+_headView.frame.size.height-10;
+        r.origin.y=_headView.frame.origin.y+_headView.frame.size.height;
         _circuleView.frame=r;
         
         r=self.frame;
-        r.size.height=_circuleView.frame.origin.y+_circuleView.frame.size.height-10;
+        //r.size.height=_circuleView.frame.origin.y+_circuleView.frame.size.height-10;
+        r.size.height=_circuleView.frame.origin.y+_circuleView.frame.size.height;
         self.frame=r;
+    }
+    if ([self checkDevice:@"iPad"]) {//如果为ipad
+        UIImage *image=[UIImage getImageFromView:self];
+        return [image imageByScalingToSize:CGSizeMake(image.size.width/2, image.size.height/2)];
     }
     return [UIImage getImageFromView:self];
 }
@@ -77,11 +92,13 @@
         _headView.frame=r;
         
         r=_circuleView.frame;
-        r.origin.y=_headView.frame.origin.y+_headView.frame.size.height-10;
+        //r.origin.y=_headView.frame.origin.y+_headView.frame.size.height-10;
+         r.origin.y=_headView.frame.origin.y+_headView.frame.size.height;
         _circuleView.frame=r;
         
         r=self.frame;
-        r.size.height=_circuleView.frame.origin.y+_circuleView.frame.size.height-10;
+        //r.size.height=_circuleView.frame.origin.y+_circuleView.frame.size.height-10;
+        r.size.height=_circuleView.frame.origin.y+_circuleView.frame.size.height;
         self.frame=r;
     }
     [_headView setImageWithURL:[NSURL URLWithString:entity.Photo] placeholderImage:[UIImage imageNamed:@"bg02.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
@@ -94,7 +111,12 @@
         }
         if(finished)
         {
-            finished([UIImage getImageFromView:self]);//取得截图
+            UIImage *resultImage=[UIImage getImageFromView:self];
+            if ([self checkDevice:@"iPad"]) {//如果为ipad
+                
+                resultImage=[resultImage imageByScalingToSize:CGSizeMake(resultImage.size.width/2, resultImage.size.height/2)];
+            }
+            finished(resultImage);//取得截图
         }
     }];
     
@@ -113,5 +135,13 @@
     }else{
         [self setDataSource:entity completed:finished];
     }
+}
+-(bool)checkDevice:(NSString*)name
+{
+    NSString* deviceType = [UIDevice currentDevice].model;
+    //NSLog(@"deviceType = %@", deviceType);
+    
+    NSRange range = [deviceType rangeOfString:name];
+    return range.location != NSNotFound;
 }
 @end

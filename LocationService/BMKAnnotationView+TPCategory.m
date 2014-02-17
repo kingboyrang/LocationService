@@ -9,6 +9,7 @@
 #import "BMKAnnotationView+TPCategory.h"
 #import "UIImage+TPCategory.h"
 #import "PinView.h"
+
 @implementation BMKAnnotationView (TPCategory)
 - (void)setPinImageWithEntity:(SupervisionPerson*)entity mapLevel:(float)level{
     if (level<6) {
@@ -19,7 +20,7 @@
         self.image=[bgView getPinImageWithSource:entity];
         [self setNeedsDisplay];
         [bgView setDataSource:entity completed:^(UIImage *image) {
-            self.image=[UIImage getImageFromView:bgView];
+             self.image=image;
             [self setNeedsDisplay];
         }];
         

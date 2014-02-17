@@ -91,6 +91,5 @@
     [UIView setAnimationDidStopSelector:@selector(removeView)];
      imageView.alpha= 0.0;
     [UIView commitAnimations];
-    
 }
 @end

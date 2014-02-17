@@ -270,6 +270,8 @@
         [cell2.textField becomeFirstResponder];
         return;
     }
+    [cell1.textField resignFirstResponder];
+    [cell2.textField resignFirstResponder];
     if (!self.hasNetWork) {
         [self showErrorNetWorkNotice:nil];
         return;

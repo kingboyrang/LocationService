@@ -527,7 +527,7 @@
     if (orginLevel>6&&mapView.zoomLevel<6) {
         orginLevel=mapView.zoomLevel;
         [self removeSupervisionAnnotations];//移除之前标注
-        NSLog(@"当前地图等级小于6，count=%d",_mapView.annotations.count);
+        //NSLog(@"当前地图等级小于6，count=%d",_mapView.annotations.count);
         [self reloadDataSupervisionAnnotations];
         //return;
     }

@@ -14,6 +14,8 @@
 #import "MeterViewController.h"
 #import "NSDate+TPCategory.h"
 #import "UIImage+TPCategory.h"
+#import "IndexViewController.h"
+#import "PersonTrajectoryViewController.h"
 @interface ShowTrajectoryViewController (){
     BOOL isFirstLoad;
 }
@@ -98,6 +100,21 @@
     _mapView.zoomLevel=16;
     isFirstLoad=YES;
     
+}
+- (BOOL)backPrevViewController{
+    if (self.navigationController) {
+        if (self.navigationController.viewControllers.count==2) {
+            id v=self.navigationController.viewControllers[0];
+            if ([v isKindOfClass:[IndexViewController class]]) {
+                IndexViewController *index=(IndexViewController*)v;
+                [index.toolBarView setSelectedItemIndex:0];
+            }
+        }
+    }
+    PersonTrajectoryViewController *person=self.navigationController.viewControllers[self.navigationController.viewControllers.count-2];
+    person.trajectorySearch.startCalendar.popoverText.popoverTextField.text=self.trajectorySearch.startCalendar.popoverText.popoverTextField.text;
+    person.trajectorySearch.endCalendar.popoverText.popoverTextField.text=self.trajectorySearch.endCalendar.popoverText.popoverTextField.text;
+    return YES;
 }
 -(void)viewWillDisappear:(BOOL)animated {
     [_mapView viewWillDisappear];
@@ -287,6 +304,8 @@
              view.image = image;
         }
         view.annotation = annotation;
+        //view.centerOffset = CGPointMake((view.frame.size.height * 7/26), 0);
+        //NSLog(@"centerOffset x=%f,y=%f",view.centerOffset.x,view.centerOffset.y);
         //自定义气泡
         TrajectoryPaoView *_areaPaoView=[[[TrajectoryPaoView alloc] initWithFrame:CGRectMake(0, 0, 250, 350)] autorelease];
         [_areaPaoView setDataSourceHistory:entity name:self.Entity.Name];

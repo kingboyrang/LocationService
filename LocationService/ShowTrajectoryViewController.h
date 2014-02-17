@@ -19,4 +19,5 @@
 @property (nonatomic,copy) NSString *startTime;//开始时间
 @property (nonatomic,copy) NSString *endTime;//结束时间
 - (void)selectedMetaWithEntity:(SupervisionPerson*)entity;//进放仪表画面
+- (BOOL)backPrevViewController;
 @end
