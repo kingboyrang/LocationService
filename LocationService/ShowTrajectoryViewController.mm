@@ -312,8 +312,6 @@
             }
         }
         view.annotation = annotation;
-        //view.centerOffset = CGPointMake((view.frame.size.height * 7/26), 0);
-        //NSLog(@"centerOffset x=%f,y=%f",view.centerOffset.x,view.centerOffset.y);
         //自定义气泡
         TrajectoryPaoView *_areaPaoView=[[[TrajectoryPaoView alloc] initWithFrame:CGRectMake(0, 0, 250, 350)] autorelease];
         [_areaPaoView setDataSourceHistory:entity name:self.Entity.Name];
