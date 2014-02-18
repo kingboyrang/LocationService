@@ -310,8 +310,10 @@
             }else{
                 view.image = image;
             }
+             view.enabled3D=YES;
         }
         view.annotation = annotation;
+       
         //自定义气泡
         TrajectoryPaoView *_areaPaoView=[[[TrajectoryPaoView alloc] initWithFrame:CGRectMake(0, 0, 250, 350)] autorelease];
         [_areaPaoView setDataSourceHistory:entity name:self.Entity.Name];

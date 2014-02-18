@@ -112,6 +112,7 @@
 }
 - (void)setSelectedSupervisionCenter:(SupervisionPerson*)entity{
     if ([[entity.Latitude Trim] length]>0&&[[entity.Longitude Trim] length]>0) {
+        //[self setRecetiveSupersion:entity];
         CLLocationCoordinate2D coor;
         coor.latitude=[entity.Latitude floatValue];
         coor.longitude=[entity.Longitude floatValue];
@@ -475,6 +476,22 @@
    
     if (currentCenterCoor.latitude>0&&currentCenterCoor.longitude>0) {
         [_mapView setCenterCoordinate:currentCenterCoor];
+        //设置监管目标选中 
+        if (_mapView.annotations&&[_mapView.annotations count]>0) {
+            NSArray* arr = [NSArray arrayWithArray:_mapView.annotations];
+            for (NSInteger i = 0;i<[arr count];i++) {
+                id elem = [arr objectAtIndex:i];
+                if ([elem isKindOfClass:[KYPointAnnotation class]]) {
+                    KYPointAnnotation *annotation=(KYPointAnnotation*)elem;
+                    if(annotation.coordinate.latitude==currentCenterCoor.latitude&&annotation.coordinate.longitude==currentCenterCoor.longitude)
+                    {
+                        [_mapView selectAnnotation:annotation animated:YES];
+                        break;
+                    }
+                }
+                
+            }
+        }
         currentCenterCoor.latitude=0.0;
         currentCenterCoor.longitude=0.0;
     }
