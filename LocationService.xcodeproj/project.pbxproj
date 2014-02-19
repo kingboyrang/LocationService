@@ -127,7 +127,6 @@
 		019513B118852AA7003255D5 /* ico11.png in Resources */ = {isa = PBXBuildFile; fileRef = 019513AB18852AA7003255D5 /* ico11.png */; };
 		019A93E11885151E002554A1 /* RunScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 019A93E01885151E002554A1 /* RunScrollView.m */; };
 		019A93E41885167C002554A1 /* RunAnimateView.m in Sources */ = {isa = PBXBuildFile; fileRef = 019A93E31885167B002554A1 /* RunAnimateView.m */; };
-		019AFB6D18B33A7900D1296D /* dirce1.png in Resources */ = {isa = PBXBuildFile; fileRef = 019AFB6C18B33A7900D1296D /* dirce1.png */; };
 		01A4C787187BE54E00B3963D /* ico01.png in Resources */ = {isa = PBXBuildFile; fileRef = 01A4C77D187BE54E00B3963D /* ico01.png */; };
 		01A4C788187BE54E00B3963D /* ico01f.png in Resources */ = {isa = PBXBuildFile; fileRef = 01A4C77E187BE54E00B3963D /* ico01f.png */; };
 		01A4C789187BE54E00B3963D /* ico02.png in Resources */ = {isa = PBXBuildFile; fileRef = 01A4C77F187BE54E00B3963D /* ico02.png */; };
@@ -230,6 +229,7 @@
 		01E2C2FC1887C4D1008FAC4C /* pinCircule.png in Resources */ = {isa = PBXBuildFile; fileRef = 01E2C2FB1887C4D1008FAC4C /* pinCircule.png */; };
 		01E9CBA5187566A3005F330A /* CVUISelect.m in Sources */ = {isa = PBXBuildFile; fileRef = 01E9CBA4187566A3005F330A /* CVUISelect.m */; };
 		01E9CBA818756B44005F330A /* AreaCar.m in Sources */ = {isa = PBXBuildFile; fileRef = 01E9CBA718756B44005F330A /* AreaCar.m */; };
+		01EE996418B43E3B00957220 /* dirce1.png in Resources */ = {isa = PBXBuildFile; fileRef = 01EE996318B43E3B00957220 /* dirce1.png */; };
 		01F859581883729300189051 /* ToolBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 01F859571883729300189051 /* ToolBarView.m */; };
 		01F8595B188394B500189051 /* MeterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01F8595A188394B200189051 /* MeterViewController.m */; };
 		01F8595D188395DF00189051 /* meta.png in Resources */ = {isa = PBXBuildFile; fileRef = 01F8595C188395DF00189051 /* meta.png */; };
@@ -453,7 +453,6 @@
 		019A93E01885151E002554A1 /* RunScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RunScrollView.m; sourceTree = "<group>"; };
 		019A93E21885167B002554A1 /* RunAnimateView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RunAnimateView.h; sourceTree = "<group>"; };
 		019A93E31885167B002554A1 /* RunAnimateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RunAnimateView.m; sourceTree = "<group>"; };
-		019AFB6C18B33A7900D1296D /* dirce1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dirce1.png; sourceTree = "<group>"; };
 		01A4C77D187BE54E00B3963D /* ico01.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ico01.png; sourceTree = "<group>"; };
 		01A4C77E187BE54E00B3963D /* ico01f.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ico01f.png; sourceTree = "<group>"; };
 		01A4C77F187BE54E00B3963D /* ico02.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ico02.png; sourceTree = "<group>"; };
@@ -665,6 +664,7 @@
 		01E9CBA4187566A3005F330A /* CVUISelect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CVUISelect.m; sourceTree = "<group>"; };
 		01E9CBA618756B44005F330A /* AreaCar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AreaCar.h; sourceTree = "<group>"; };
 		01E9CBA718756B44005F330A /* AreaCar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AreaCar.m; sourceTree = "<group>"; };
+		01EE996318B43E3B00957220 /* dirce1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dirce1.png; sourceTree = "<group>"; };
 		01F859561883729300189051 /* ToolBarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolBarView.h; sourceTree = "<group>"; };
 		01F859571883729300189051 /* ToolBarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolBarView.m; sourceTree = "<group>"; };
 		01F85959188394AF00189051 /* MeterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeterViewController.h; sourceTree = "<group>"; };
@@ -1331,7 +1331,7 @@
 		01BE4002185EAFD2005C25D9 /* images */ = {
 			isa = PBXGroup;
 			children = (
-				019AFB6C18B33A7900D1296D /* dirce1.png */,
+				01EE996318B43E3B00957220 /* dirce1.png */,
 				0173DFE118B1E93300215FBE /* dirce2.png */,
 				012B10AE18B1B084008B76AF /* pinArrow.png */,
 				01D8A708188FCF2800975F3F /* load02.jpg */,
@@ -1682,6 +1682,7 @@
 				012097D0185ECA6600437EA3 /* load01@2x.jpg in Resources */,
 				016924BD18618DE60040E0C9 /* NoticeView.bundle in Resources */,
 				01D8A70B188FCF2800975F3F /* load02@2x.jpg in Resources */,
+				01EE996418B43E3B00957220 /* dirce1.png in Resources */,
 				0173DFE218B1E93300215FBE /* dirce2.png in Resources */,
 				0195139E18852997003255D5 /* bottomico.png in Resources */,
 				01A4C78E187BE54E00B3963D /* ico04f.png in Resources */,
@@ -1695,7 +1696,6 @@
 				012809A4187B87D2009AE37D /* leftico.png in Resources */,
 				01F994C31867E76400FEC0F2 /* MoreCell.xib in Resources */,
 				01A4C78C187BE54E00B3963D /* ico03f.png in Resources */,
-				019AFB6D18B33A7900D1296D /* dirce1.png in Resources */,
 				0104B628186BC752009C7507 /* corner.png in Resources */,
 				0195139F18852997003255D5 /* topico.png in Resources */,
 				015B62891869599300E488F2 /* bg02.png in Resources */,
@@ -1944,7 +1944,8 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					/usr/include/libxml2,
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IBC_ERRORS = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "-lxml2";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "03C9A3A1-642A-49F3-8A03-31FD28FF5B12";
@@ -1977,7 +1978,8 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					/usr/include/libxml2,
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IBC_ERRORS = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				OTHER_LDFLAGS = "-lxml2";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "4EA15DEC-C735-469B-8346-5ED9BF9F8422";
@@ -1995,6 +1997,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LocationService/LocationService-Prefix.pch";
 				INFOPLIST_FILE = "LocationService/LocationService-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\\\"$(SRCROOT)/LocationService\\\"",
@@ -2015,6 +2018,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LocationService/LocationService-Prefix.pch";
 				INFOPLIST_FILE = "LocationService/LocationService-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\\\"$(SRCROOT)/LocationService\\\"",

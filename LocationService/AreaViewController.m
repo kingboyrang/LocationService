@@ -66,7 +66,7 @@
     [super viewDidLoad];
 	CGRect r=self.view.bounds;
     r.origin.y=44;
-    r.size.height-=44*2;
+    r.size.height-=44;
 
     _tableView=[[UITableView alloc] initWithFrame:r style:UITableViewStylePlain];
     _tableView.delegate=self;

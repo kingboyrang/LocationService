@@ -93,6 +93,14 @@
 {
     
     [super viewDidLoad];
+#ifdef __IPHONE_7_0
+    if ([[UIDevice currentDevice].systemVersion floatValue] >= 7.0) {
+        self.edgesForExtendedLayout = UIRectEdgeNone;
+        self.extendedLayoutIncludesOpaqueBars = NO;
+        //self.edgesForExtendedLayout = UIRectEdgeBottom | UIRectEdgeLeft | UIRectEdgeRight;
+    }
+#endif
+    
     self.serviceHelper=[[ServiceHelper alloc] init];
     self.view.backgroundColor=[UIColor whiteColor];
     //[self showNavigationBackButton];

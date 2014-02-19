@@ -124,6 +124,22 @@
     if (![_trajectorySearch compareToDate]) {
         return;
     }
+    UIButton *btn=(UIButton*)[self.navBarView viewWithTag:301];
+    if (btn.selected) {
+        CGRect r=self.trajectorySearch.frame;
+        r.origin.y=44-r.size.height;
+        
+        CGRect r1=_tableView.frame;
+        r1.origin.y=44;
+        r1.size.height=self.view.bounds.size.height-r1.origin.y;
+        
+        [UIView animateWithDuration:0.5f animations:^{
+            self.trajectorySearch.frame=r;
+            _tableView.frame=r1;
+            btn.selected=NO;
+            [self.view sendSubviewToBack:self.trajectorySearch];
+        }];
+    }
     [self loadingHistory];
 }
 //查询

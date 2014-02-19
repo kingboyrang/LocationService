@@ -340,9 +340,11 @@
     
     CGRect r=self.trajectorySearch.frame;
     if (r.origin.y>0) {
+        UIButton *btn=(UIButton*)[self.navBarView viewWithTag:301];
         r.origin.y=44-r.size.height;
         [UIView animateWithDuration:0.5f animations:^{
             self.trajectorySearch.frame=r;
+             btn.selected=NO;
         } completion:^(BOOL finished) {
             if (finished) {
                 [self.view sendSubviewToBack:self.trajectorySearch];
