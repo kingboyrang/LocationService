@@ -48,9 +48,22 @@
         searchBar.delegate = self;
         searchBar.placeholder =@"请输入名称";
         searchBar.backgroundColor=[UIColor clearColor];
-        UITextField *searchField = [[searchBar subviews] lastObject];
-        //[searchField setReturnKeyType:UIReturnKeyDone];
-        searchField.clearButtonMode=UITextFieldViewModeNever;
+#ifdef __IPHONE_7_0
+        if ([[UIDevice currentDevice].systemVersion floatValue] >= 7.0) {
+            searchBar.barTintColor=[UIColor clearColor];
+            UIView *searchV = [[searchBar subviews] lastObject];
+            for (id v in searchV.subviews) {
+                if ([v isKindOfClass:[UITextField class]])
+                {
+                    UITextField *field=(UITextField*)v;
+                    field.clearButtonMode=UITextFieldViewModeNever;
+                    break;
+                }
+            }
+        }
+#endif
+        //UITextField *field = [[searchBar subviews] lastObject];
+        //field.clearButtonMode=UITextFieldViewModeNever;
         for (UIView *subview in searchBar.subviews)
         {
             if ([subview isKindOfClass:NSClassFromString(@"UISearchBarBackground")])
@@ -59,6 +72,16 @@
                 break;
             }
         }
+        for (UIView *subview in searchBar.subviews)
+        {
+            if ([subview isKindOfClass:[UITextField class]])
+            {
+                UITextField *field=(UITextField*)subview;
+                field.clearButtonMode=UITextFieldViewModeNever;
+                break;
+            }
+        }
+        
         //为UISearchBar添加背景图片
         [self.navBarView addSubview:searchBar];
         [searchBar release];

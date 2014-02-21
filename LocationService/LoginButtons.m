@@ -7,7 +7,7 @@
 //
 
 #import "LoginButtons.h"
-
+#import "UIColor+TPCategory.h"
 @implementation LoginButtons
 
 - (id)initWithFrame:(CGRect)frame

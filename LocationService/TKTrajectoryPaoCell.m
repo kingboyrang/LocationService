@@ -12,6 +12,12 @@
 
 - (id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     if(!(self=[super initWithStyle:style reuseIdentifier:reuseIdentifier])) return nil;
+#ifdef __IPHONE_7_0
+    if ([[UIDevice currentDevice].systemVersion floatValue] >= 7.0) {
+        //我是由于这层挡住了，大家注意下每一层颜色
+        self.backgroundColor = [UIColor clearColor];
+    }
+#endif
     self.label.font=[UIFont fontWithName:DeviceFontName size:12];
     
     _showLabel1 = [[UILabel alloc] initWithFrame:CGRectZero];

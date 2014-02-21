@@ -120,8 +120,22 @@
         [AlertHelper initWithTitle:@"提示" message:@"确认注销?" cancelTitle:@"取消" cancelAction:nil confirmTitle:@"确认" confirmAction:^{
             [Account closed];
             LoginViewController *login=[[[LoginViewController alloc] init] autorelease];
+            NSMutableArray *arr=[NSMutableArray arrayWithArray:self.navigationController.viewControllers];
+            [arr replaceObjectAtIndex:0 withObject:login];
+            self.navigationController.viewControllers=arr;
+            [self.navigationController popToRootViewControllerAnimated:YES];
+            /***
             BasicNavigationController *nav=[[[BasicNavigationController alloc] initWithRootViewController:login] autorelease];
+#ifdef __IPHONE_7_0
+            if ([[UIDevice currentDevice].systemVersion floatValue] >= 7.0) {
+                UIWindow *window=[[UIApplication sharedApplication] keyWindow];
+                window.rootViewController=nav;
+            }
+#else
             [self presentViewController:nav animated:YES completion:nil];
+#endif
+             ***/
+            
         }];
     }
 }

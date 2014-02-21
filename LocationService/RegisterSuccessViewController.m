@@ -10,6 +10,8 @@
 #import "AppUI.h"
 #import <QuartzCore/QuartzCore.h>
 #import "MainViewController.h"
+#import "IndexViewController.h"
+#import "BasicNavigationController.h"
 @interface RegisterSuccessViewController (){
     UILabel *_labelShowInfo;
     int total;
@@ -68,9 +70,17 @@
     if (total==0) {
         [theTimer invalidate];
         [Account registerLoginWithAccount:self.Entity];
-        MainViewController *main=[[MainViewController alloc] init];
-        [self presentViewController:main animated:YES completion:nil];
-        [main release];
+        IndexViewController *indexController=[[[IndexViewController alloc] init] autorelease];
+        BasicNavigationController *nav=[[[BasicNavigationController alloc] initWithRootViewController:indexController] autorelease];
+#ifdef __IPHONE_7_0
+        if ([[UIDevice currentDevice].systemVersion floatValue] >= 7.0) {
+            UIWindow *window=[[UIApplication sharedApplication] keyWindow];
+            window.rootViewController=nav;
+        }
+#else
+        [self presentViewController:nav animated:YES completion:nil];
+#endif
+        
     }else{
        _labelShowInfo.text=[NSString stringWithFormat:@"自动登录,%d秒后跳转到主画面...",total];
     }

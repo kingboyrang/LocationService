@@ -73,7 +73,7 @@
     _tableView.delegate=self;
     [self.view addSubview:_tableView];
     
-    CGFloat topY=self.view.bounds.size.height+44;
+    CGFloat topY=self.view.bounds.size.height;
     _toolBar=[[LoginButtons alloc] initWithFrame:CGRectMake(0, topY, self.view.bounds.size.width, 44)];
     _toolBar.cancel.hidden=YES;
     _toolBar.submit.frame=CGRectMake(0, 0, _toolBar.frame.size.width, _toolBar.frame.size.height);
@@ -93,11 +93,12 @@
     if(_tableView.editing){//编辑
         [btn setTitle:@"取消" forState:UIControlStateNormal];
         CGRect r=_toolBar.frame;
-        r.origin.y=self.view.bounds.size.height-44;
+        //r.origin.y=self.view.bounds.size.height-44;
+        r.origin.y-=r.size.height;
         
         CGRect r1=_tableView.frame;
-        r1.size.height=self.view.bounds.size.height-44*2;
-        
+        //r1.size.height=self.view.bounds.size.height-44*2;
+        r1.size.height-=r.size.height;
         
         
         [UIView animateWithDuration:0.5f animations:^(){
@@ -112,10 +113,12 @@
         [_toolBar.submit setTitle:@"删除(0)" forState:UIControlStateNormal];
         [btn setTitle:@"编辑" forState:UIControlStateNormal];
         CGRect r=_toolBar.frame;
-        r.origin.y=self.view.bounds.size.height+44;
+        //r.origin.y=self.view.bounds.size.height+44;
+        r.origin.y+=r.size.height;
         
         CGRect r1=_tableView.frame;
-        r1.size.height=self.view.bounds.size.height-44;
+        //r1.size.height=self.view.bounds.size.height-44;
+        r1.size.height+=r.size.height;
         
         [UIView animateWithDuration:0.5f animations:^(){
             _toolBar.frame=r;

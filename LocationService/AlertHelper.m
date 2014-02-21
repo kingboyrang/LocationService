@@ -8,6 +8,7 @@
 
 #import "AlertHelper.h"
 #import "RIButtonItem.h"
+#import "AppDelegate.h"
 @implementation AlertHelper
 +(void)initWithTitle:(NSString *)inTitle message:(NSString *)inMessage cancelButtonItem:(RIButtonItem *)inCancelButtonItem otherButtonItems:(RIButtonItem *)inOtherButtonItems, ...{
     UIAlertView *alter=[[UIAlertView alloc] initWithTitle:inTitle message:inMessage cancelButtonItem:inCancelButtonItem otherButtonItems:inOtherButtonItems, nil];
@@ -41,7 +42,17 @@
     delBtn.action=confirmAction;
     UIActionSheet *sheet=[[UIActionSheet alloc] initWithTitle:nil cancelButtonItem:canBtn destructiveButtonItem:nil otherButtonItems:delBtn, nil];
     [sheet showInView:view];
+#ifdef __IPHONE_7_0
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7)
+    {
+        CGRect r=sheet.frame;
+        r.origin.y-=20;
+        sheet.frame=r;
+    }
+#endif
     [sheet release];
+    
+
 
 }
 @end

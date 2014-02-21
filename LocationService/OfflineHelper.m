@@ -103,6 +103,14 @@
     delBtn.action=deleteAct;
     UIActionSheet *sheet=[[UIActionSheet alloc] initWithTitle:nil cancelButtonItem:canBtn destructiveButtonItem:nil otherButtonItems:viewerBtn,delBtn, nil];
     [sheet showInView:view];
+#ifdef __IPHONE_7_0
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7)
+    {
+        CGRect r=sheet.frame;
+        r.origin.y-=20;
+        sheet.frame=r;
+    }
+#endif
     [sheet release];
 }
 +(void)viewerDownloadMapInView:(UIView *)view viewAction:(void (^)())viewerAct pauseAction:(void (^)())pauseAct deleteAction:(void (^)())deleteAct{
@@ -123,6 +131,14 @@
     delBtn.action=deleteAct;
     UIActionSheet *sheet=[[UIActionSheet alloc] initWithTitle:nil cancelButtonItem:canBtn destructiveButtonItem:nil otherButtonItems:viewerBtn,pauseBtn,delBtn, nil];
     [sheet showInView:view];
+#ifdef __IPHONE_7_0
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7)
+    {
+        CGRect r=sheet.frame;
+        r.origin.y-=20;
+        sheet.frame=r;
+    }
+#endif
     [sheet release];
 }
 +(void)viewerDownloadMapInView:(UIView*)view viewAction:(void(^)())viewerAct pauseTitle:(NSString*)title pauseAction:(void(^)())pauseAct deleteAction:(void(^)())deleteAct{
@@ -143,6 +159,14 @@
     delBtn.action=deleteAct;
     UIActionSheet *sheet=[[UIActionSheet alloc] initWithTitle:nil cancelButtonItem:canBtn destructiveButtonItem:nil otherButtonItems:viewerBtn,pauseBtn,delBtn, nil];
     [sheet showInView:view];
+#ifdef __IPHONE_7_0
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7)
+    {
+        CGRect r=sheet.frame;
+        r.origin.y-=20;
+        sheet.frame=r;
+    }
+#endif
     [sheet release];
 
 }

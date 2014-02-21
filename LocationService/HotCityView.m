@@ -38,14 +38,36 @@
         searchBar.delegate = self;
         searchBar.placeholder =@"请输入城市名称或首字母";
         searchBar.backgroundColor=[UIColor colorFromHexRGB:@"dbe6f3"];
-        UITextField *searchField = [[searchBar subviews] lastObject];
-        [searchField setReturnKeyType:UIReturnKeyDone];
-        searchField.clearButtonMode=UITextFieldViewModeNever;
+#ifdef __IPHONE_7_0
+        if ([[UIDevice currentDevice].systemVersion floatValue] >= 7.0) {
+                    UIView *searchV = [[searchBar subviews] lastObject];
+            for (id v in searchV.subviews) {
+                if ([v isKindOfClass:[UITextField class]])
+                {
+                    UITextField *field=(UITextField*)v;
+                    field.returnKeyType=UIReturnKeyDone;
+                    field.clearButtonMode=UITextFieldViewModeNever;
+                    break;
+                }
+            }
+        }
+#endif
+
         for (UIView *subview in searchBar.subviews)
         {
             if ([subview isKindOfClass:NSClassFromString(@"UISearchBarBackground")])
             {
                 [subview removeFromSuperview];
+                break;
+            }
+        }
+        for (UIView *subview in searchBar.subviews)
+        {
+            if ([subview isKindOfClass:[UITextField class]])
+            {
+                UITextField *field=(UITextField*)subview;
+                field.returnKeyType=UIReturnKeyDone;
+                field.clearButtonMode=UITextFieldViewModeNever;
                 break;
             }
         }

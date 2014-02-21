@@ -33,8 +33,8 @@
 {
     [super viewDidLoad];
     self.showBarView=NO;
+   [self.navigationController setNavigationBarHidden:YES animated:NO];
     
-    [self.navigationController setNavigationBarHidden:YES animated:NO];
     
     _way=[[LoginWay alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 44)];
     _way.controlers=self;

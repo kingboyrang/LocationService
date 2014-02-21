@@ -68,6 +68,8 @@
 		0171E32D1887753C0090E02B /* ico14.png in Resources */ = {isa = PBXBuildFile; fileRef = 0171E32B1887753C0090E02B /* ico14.png */; };
 		0171E32E1887753C0090E02B /* ico13.png in Resources */ = {isa = PBXBuildFile; fileRef = 0171E32C1887753C0090E02B /* ico13.png */; };
 		0173DFE218B1E93300215FBE /* dirce2.png in Resources */ = {isa = PBXBuildFile; fileRef = 0173DFE118B1E93300215FBE /* dirce2.png */; };
+		01799C8118B5D4240098C151 /* Icon-80.png in Resources */ = {isa = PBXBuildFile; fileRef = 01799C8018B5D4240098C151 /* Icon-80.png */; };
+		01799C8318B5D4C00098C151 /* Icon-120.png in Resources */ = {isa = PBXBuildFile; fileRef = 01799C8218B5D4C00098C151 /* Icon-120.png */; };
 		017C2292187511DF00FBF95D /* KYPointAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 017C228F187511DF00FBF95D /* KYPointAnnotation.m */; };
 		017F2C66188FAC000067E4C6 /* HotCityView.m in Sources */ = {isa = PBXBuildFile; fileRef = 017F2C65188FAC000067E4C6 /* HotCityView.m */; };
 		0189889A185FD8E10073B253 /* LoginWay.m in Sources */ = {isa = PBXBuildFile; fileRef = 01898899185FD8E10073B253 /* LoginWay.m */; };
@@ -359,6 +361,8 @@
 		0171E32B1887753C0090E02B /* ico14.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ico14.png; sourceTree = "<group>"; };
 		0171E32C1887753C0090E02B /* ico13.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ico13.png; sourceTree = "<group>"; };
 		0173DFE118B1E93300215FBE /* dirce2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dirce2.png; sourceTree = "<group>"; };
+		01799C8018B5D4240098C151 /* Icon-80.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-80.png"; sourceTree = "<group>"; };
+		01799C8218B5D4C00098C151 /* Icon-120.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-120.png"; sourceTree = "<group>"; };
 		017C228E187511DF00FBF95D /* KYPointAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KYPointAnnotation.h; sourceTree = "<group>"; };
 		017C228F187511DF00FBF95D /* KYPointAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KYPointAnnotation.m; sourceTree = "<group>"; };
 		017F2C64188FAC000067E4C6 /* HotCityView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HotCityView.h; sourceTree = "<group>"; };
@@ -1331,6 +1335,8 @@
 		01BE4002185EAFD2005C25D9 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				01799C8218B5D4C00098C151 /* Icon-120.png */,
+				01799C8018B5D4240098C151 /* Icon-80.png */,
 				01EE996318B43E3B00957220 /* dirce1.png */,
 				0173DFE118B1E93300215FBE /* dirce2.png */,
 				012B10AE18B1B084008B76AF /* pinArrow.png */,
@@ -1659,6 +1665,7 @@
 				01BE3FED185EACB6005C25D9 /* Default.png in Resources */,
 				01E2C2FC1887C4D1008FAC4C /* pinCircule.png in Resources */,
 				01280998187B865D009AE37D /* checkbox.png in Resources */,
+				01799C8318B5D4C00098C151 /* Icon-120.png in Resources */,
 				019513B018852AA7003255D5 /* ico10.png in Resources */,
 				012097CF185ECA6600437EA3 /* load01.jpg in Resources */,
 				019513AE18852AA7003255D5 /* ico08.png in Resources */,
@@ -1714,6 +1721,7 @@
 				0171E32E1887753C0090E02B /* ico13.png in Resources */,
 				01A4C78D187BE54E00B3963D /* ico04.png in Resources */,
 				019513AC18852AA7003255D5 /* ico06.png in Resources */,
+				01799C8118B5D4240098C151 /* Icon-80.png in Resources */,
 				01A4C788187BE54E00B3963D /* ico01f.png in Resources */,
 				019513A518852A14003255D5 /* ico17.png in Resources */,
 				0128098F187AAAC5009AE37D /* RightAccessory.png in Resources */,
@@ -1926,7 +1934,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
 				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: 澜洲 吴 (M3F85US4G2)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Bai Fu (KJ93M4ECNB)";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -1948,7 +1956,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "-lxml2";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "03C9A3A1-642A-49F3-8A03-31FD28FF5B12";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "FF36FDE6-DEB5-4D21-8004-008EC8B0C8D4";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1967,7 +1975,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
 				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Maxense Corp. (B9R2MVL97F)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: YUNNAN BEIDOU NAVIGATION TECHNOLOGY CO., LTD. (4A34U6BSLD)";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -1982,7 +1990,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				OTHER_LDFLAGS = "-lxml2";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "4EA15DEC-C735-469B-8346-5ED9BF9F8422";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "2779953A-31B7-4C0C-B848-8D9475B8AA58";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -1993,7 +2001,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: 澜洲 吴 (M3F85US4G2)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Bai Fu (KJ93M4ECNB)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LocationService/LocationService-Prefix.pch";
 				INFOPLIST_FILE = "LocationService/LocationService-Info.plist";
@@ -2004,7 +2012,7 @@
 					/Users/aJia/Desktop/Project/LocationService/LocationService,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "03C9A3A1-642A-49F3-8A03-31FD28FF5B12";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "FF36FDE6-DEB5-4D21-8004-008EC8B0C8D4";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -2014,7 +2022,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Maxense Corp. (B9R2MVL97F)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: YUNNAN BEIDOU NAVIGATION TECHNOLOGY CO., LTD. (4A34U6BSLD)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LocationService/LocationService-Prefix.pch";
 				INFOPLIST_FILE = "LocationService/LocationService-Info.plist";
@@ -2025,7 +2033,7 @@
 					/Users/aJia/Desktop/Project/LocationService/LocationService,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "4EA15DEC-C735-469B-8346-5ED9BF9F8422";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "2779953A-31B7-4C0C-B848-8D9475B8AA58";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};

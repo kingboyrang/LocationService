@@ -298,11 +298,20 @@
                 [self hideLoadingViewAnimated:^(AnimateLoadView *hideView) {
                     submit.enabled=YES;
                     //登录
-                    [Account loginGeneralWithUserId:[cell1.textField.text Trim] password:[cell2.textField.text Trim] encrypt:[cell2.textField.text Trim] rememberPassword:cell3.check.hasRemember withData:dic];
+                    [Account    loginGeneralWithUserId:[cell1.textField.text Trim] password:[cell2.textField.text Trim] encrypt:[cell2.textField.text Trim] rememberPassword:cell3.check.hasRemember withData:dic];
                    
                     IndexViewController *indexController=[[[IndexViewController alloc] init] autorelease];
                     BasicNavigationController *nav=[[[BasicNavigationController alloc] initWithRootViewController:indexController] autorelease];
+                    
+#ifdef __IPHONE_7_0
+                    if ([[UIDevice currentDevice].systemVersion floatValue] >= 7.0) {
+                        UIWindow *window=[[UIApplication sharedApplication] keyWindow];
+                        window.rootViewController=nav;
+                    }
+#else
                     [self presentViewController:nav animated:YES completion:nil];
+#endif
+                   
                     //MainViewController *main=[[MainViewController alloc] init];
                     //[self presentViewController:main animated:YES completion:nil];
                     //[main release];

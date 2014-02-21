@@ -262,7 +262,16 @@
                     
                     IndexViewController *indexController=[[[IndexViewController alloc] init] autorelease];
                     BasicNavigationController *nav=[[[BasicNavigationController alloc] initWithRootViewController:indexController] autorelease];
-                    [self presentViewController:nav animated:YES completion:nil];
+                    
+#ifdef __IPHONE_7_0
+                    if ([[UIDevice currentDevice].systemVersion floatValue] >= 7.0) {
+                        UIWindow *window=[[UIApplication sharedApplication] keyWindow];
+                        window.rootViewController=nav;
+                    }
+#else
+                     [self presentViewController:nav animated:YES completion:nil];
+#endif
+                   
                     
                    // MainViewController *main=[[MainViewController alloc] init];
                    // [self presentViewController:main animated:YES completion:nil];

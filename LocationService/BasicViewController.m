@@ -93,14 +93,18 @@
 {
     
     [super viewDidLoad];
+
 #ifdef __IPHONE_7_0
     if ([[UIDevice currentDevice].systemVersion floatValue] >= 7.0) {
-        self.edgesForExtendedLayout = UIRectEdgeNone;
-        self.extendedLayoutIncludesOpaqueBars = NO;
-        //self.edgesForExtendedLayout = UIRectEdgeBottom | UIRectEdgeLeft | UIRectEdgeRight;
+        self.view.frame=CGRectMake(0, 20, self.view.frame.size.width, self.view.frame.size.height-20);
+        self.view.bounds=CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+         self.edgesForExtendedLayout = UIRectEdgeNone;
+         self.extendedLayoutIncludesOpaqueBars = NO;
+         self.modalPresentationCapturesStatusBarAppearance = NO;
+         self.automaticallyAdjustsScrollViewInsets = YES;
     }
 #endif
-    
+   
     self.serviceHelper=[[ServiceHelper alloc] init];
     self.view.backgroundColor=[UIColor whiteColor];
     //[self showNavigationBackButton];
@@ -109,6 +113,31 @@
     
     
     
+}
+/***
+- (void) viewDidLayoutSubviews {
+    // only works for iOS 7+
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0) {
+        CGRect viewBounds = self.view.bounds;
+        CGFloat topBarOffset = self.topLayoutGuide.length;
+        
+        // snaps the view under the status bar (iOS 6 style)
+        viewBounds.origin.y = topBarOffset * -1;
+        
+        // shrink the bounds of your view to compensate for the offset
+        viewBounds.size.height = viewBounds.size.height + (topBarOffset * -1);
+        self.view.bounds = viewBounds;
+    }
+}
+ ***/
+- (float)topHeight{
+    float h=0;
+#ifdef __IPHONE_7_0
+    if ([[UIDevice currentDevice].systemVersion floatValue] >= 7.0) {
+        h=20;
+    }
+#endif
+    return h;
 }
 - (BOOL)hasNetWork{
     return [NetWorkConnection IsEnableConnection];

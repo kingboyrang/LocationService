@@ -20,6 +20,7 @@
 @property(nonatomic,assign) BOOL showBackButton;
 @property(nonatomic,strong) ServiceHelper *serviceHelper;
 @property(nonatomic,readonly) BOOL hasNetWork;
+@property(nonatomic,readonly) float topHeight;
 //动画操作
 -(AnimateErrorView*) errorView;
 -(AnimateErrorView*) successView;

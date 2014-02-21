@@ -76,8 +76,8 @@
 {
     [super viewDidLoad];
 	CGRect r=self.view.bounds;
-    r.size.height-=44;
-    r.origin.y=44;
+     r.origin.y=44;
+    r.size.height-=r.origin.y;
     _tableView=[[UITableView alloc] initWithFrame:r style:UITableViewStylePlain];
     _tableView.delegate=self;
     _tableView.dataSource=self;
@@ -86,7 +86,7 @@
     //_tableView.bounces=NO;
     [self.view addSubview:_tableView];
     
-    _toolBar=[[LoginButtons alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height+44, self.view.bounds.size.width, 44)];
+    _toolBar=[[LoginButtons alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height, self.view.bounds.size.width, 44)];
     _toolBar.cancel.hidden=YES;
     _toolBar.submit.frame=CGRectMake(0, 0, self.view.bounds.size.width, 44);
     [_toolBar.submit setTitle:@"删除(0)" forState:UIControlStateNormal];
@@ -263,10 +263,13 @@
     if(_tableView.editing){
         [btn setTitle:@"取消" forState:UIControlStateNormal];
         CGRect r=_toolBar.frame;
-        r.origin.y=self.view.bounds.size.height-44;
+        //r.origin.y=self.view.bounds.size.height-44-[self topHeight];
+        r.origin.y-=r.size.height;
+        
         
         CGRect r1=_tableView.frame;
-        r1.size.height=self.view.bounds.size.height-44*2;
+        //r1.size.height=self.view.bounds.size.height-44*2-[self topHeight];
+        r1.size.height-=r.size.height;
         
         [UIView animateWithDuration:0.5f animations:^(){
             _toolBar.frame=r;
@@ -282,10 +285,12 @@
         
         [btn setTitle:@"编辑" forState:UIControlStateNormal];
         CGRect r=_toolBar.frame;
-        r.origin.y=self.view.bounds.size.height+44;
+        //r.origin.y=self.view.bounds.size.height+44;
+        r.origin.y+=r.size.height;
         
         CGRect r1=_tableView.frame;
-        r1.size.height=self.view.bounds.size.height-44;
+        //r1.size.height=self.view.bounds.size.height-44;
+        r1.size.height+=r.size.height;
         
         [UIView animateWithDuration:0.5f animations:^(){
             _toolBar.frame=r;

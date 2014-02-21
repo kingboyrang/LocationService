@@ -34,14 +34,29 @@
     }
     [_mapManager release];
     
-    
     self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
-     /***
-    MainViewController *main=[[[MainViewController alloc] init] autorelease];
-    self.window.rootViewController=main;
-    [self.window makeKeyAndVisible];
-    // Override point for customization after application launch.
-   ***/
+   
+    
+#ifdef __IPHONE_7_0
+    if ([[UIDevice currentDevice].systemVersion floatValue] >= 7.0) {
+        [application setStatusBarStyle:UIStatusBarStyleLightContent];
+        self.window.clipsToBounds =YES;
+        self.window.frame=CGRectMake(0,20,self.window.frame.size.width,self.window.frame.size.height-20);
+        //added on 19th Sep
+        //self.window.bounds = CGRectMake(0, 20, self.window.frame.size.width, self.window.frame.size.height);
+    }
+#endif
+
+    /***
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0) {
+        self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]];
+        [application setStatusBarStyle:UIStatusBarStyleLightContent];
+       }
+    else {
+       self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    }
+    self.window.backgroundColor = [UIColor whiteColor];
+    ***/
     Account *acc=[Account unarchiverAccount];
     if (acc.isRememberPwd) {//记住密码
         acc.isLogin=YES;

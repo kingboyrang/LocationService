@@ -123,7 +123,7 @@
     args.serviceNameSpace=DataNameSpace1;
     args.methodName=@"GetCanTeleNo";
     args.soapParams=params;
-    NSLog(@"soap=%@",args.soapMessage);
+    //NSLog(@"soap=%@",args.soapMessage);
     [self.serviceHelper asynService:args success:^(ServiceResult *result) {
         NSDictionary *dic=[result json];
         if (dic!=nil) {
@@ -144,14 +144,14 @@
 #pragma mark -
 - (void)mapView:(BMKMapView *)mapView didSelectAnnotationView:(BMKAnnotationView *)view{
     CGRect r=_phoneView.frame;
-    r.origin.y=self.view.bounds.size.height-r.size.height;
+    r.origin.y-=r.size.height;
     [UIView animateWithDuration:0.5f animations:^{
         _phoneView.frame=r;
     }];
 }
 - (void)mapView:(BMKMapView *)mapView didDeselectAnnotationView:(BMKAnnotationView *)view{
     CGRect r=_phoneView.frame;
-    r.origin.y=self.view.bounds.size.height;
+    r.origin.y+=r.size.height;
     [UIView animateWithDuration:0.5f animations:^{
         _phoneView.frame=r;
     }];
