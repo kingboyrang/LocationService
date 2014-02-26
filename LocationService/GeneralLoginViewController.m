@@ -307,11 +307,10 @@
                     if ([[UIDevice currentDevice].systemVersion floatValue] >= 7.0) {
                         UIWindow *window=[[UIApplication sharedApplication] keyWindow];
                         window.rootViewController=nav;
+                        return;
                     }
-#else
-                    [self presentViewController:nav animated:YES completion:nil];
 #endif
-                   
+                    [self presentViewController:nav animated:YES completion:nil];
                     //MainViewController *main=[[MainViewController alloc] init];
                     //[self presentViewController:main animated:YES completion:nil];
                     //[main release];

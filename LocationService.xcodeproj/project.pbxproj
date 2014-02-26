@@ -1934,7 +1934,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
 				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Bai Fu (KJ93M4ECNB)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: 澜洲 吴 (M3F85US4G2)";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -1956,7 +1956,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "-lxml2";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "FF36FDE6-DEB5-4D21-8004-008EC8B0C8D4";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "03C9A3A1-642A-49F3-8A03-31FD28FF5B12";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1975,7 +1975,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
 				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: YUNNAN BEIDOU NAVIGATION TECHNOLOGY CO., LTD. (4A34U6BSLD)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Maxense Corp. (B9R2MVL97F)";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -1990,7 +1990,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				OTHER_LDFLAGS = "-lxml2";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "2779953A-31B7-4C0C-B848-8D9475B8AA58";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "4EA15DEC-C735-469B-8346-5ED9BF9F8422";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -2001,7 +2001,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Bai Fu (KJ93M4ECNB)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: 澜洲 吴 (M3F85US4G2)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LocationService/LocationService-Prefix.pch";
 				INFOPLIST_FILE = "LocationService/LocationService-Info.plist";
@@ -2012,7 +2012,7 @@
 					/Users/aJia/Desktop/Project/LocationService/LocationService,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "FF36FDE6-DEB5-4D21-8004-008EC8B0C8D4";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "03C9A3A1-642A-49F3-8A03-31FD28FF5B12";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -2022,7 +2022,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: YUNNAN BEIDOU NAVIGATION TECHNOLOGY CO., LTD. (4A34U6BSLD)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Maxense Corp. (B9R2MVL97F)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LocationService/LocationService-Prefix.pch";
 				INFOPLIST_FILE = "LocationService/LocationService-Info.plist";
@@ -2033,7 +2033,7 @@
 					/Users/aJia/Desktop/Project/LocationService/LocationService,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "2779953A-31B7-4C0C-B848-8D9475B8AA58";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "4EA15DEC-C735-469B-8346-5ED9BF9F8422";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
