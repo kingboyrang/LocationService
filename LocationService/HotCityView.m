@@ -16,6 +16,7 @@
 - (BMKOLUpdateElement*)findByCityId:(int)cityId;
 - (BOOL)downloadingWithCityId:(int)cityId;
 - (BOOL)findByIdUpdate:(int)cityId;
+- (void)searchExitKeyboard;
 @end
 
 @implementation HotCityView
@@ -35,6 +36,7 @@
         [topView release];
         
         UISearchBar *searchBar=[[UISearchBar alloc] initWithFrame:CGRectMake(0, 44, frame.size.width, 44)];
+        searchBar.tag=40;
         searchBar.delegate = self;
         searchBar.placeholder =@"请输入城市名称或首字母";
         searchBar.backgroundColor=[UIColor colorFromHexRGB:@"dbe6f3"];
@@ -266,6 +268,7 @@
     BOOL boo=[self findByIdUpdate:entity.cityID];
     if (!boo) {//可下载
          if (self.delegate&&[self.delegate respondsToSelector:@selector(addOfflineMapDownload:)]) {
+             [self searchExitKeyboard];//隐藏键盘
              [self.delegate addOfflineMapDownload:entity];
          }
          
@@ -326,5 +329,31 @@
         }
     }
     return NO;
+}
+- (void)searchExitKeyboard{
+    UISearchBar *search=(UISearchBar*)[self viewWithTag:40];
+#ifdef __IPHONE_7_0
+    if ([[UIDevice currentDevice].systemVersion floatValue] >= 7.0) {
+        UIView *searchV = [[search subviews] lastObject];
+        for (id v in searchV.subviews) {
+            if ([v isKindOfClass:[UITextField class]])
+            {
+                UITextField *field=(UITextField*)v;
+                [field resignFirstResponder];
+                break;
+            }
+        }
+    }
+    return;
+#endif
+    for (UIView *subview in search.subviews)
+    {
+        if ([subview isKindOfClass:[UITextField class]])
+        {
+            UITextField *field=(UITextField*)subview;
+            [field resignFirstResponder];
+            break;
+        }
+    }
 }
 @end
