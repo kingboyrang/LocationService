@@ -111,6 +111,12 @@
 #pragma mark DownloadMapViewDelegate Methods
 //查看地图
 - (void)viewerMapWithCityId:(int)cityId{
+    //删除坐标
+    [_mapView removeOverlays:_mapView.overlays];
+    NSArray* array = [NSArray arrayWithArray:_mapView.annotations];
+    [_mapView removeAnnotations:array];
+    
+    //加载城市地图
     BMKOLUpdateElement* localMapInfo;
     localMapInfo = [_offlineMap getUpdateInfo:cityId];
     [_mapView setCenterCoordinate:localMapInfo.pt];
@@ -142,6 +148,7 @@
     if ([_downloadMapView existslocalSourceByCityId:cityId]) {//更新地图
         [_offlineMap update:cityId];
     }else{//下载地图
+        //NSLog(@"开始下载地图!");
         [_offlineMap start:cityId];
     }
 }

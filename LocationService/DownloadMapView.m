@@ -175,6 +175,8 @@
         if (self.delegate&&[self.delegate respondsToSelector:@selector(pauseDownloadWithCityId:)]) {
             [self.delegate pauseDownloadWithCityId:self.currentDownloadCityId];
         }
+    }
+    if ([self isLoadingSection]) {
         for (int i=0; i<self.downloadMaps.count; i++) {
             NSIndexPath *indexPath=[NSIndexPath indexPathForRow:i inSection:0];
             TKMapCell *cell=(TKMapCell*)[_tableView cellForRowAtIndexPath:indexPath];
@@ -184,17 +186,27 @@
 }
 //全部下载
 - (void)buttonDownloadClick:(id)sender{
+    if ([self isLoadingSection]) {
+        for (int i=0; i<self.downloadMaps.count; i++) {
+            NSIndexPath *indexPath=[NSIndexPath indexPathForRow:i inSection:0];
+            TKMapCell *cell=(TKMapCell*)[_tableView cellForRowAtIndexPath:indexPath];
+            cell.isPause=NO;//取消暂停
+        }
+    }
+    NSLog(@"aa");
     [self buttonUpdateClick:nil];
-    if ([self isLoadingSection]&&self.currentDownloadCityId!=-1) {
+    NSLog(@"bb");
+    if ([self isLoadingSection]) {
         if (self.delegate&&[self.delegate respondsToSelector:@selector(downloadMapWithCityId:)]) {
+            if (self.currentDownloadCityId==-1) {
+                NSIndexPath *indexPath=[NSIndexPath indexPathForRow:0 inSection:0];
+                TKMapCell *cell=(TKMapCell*)[_tableView cellForRowAtIndexPath:indexPath];
+                self.currentDownloadCityId=cell.Entity.cityID;
+            }
             [self.delegate downloadMapWithCityId:self.currentDownloadCityId];
         }
     }
-    for (int i=0; i<self.downloadMaps.count; i++) {
-        NSIndexPath *indexPath=[NSIndexPath indexPathForRow:i inSection:0];
-        TKMapCell *cell=(TKMapCell*)[_tableView cellForRowAtIndexPath:indexPath];
-        cell.isPause=NO;//取消暂停
-    }
+    
 }
 //全部更新
 - (void)buttonUpdateClick:(id)sender{
