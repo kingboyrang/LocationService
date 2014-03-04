@@ -22,6 +22,7 @@
 @property(nonatomic,strong) NSMutableArray *cells;
 @property(nonatomic,retain) SupervisionPerson *selectedSupervision;
 @property(nonatomic,readonly) BOOL canShowTrajectory;
+@property(nonatomic,copy) NSString *laglnt;
 - (BOOL)selectedTrajectoryIndex:(id)number;
 - (void)setSelectedTabIndex:(id)num;
 - (void)selectedMetaWithEntity:(SupervisionPerson*)entity;//进放仪表画面

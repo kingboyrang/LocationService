@@ -33,6 +33,7 @@
 @interface IndexViewController (){
     RecordView *_recordView;
     NSTimer *_updateTimer;
+    BOOL isGps;
     //PinView *_pinView;
 }
 - (void)buttonCompassClick;
@@ -64,6 +65,10 @@
         [_recordView release];
         _recordView = nil;
     }
+    if (_updateTimer) {
+        [_updateTimer release];
+    }
+    
    // [_pinView release];
     
 }
@@ -85,6 +90,7 @@
 //    CGSize size=[str textSize:[UIFont fontWithName:DeviceFontName size:12] withWidth:self.view.bounds.size.width];
 //    NSLog(@"size=%@",NSStringFromCGSize(size));
 
+    isGps=YES;
     
     CGRect r=self.view.bounds;
     r.origin.y=44;
@@ -104,7 +110,7 @@
     //先执行一次
     [self loadSupervision];
     //30秒刷新一次
-     _updateTimer=[NSTimer scheduledTimerWithTimeInterval:30.0f target:self selector:@selector(changedAdTimer:) userInfo:nil repeats:YES];
+     _updateTimer=[[NSTimer scheduledTimerWithTimeInterval:30.0f target:self selector:@selector(changedAdTimer:) userInfo:nil repeats:YES] retain];
 }
 - (void)selectedMetaWithEntity:(SupervisionPerson*)entity{
     MeterViewController *meter=[[MeterViewController alloc] init];
@@ -120,9 +126,11 @@
         coor.longitude=[entity.Longitude floatValue];
         [_mapView setCenterCoordinate:coor];
         currentCenterCoor=coor;
-        
+        self.laglnt=entity.ID;
+        //[NSString stringWithFormat:@"%@,%@",entity.Latitude,entity.Longitude];
         if (![NetWorkConnection locationServicesEnabled]) {//表示未开启定位功能
-            
+            [self setChoosetTarget];
+            [self setRecetiveSupersion:entity];
         }
         /***
         //选中监管目标
@@ -294,8 +302,22 @@
     [_mapView viewWillAppear];
     _mapView.delegate = self; // 此处记得不用的时候需要置nil，否则影响内存的释放
     
-    [self startUserLocation];//当前定位
-    [_updateTimer resumeTimer]; //恢复计时器
+    if (isGps) {
+        isGps=NO;
+        [self startUserLocation];//当前定位
+    }else{
+        if ([NetWorkConnection locationServicesEnabled]) {//表示开启定位功能
+            [self startUserLocation];//当前定位
+        }
+    }
+#ifdef __IPHONE_7_0
+    if (_mapView.annotations.count==0||_mapView.annotations.count==1) {
+         [self loadSupervision];
+    }
+#endif
+    
+    
+    [_updateTimer resume]; //恢复计时器
 }
 -(void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
@@ -303,7 +325,7 @@
     [_mapView viewWillDisappear];
     _mapView.delegate = nil; // 不用时，置nil
     //暂停计时器
-    [_updateTimer pauseTimer];
+    [_updateTimer pause];
 }
 //当前定位
 - (void)startUserLocation{
@@ -349,6 +371,9 @@
                     coor.latitude=[entity.Latitude floatValue];
                     coor.longitude=[entity.Longitude floatValue];
                     KYPointAnnotation* item = [[KYPointAnnotation alloc] init];
+                    item.laglnt=entity.ID;
+                    //[NSString stringWithFormat:@"%@,%@",entity.Latitude,entity.Longitude];
+                    //NSLog(@"%@,%@",entity.Latitude,entity.Longitude);
                     item.coordinate =coor;
                     item.title=@"当前位置";
                     item.tag=100+i;
@@ -360,6 +385,7 @@
                     }
                     
                 }
+                [self setChoosetTarget];//设置选中监管目标
             }
            
         }
@@ -377,10 +403,13 @@
 }
 //显示当前定位
 - (void)buttonCompassClick{
-    if (currentCoor.latitude>0&&currentCoor.longitude>0) {
-        [_mapView setCenterCoordinate:currentCoor];
+    if ([NetWorkConnection locationServicesEnabled]) {
+        if (currentCoor.latitude>0&&currentCoor.longitude>0) {
+            [_mapView setCenterCoordinate:currentCoor];
+        }
+    }else{
+        [self startUserLocation];//当前定位
     }
-    
 }
 //新增监管目标
 - (void)buttonTargetClick{
@@ -463,11 +492,12 @@
     [mapView setShowsUserLocation:NO];
     
     [self setChoosetTarget];
+    
 
 }
 - (void)setChoosetTarget{
+    //NSLog(@"lat=%f,log=%f",currentCenterCoor.latitude,currentCenterCoor.longitude);
     if (currentCenterCoor.latitude>0&&currentCenterCoor.longitude>0) {
-        [_mapView setCenterCoordinate:currentCenterCoor];
         //设置监管目标选中
         if (_mapView.annotations&&[_mapView.annotations count]>0) {
             NSArray* arr = [NSArray arrayWithArray:_mapView.annotations];
@@ -475,17 +505,20 @@
                 id elem = [arr objectAtIndex:i];
                 if ([elem isKindOfClass:[KYPointAnnotation class]]) {
                     KYPointAnnotation *annotation=(KYPointAnnotation*)elem;
-                    if(annotation.coordinate.latitude==currentCenterCoor.latitude&&annotation.coordinate.longitude==currentCenterCoor.longitude)
+                    if([annotation.laglnt isEqualToString:self.laglnt])
                     {
                         [_mapView selectAnnotation:annotation animated:YES];
+                         [_mapView setCenterCoordinate:currentCenterCoor];
+                        self.laglnt=@"";
+                        currentCenterCoor.latitude=0.0;
+                        currentCenterCoor.longitude=0.0;
                         break;
                     }
                 }
                 
             }
         }
-        currentCenterCoor.latitude=0.0;
-        currentCenterCoor.longitude=0.0;
+       
     }
 }
 //定位停止
@@ -536,7 +569,6 @@
         KYPointAnnotation *elem=(KYPointAnnotation*)view.annotation;
         int index=elem.tag-100;
         SupervisionPerson *entity=self.cells[index];
-        //NSLog(@"id=%@",entity.ID);
         [self setRecetiveSupersion:entity];
     }
 }

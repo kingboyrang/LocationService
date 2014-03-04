@@ -32,11 +32,8 @@
 ///公交路段结果类
 @interface BMKLine : NSObject
 {
-    int _zonePrice;
-    int _totalPrice;
 	int _viaStopsNum;
 	int _distance;
-    int _time;
 	int _type;
 	NSString* _title;
 	NSString* _tip;
@@ -46,16 +43,10 @@
 	BMKMapPoint* _points;
 	int _pointsCount;
 }
-///路段价格
-@property (nonatomic) int zonePrice;
-///线路总价格
-@property (nonatomic) int totalPrice;
 ///经过的公交站数
 @property (nonatomic) int viaStopsNum;
 ///线路距离，单位：米
 @property (nonatomic) int distance;
-///线路耗时，单位：秒
-@property (nonatomic) int time;
 ///线路类型，0:公交 1:地铁
 @property (nonatomic) int type;
 ///坐标点数目
@@ -116,7 +107,6 @@
 @interface BMKRoute : NSObject
 {
 	int _distance;
-    int _time;
 	int _type;
 	CLLocationCoordinate2D _startPt;
 	CLLocationCoordinate2D _endPt;
@@ -128,8 +118,6 @@
 }
 ///线路距离，单位：米
 @property (nonatomic) int distance;
-///此路段的消耗时间 单位：秒
-@property (nonatomic) int time;
 ///线路类型，0:未知 1:驾驶 2:步行
 @property (nonatomic) int type;
 ///坐标点段数

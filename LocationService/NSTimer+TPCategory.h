@@ -11,4 +11,8 @@
 @interface NSTimer (TPCategory)
 -(void)pauseTimer;//暂停
 -(void)resumeTimer;//取消
+
+- (NSMutableDictionary *)pauseDictionary;
+- (void)pause;
+- (void)resume;
 @end

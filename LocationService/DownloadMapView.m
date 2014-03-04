@@ -193,9 +193,7 @@
             cell.isPause=NO;//取消暂停
         }
     }
-    NSLog(@"aa");
     [self buttonUpdateClick:nil];
-    NSLog(@"bb");
     if ([self isLoadingSection]) {
         if (self.delegate&&[self.delegate respondsToSelector:@selector(downloadMapWithCityId:)]) {
             if (self.currentDownloadCityId==-1) {
@@ -253,7 +251,7 @@
         int total=0;
         for (BMKOLUpdateElement *item in self.localMaps) {
             BOOL boo=[self existsDownloadSourceByCityId:item.cityID];
-            if (!boo) {
+            if (!boo&&item.update) {
                 BMKOLSearchRecord *entity=[[BMKOLSearchRecord alloc] init];
                 entity.cityID=item.cityID;
                 entity.cityName=item.cityName;

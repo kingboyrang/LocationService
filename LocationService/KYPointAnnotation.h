@@ -13,4 +13,5 @@
 }
 
 @property NSUInteger tag;
+@property (nonatomic,copy) NSString *laglnt;
 @end
