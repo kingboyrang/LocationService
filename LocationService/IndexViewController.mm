@@ -34,6 +34,7 @@
     RecordView *_recordView;
     NSTimer *_updateTimer;
     BOOL isGps;
+    BOOL isPushController;
     //PinView *_pinView;
 }
 - (void)buttonCompassClick;
@@ -91,6 +92,7 @@
 //    NSLog(@"size=%@",NSStringFromCGSize(size));
 
     isGps=YES;
+    isPushController=NO;
     
     CGRect r=self.view.bounds;
     r.origin.y=44;
@@ -310,13 +312,12 @@
             [self startUserLocation];//当前定位
         }
     }
-#ifdef __IPHONE_7_0
-    if (_mapView.annotations.count==0||_mapView.annotations.count==1) {
-         [self loadSupervision];
+    if (isPushController) {//popController后执行的对象
+        isPushController=NO;
+        if (_mapView.annotations.count==0||_mapView.annotations.count==1) {
+             [self reloadDataSupervisionAnnotations];//重新加载
+        }
     }
-#endif
-    
-    
     [_updateTimer resume]; //恢复计时器
 }
 -(void)viewWillDisappear:(BOOL)animated {
@@ -326,6 +327,7 @@
     _mapView.delegate = nil; // 不用时，置nil
     //暂停计时器
     [_updateTimer pause];
+    isPushController=YES;
 }
 //当前定位
 - (void)startUserLocation{
@@ -585,7 +587,6 @@
 }
 //重新加载标注
 - (void)reloadAnnotations:(BMKMapView *)mapView{
-   // NSLog(@"current level=%f",mapView.zoomLevel);
     // NSLog(@"orgin level=%f",orginLevel);
     if (orginLevel>6&&mapView.zoomLevel<6) {
         orginLevel=mapView.zoomLevel;
@@ -625,6 +626,7 @@
             coor.latitude=[entity.Latitude floatValue];
             coor.longitude=[entity.Longitude floatValue];
             KYPointAnnotation* item = [[KYPointAnnotation alloc] init];
+            item.laglnt=entity.ID;
             item.coordinate =coor;
             item.title=@"当前位置";
             item.tag=100+i;
