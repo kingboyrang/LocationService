@@ -265,70 +265,101 @@
     }
       ***/
     TKTextFieldCell *cell2=self.cells[3];
+    /**
     if (!cell2.hasValue) {
         [AlertHelper initWithTitle:@"提示" message:@"请输入SOS号!"];
         [cell2.textField becomeFirstResponder];
         return;
     }
+     ***/
+    if(cell2.hasValue)
+    {
+        if (![cell2.textField.text isNumberString]) {
+            [AlertHelper initWithTitle:@"提示" message:@"SOS号只能为数字!"];
+            [cell2.textField becomeFirstResponder];
+            return;
+        }
+        if(strlen([cell2.textField.text UTF8String])<11)
+        {
+            [AlertHelper initWithTitle:@"提示" message:@"SOS号必须为11位！"];
+            [cell2.textField becomeFirstResponder];
+            return;
+        }
+    }
     TKTextFieldCell *cell3=self.cells[5];
+    /***
     if (!cell3.hasValue) {
         [AlertHelper initWithTitle:@"提示" message:@"请输入监听号!"];
         [cell3.textField becomeFirstResponder];
         return;
     }
-    if (![cell3.textField.text isNumberString]) {
-        [AlertHelper initWithTitle:@"提示" message:@"监听号只能为数字!"];
-        [cell3.textField becomeFirstResponder];
-        return;
+     ***/
+    if (cell3.hasValue) {
+        if (![cell3.textField.text isNumberString]) {
+            [AlertHelper initWithTitle:@"提示" message:@"监听号只能为数字!"];
+            [cell3.textField becomeFirstResponder];
+            return;
+        }
+        if(strlen([cell3.textField.text UTF8String])<11)
+        {
+            [AlertHelper initWithTitle:@"提示" message:@"监听号必须为11位！"];
+            [cell3.textField becomeFirstResponder];
+            return;
+        }
     }
-    if(strlen([cell3.textField.text UTF8String])<11)
-    {
-        [AlertHelper initWithTitle:@"提示" message:@"监听号必须为11位！"];
-        [cell3.textField becomeFirstResponder];
-        return;
-    }
+    
     TKTextFieldCell *cell4=self.cells[7];
     TKTextFieldCell *cell5=self.cells[8];
     TKTextFieldCell *cell6=self.cells[9];
     
+    /***
     if (!cell4.hasValue&&!cell5.hasValue&&!cell6.hasValue) {
         [AlertHelper initWithTitle:@"提示" message:@"请至少填写一个亲情号码!"];
         [cell4.textField becomeFirstResponder];
         return;
     }
-    if(cell4.hasValue&&![cell4.textField.text isNumberString])
+     ***/
+    if (cell4.hasValue) {
+        if(cell4.hasValue&&![cell4.textField.text isNumberString])
+        {
+            [AlertHelper initWithTitle:@"提示" message:@"亲情号码1只能为数字!"];
+            [cell4.textField becomeFirstResponder];
+            return;
+        }
+        if (cell4.hasValue&&strlen([cell4.textField.text UTF8String])<11) {
+            [AlertHelper initWithTitle:@"提示" message:@"亲情号码1必须为11位！"];
+            [cell4.textField becomeFirstResponder];
+            return;
+        }
+    }
+    if(cell5.hasValue)
     {
-        [AlertHelper initWithTitle:@"提示" message:@"亲情号码1只能为数字!"];
-        [cell4.textField becomeFirstResponder];
-        return;
+        if(cell5.hasValue&&![cell5.textField.text isNumberString])
+        {
+            [AlertHelper initWithTitle:@"提示" message:@"亲情号码2只能为数字!"];
+            [cell5.textField becomeFirstResponder];
+            return;
+        }
+        if (cell5.hasValue&&strlen([cell5.textField.text UTF8String])<11) {
+            [AlertHelper initWithTitle:@"提示" message:@"亲情号码2必须为11位！"];
+            [cell5.textField becomeFirstResponder];
+            return;
+        }
     }
-    if (cell4.hasValue&&strlen([cell4.textField.text UTF8String])<11) {
-        [AlertHelper initWithTitle:@"提示" message:@"亲情号码1必须为11位！"];
-        [cell4.textField becomeFirstResponder];
-        return;
+    if (cell6.hasValue) {
+        if(cell6.hasValue&&![cell6.textField.text isNumberString])
+        {
+            [AlertHelper initWithTitle:@"提示" message:@"亲情号码3只能为数字!"];
+            [cell6.textField becomeFirstResponder];
+            return;
+        }
+        if (cell6.hasValue&&strlen([cell6.textField.text UTF8String])<11) {
+            [AlertHelper initWithTitle:@"提示" message:@"亲情号码3必须为11位！"];
+            [cell6.textField becomeFirstResponder];
+            return;
+        }
     }
-    if(cell5.hasValue&&![cell5.textField.text isNumberString])
-    {
-        [AlertHelper initWithTitle:@"提示" message:@"亲情号码2只能为数字!"];
-        [cell5.textField becomeFirstResponder];
-        return;
-    }
-    if (cell5.hasValue&&strlen([cell5.textField.text UTF8String])<11) {
-        [AlertHelper initWithTitle:@"提示" message:@"亲情号码2必须为11位！"];
-        [cell5.textField becomeFirstResponder];
-        return;
-    }
-    if(cell6.hasValue&&![cell6.textField.text isNumberString])
-    {
-        [AlertHelper initWithTitle:@"提示" message:@"亲情号码3只能为数字!"];
-        [cell6.textField becomeFirstResponder];
-        return;
-    }
-    if (cell6.hasValue&&strlen([cell6.textField.text UTF8String])<11) {
-        [AlertHelper initWithTitle:@"提示" message:@"亲情号码3必须为11位！"];
-        [cell6.textField becomeFirstResponder];
-        return;
-    }
+    
     //[self textFieldShouldReturn:cell1.textField];
     [self textFieldShouldReturn:cell2.textField];
     [self textFieldShouldReturn:cell3.textField];
@@ -351,6 +382,9 @@
     if ([cell6.textField.text length]>0) {
         affection=[NSString stringWithFormat:@"%@|%@,3",affection,cell6.textField.text];
     }
+    
+   
+    
     NSMutableArray *params=[NSMutableArray arrayWithCapacity:6];
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"15",@"OperateValue", nil]];
     //[params addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"15",@"OperateValue", nil]];
@@ -372,7 +406,7 @@
     NSString *memo=self.operateType==1?@"新增":@"修改";
     [self showLoadingAnimatedWithTitle:[NSString stringWithFormat:@"正在%@,请稍后...",memo]];
     [self.serviceHelper asynService:args success:^(ServiceResult *result) {
-       // NSLog(@"xml=%@",result.request.responseString);
+       NSLog(@"xml=%@",result.request.responseString);
         BOOL boo=NO;
         if (result.hasSuccess) {
             NSDictionary *dic=(NSDictionary*)[result json];
@@ -431,17 +465,15 @@
     if (cell0.textField==textField) {
         [self replacePhonestring:textField];
     }
-    TKTextFieldCell *cell1=self.cells[3];
+    TKTextFieldCell *cell1=self.cells[3];//sos号
     TKTextFieldCell *cell2=self.cells[5];//监听号
     TKTextFieldCell *cell3=self.cells[7];
     TKTextFieldCell *cell4=self.cells[8];
     TKTextFieldCell *cell5=self.cells[9];
     if (cell1.textField==textField||cell2.textField==textField||cell3.textField==textField||cell4.textField==textField||cell5.textField==textField) {
         [self replacePhonestring:textField];
-        if (cell2.textField==textField||cell3.textField==textField||cell4.textField==textField||cell5.textField==textField) {
-            if(strlen([textField.text UTF8String]) >= 11 && range.length != 1)
-                boo=NO;
-        }
+        if(strlen([textField.text UTF8String]) >= 11 && range.length != 1)
+            boo=NO;
     }
     return boo;
 }
