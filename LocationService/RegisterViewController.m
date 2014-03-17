@@ -30,9 +30,9 @@
     
     LoginButtons *_toolBar;
     
-    BOOL isKeyBoardShow;
     //UIScrollView *_scrollView;
 }
+@property (nonatomic,assign) CGRect tableRect;
 - (void)updateShowInfo:(NSString*)user;
 - (void)buttonSubmit;
 - (void)buttonCancel;
@@ -73,13 +73,12 @@
     isExistsPhone=NO;
     isExistsNumber=NO;
     
-    isKeyBoardShow=NO;
     
    CGRect r=self.view.bounds;
     r.origin.y=44;
     r.size.height-=44*2;
     
-    
+    self.tableRect=r;
     _tableView=[[UITableView alloc] initWithFrame:r style:UITableViewStylePlain];
     _tableView.delegate=self;
     _tableView.dataSource=self;
@@ -120,7 +119,7 @@
     [cell2.textField addTarget:self action:@selector(textUserChange:) forControlEvents:UIControlEventValueChanged];
     
     TKLabelCell *cell3=[[[TKLabelCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
-    cell3.label.text=@"妮称";
+    cell3.label.text=@"昵称";
     
     TKTextFieldCell *cell4=[[[TKTextFieldCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
     cell4.textField.placeholder=@"请输入妮称";
@@ -164,8 +163,48 @@
     self.cells=[NSMutableArray arrayWithObjects:cell1,cell2,cell3,cell4,cell5,cell6,cell7,cell8,cell9,cell10, nil];
     
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleKeyboardWillShowHideNotification:)
+                                                 name:UIKeyboardDidShowNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleKeyboardWillShowHideNotification:)
+                                                 name:UIKeyboardDidHideNotification
+                                               object:nil];
 
     
+}
+#pragma mark - Notifications
+- (void)handleKeyboardWillShowHideNotification:(NSNotification *)notification
+{
+    NSDictionary *info = [notification userInfo];
+    //取得键盘的大小
+    CGRect kbFrame = [[info valueForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    if ([notification.name isEqualToString:UIKeyboardDidShowNotification]) {//显示键盘
+        CGRect r=_tableView.frame;
+        CGRect r1=_toolBar.frame;
+        r.size.height=self.tableRect.size.height-kbFrame.size.height;
+        
+        
+        r1.origin.y=r.origin.y+r.size.height;
+        _toolBar.frame=r1;
+        [UIView animateWithDuration:[[info valueForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue] animations:^{
+            _tableView.frame=r;
+        }];
+        
+    }
+    else if ([notification.name isEqualToString:UIKeyboardDidHideNotification]) {//隐藏键盘
+        CGRect r=_tableView.frame;
+        CGRect r1=_toolBar.frame;
+        r.size.height=self.tableRect.size.height;
+
+        r1.origin.y=self.tableRect.origin.y+r.size.height;
+        _toolBar.frame=r1;
+        [UIView animateWithDuration:[[info valueForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue] animations:^{
+            _tableView.frame=r;
+        }];
+    }
 }
 //注册
 - (void)buttonSubmit{
@@ -184,7 +223,7 @@
     }
     TKTextFieldCell *cell2=self.cells[3];
     if (!cell2.hasValue) {
-        [AlertHelper initWithTitle:@"提示" message:@"妮称不为空!"];
+        [AlertHelper initWithTitle:@"提示" message:@"昵称不为空!"];
         [cell2.textField becomeFirstResponder];
         return;
     }
@@ -470,39 +509,9 @@
     }
     return boo;
 }
--(void)textFieldDidBeginEditing:(UITextField *)textField {
-   
-    if (!isKeyBoardShow) {
-        isKeyBoardShow=YES;
-        CGRect r=_tableView.frame;
-        r.size.height-=216;
-        
-        CGRect r1=_toolBar.frame;
-        r1.origin.y-=216;
-        [UIView animateWithDuration:0.3f animations:^{
-            _tableView.frame=r;
-            _toolBar.frame=r1;
-        }];
-    }
-    
-}
+
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{
     [textField resignFirstResponder];
-    
-    if (isKeyBoardShow) {
-        isKeyBoardShow=NO;
-        CGRect r=_tableView.frame;
-        r.size.height+=216;
-        
-        
-        CGRect r1=_toolBar.frame;
-        r1.origin.y+=216;
-        [UIView animateWithDuration:0.3f animations:^{
-            _tableView.frame=r;
-            _toolBar.frame=r1;
-        }];
-    }
-    
     return YES;
 }
 

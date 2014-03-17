@@ -21,8 +21,9 @@
     UITableView *_tableView;
     UIImageView *_imageHead;
     LoginButtons *_toolBar;
-    BOOL isKeyBoardShow;
+   
 }
+@property (nonatomic,assign) CGRect tableRect;
 - (void)buttonSubmit;
 - (void)buttonCancel;
 - (void)buttonChooseImage;
@@ -37,6 +38,7 @@
     [_tableView release];
     [_imageHead release];
     [_toolBar release];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -69,7 +71,7 @@
     r.origin.y=44;
     r.size.height-=44*2;
     
-    
+    self.tableRect=r;
     _tableView=[[UITableView alloc] initWithFrame:r style:UITableViewStylePlain];
     _tableView.delegate=self;
     _tableView.dataSource=self;
@@ -139,7 +141,48 @@
     cell8.textField.text=self.Entity.Password;
     
     self.cells=[NSMutableArray arrayWithObjects:cell9,cell1,cell2,cell3,cell4,cell5,cell6,cell7,cell8, nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleKeyboardWillShowHideNotification:)
+                                                 name:UIKeyboardDidShowNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleKeyboardWillShowHideNotification:)
+                                                 name:UIKeyboardDidHideNotification
+                                               object:nil];
 
+}
+#pragma mark - Notifications
+- (void)handleKeyboardWillShowHideNotification:(NSNotification *)notification
+{
+    NSDictionary *info = [notification userInfo];
+    //取得键盘的大小
+    CGRect kbFrame = [[info valueForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    if ([notification.name isEqualToString:UIKeyboardDidShowNotification]) {//显示键盘
+        CGRect r=_tableView.frame;
+        CGRect r1=_toolBar.frame;
+        r.size.height=self.tableRect.size.height-kbFrame.size.height;
+        
+        
+        r1.origin.y=r.origin.y+r.size.height;
+        _toolBar.frame=r1;
+        [UIView animateWithDuration:[[info valueForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue] animations:^{
+            _tableView.frame=r;
+        }];
+        
+    }
+    else if ([notification.name isEqualToString:UIKeyboardDidHideNotification]) {//隐藏键盘
+        CGRect r=_tableView.frame;
+        CGRect r1=_toolBar.frame;
+        r.size.height=self.tableRect.size.height;
+        
+        r1.origin.y=self.tableRect.origin.y+r.size.height;
+        _toolBar.frame=r1;
+        [UIView animateWithDuration:[[info valueForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue] animations:^{
+            _tableView.frame=r;
+        }];
+    }
 }
 //修改时，加载信息
 - (void)loadingPersonInfo{
@@ -261,6 +304,7 @@
         args.soapParams=params;
         [self.serviceHelper asynService:args success:^(ServiceResult *result) {
             BOOL boo=NO;
+             NSString *status=@"";
             if (result.hasSuccess) {
                 XmlNode *node=[result methodNode];
                 NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:[node.InnerText dataUsingEncoding:NSUTF8StringEncoding] options:1 error:nil];
@@ -273,9 +317,18 @@
                     }];
                     return;
                 }
+                if ([dic.allKeys containsObject:@"Result"]) {
+                    status=[dic objectForKey:@"Result"];
+                }
+
             }
             if (!boo) {
-                [self hideLoadingFailedWithTitle:@"修改监管目标失败!" completed:nil];
+                NSString *errorMsg=@"修改监管目标失败!";
+                if ([status isEqualToString:@"Exists"]) {
+                    errorMsg=@"名称重复!";
+                }
+
+                [self hideLoadingFailedWithTitle:errorMsg completed:nil];
             }
         } failed:^(NSError *error, NSDictionary *userInfo) {
             [self hideLoadingFailedWithTitle:@"修改监管目标失败!" completed:nil];
@@ -354,55 +407,10 @@
     }
     return boo;
 }
--(void)textFieldDidBeginEditing:(UITextField *)textField {
-    if (!isKeyBoardShow) {
-        isKeyBoardShow=YES;
-        CGRect r=_tableView.frame;
-        r.size.height-=216;
-        
-        CGRect r1=_toolBar.frame;
-        r1.origin.y-=216;
-        [UIView animateWithDuration:0.3f animations:^{
-            _tableView.frame=r;
-            _toolBar.frame=r1;
-        }];
-    }
 
-    /***
-    CGRect frame = [self fieldToRect:textField];
-    int offset = frame.origin.y + 36 - (self.view.frame.size.height - 216.0);//键盘高度216
-    
-    NSTimeInterval animationDuration = 0.30f;
-    [UIView beginAnimations:@"ResizeForKeyboard" context:nil];
-    [UIView setAnimationDuration:animationDuration];
-    
-    //将视图的Y坐标向上移动offset个单位，以使下面腾出地方用于软键盘的显示
-    if(offset > 0)
-        self.view.frame = CGRectMake(0.0f, -offset, self.view.frame.size.width, self.view.frame.size.height);
-    [UIView commitAnimations];
-     ***/
-}
-- (void)textFieldDidEndEditing:(UITextField *)textField;
-{
-    //self.view.frame =CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
-}
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{
     [textField resignFirstResponder];
-    if (isKeyBoardShow) {
-        isKeyBoardShow=NO;
-        CGRect r=_tableView.frame;
-        r.size.height+=216;
-        
-        
-        CGRect r1=_toolBar.frame;
-        r1.origin.y+=216;
-        [UIView animateWithDuration:0.3f animations:^{
-            _tableView.frame=r;
-            _toolBar.frame=r1;
-        }];
-    }
-    
     return YES;
 }
 #pragma mark UITableViewDataSource Methods
@@ -427,23 +435,4 @@
     }
     return 44.0;
 }
-/***
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
-    return 110;
-}
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
-    UIView *bgView=[[[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 110)] autorelease];
-    bgView.backgroundColor=[UIColor clearColor];
-    UIImage *image=[UIImage imageNamed:@"bg03.png"];
-    _imageHead=[[UIImageView alloc] initWithFrame:CGRectMake((self.view.bounds.size.width-image.size.width)/2,bgView.frame.size.height-image.size.height, image.size.width, image.size.height)];
-    [_imageHead setImageWithURL:[NSURL URLWithString:self.Entity.Photo] placeholderImage:image];
-    [bgView addSubview:_imageHead];
-    
-    UIButton *btn=[UIButton buttonWithType:UIButtonTypeCustom];
-    btn.frame=_imageHead.frame;
-    [btn addTarget:self action:@selector(buttonChooseImage) forControlEvents:UIControlEventTouchUpInside];
-    [bgView addSubview:btn];
-    return bgView;
-}
- ***/
 @end

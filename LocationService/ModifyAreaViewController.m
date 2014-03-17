@@ -103,8 +103,9 @@
     r.origin.y=44;
     r.size.height-=44*2+73;
     _mapView= [[BMKMapView alloc]initWithFrame:r];
-    _mapView.zoomLevel=16;
+    
     [self.view addSubview:_mapView];
+    _mapView.zoomLevel=16;
     
     
     

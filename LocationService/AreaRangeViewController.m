@@ -18,6 +18,7 @@
 #import "AppHelper.h"
 #import "NSDate+TPCategory.h"
 #import "AppUI.h"
+#import "NSDate+TPCategory.h"
 #define  dicWeeks [NSDictionary dictionaryWithObjectsAndKeys:@"一",@"1",@"二",@"2",@"三",@"3",@"四",@"4",@"五",@"5",@"六",@"6",@"日",@"7", nil]
 @interface AreaRangeViewController ()<UITableViewDataSource,UITableViewDelegate>{
     CVUICalendar *_sCalendar;
@@ -106,7 +107,7 @@
     _sCalendar.popoverView.clearButtonTitle=@"取消";
     _sCalendar.isClearEmpty=NO;
     //添加事件监听事件
-    [_sCalendar.popoverText.popoverTextField addObserver:self forKeyPath:@"text" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:nil];
+    //[_sCalendar.popoverText.popoverTextField addObserver:self forKeyPath:@"text" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:nil];
     [self.view addSubview:_sCalendar];
     
 
@@ -118,7 +119,7 @@
     _eCalendar.popoverView.clearButtonTitle=@"取消";
     _eCalendar.isClearEmpty=NO;
     //添加属性事件监听
-    [_eCalendar.popoverText.popoverTextField addObserver:self forKeyPath:@"text" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:nil];
+    //[_eCalendar.popoverText.popoverTextField addObserver:self forKeyPath:@"text" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:nil];
     [self.view addSubview:_eCalendar];
     topY+=35+5;
     
@@ -148,16 +149,18 @@
     
     self.cells=[NSMutableArray array];
     self.cellChilds=[NSMutableDictionary dictionary];
-    int weekDay=1;
+    //int weekDay=1;
     for (int i=0; i<7; i++) {
+        /***
         if (i==0) {
             weekDay=[date dayOfWeek];
         }else{
             weekDay=[[date dateByAddingDays:i] dayOfWeek];
         }
+         ***/
         TKAreaWeekCell *cell=[[TKAreaWeekCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
-        cell.label.text=[NSString stringWithFormat:@"星期%@",[dicWeeks objectForKey:[NSString stringWithFormat:@"%d",weekDay]]];
-        cell.index=weekDay-1;//星期几
+        cell.label.text=[NSString stringWithFormat:@"星期%@",[dicWeeks objectForKey:[NSString stringWithFormat:@"%d",i+1]]];
+        cell.index=i;//weekDay-1;//星期几
         cell.Sort=i;
         //[cell setSelectedWeek:NO];
         [self.cells addObject:cell];
@@ -165,9 +168,9 @@
         
         TKAreaRangeCell *cell1=[[TKAreaRangeCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
         cell1.deleteButton.hidden=YES;
-        cell1.index=weekDay-1;//星期几
+        cell1.index=i;//weekDay-1;//星期几
         [cell1.button addTarget:self action:@selector(buttonAddRowClick:) forControlEvents:UIControlEventTouchUpInside];
-        [self.cellChilds setValue:[NSMutableArray arrayWithObjects:cell1, nil] forKey:[NSString stringWithFormat:@"%d",weekDay-1]];
+        [self.cellChilds setValue:[NSMutableArray arrayWithObjects:cell1, nil] forKey:[NSString stringWithFormat:@"%d",i]];
         [cell1 release];
     }
 }
@@ -227,7 +230,6 @@
 //事件改变事件
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-   
     if (![[change objectForKey:@"new"] isEqualToString:[change objectForKey:@"old"]]) {//处理改变事件
         id v=[object superview];
         while (![v isKindOfClass:[CVUICalendar class]]) {
@@ -333,14 +335,22 @@
             NSString *start=@"",*end=@"";
             for (ServiceResult *result in results) {
                 NSString *key=[[result userInfo] objectForKey:@"name"];
+                //NSLog(@"xml=%@",result.xmlString);
                 NSDictionary *dic=[result json];
                 if (dic!=nil) {
                     NSArray *arr=[dic objectForKey:@"TimeSpanList"];
-                    if ([key isEqualToString:@"0"]&&arr&&[arr count]>0) {
-                        start=[arr[0] objectForKey:@"validSTime"];
-                    }
-                    if ([key isEqualToString:@"6"]&&arr&&[arr count]>0) {
-                       end=[arr[0] objectForKey:@"validSTime"];
+                   
+                    if (arr&&[arr count]>0) {
+                        NSDictionary *sDic=arr[0];
+                        if ([sDic.allKeys containsObject:@"validSTime"]&&[[sDic objectForKey:@"validSTime"] length]>0) {
+                            start=[sDic objectForKey:@"validSTime"];
+                           
+                        }
+                        if ([sDic.allKeys containsObject:@"validETime"]&&[[sDic objectForKey:@"validETime"] length]>0) {
+                            end=[sDic objectForKey:@"validETime"];
+                           
+                        }
+                        
                     }
                     if (arr&&[arr count]>0) {
                         [self handlerLimitWithArray:arr week:key];
@@ -349,11 +359,11 @@
                 }
             }
             if ([start length]>0) {
-                NSDate *date1=[NSDate dateFromString:start withFormat:@"yyyy-MM-dd HH:mm"];
+                NSDate *date1=[NSDate dateFromString:start withFormat:@"yyyy-MM-dd"];
                 _sCalendar.popoverText.popoverTextField.text=[NSDate stringFromDate:date1 withFormat:@"yyyy-MM-dd"];
             }
             if ([end length]>0) {
-                NSDate *date2=[NSDate dateFromString:end withFormat:@"yyyy-MM-dd HH:mm"];
+                NSDate *date2=[NSDate dateFromString:end withFormat:@"yyyy-MM-dd"];
                 _eCalendar.popoverText.popoverTextField.text=[NSDate stringFromDate:date2 withFormat:@"yyyy-MM-dd"];
             }
         }];
@@ -552,6 +562,19 @@
         [AlertHelper initWithTitle:@"提示" message:@"请选择有限日期结速时间!"];
         return;
     }
+    NSString *sdate=_sCalendar.popoverText.popoverTextField.text,*edate=_eCalendar.popoverText.popoverTextField.text;
+    if ([sdate length]>0&&[edate length]>0) {
+        NSDate *date1=[NSDate dateFromString:sdate withFormat:@"yyyy-MM-dd"];
+        NSDate *date2=[NSDate dateFromString:edate withFormat:@"yyyy-MM-dd"];
+        
+        NSComparisonResult result = [date1 compare:date2];
+        if (result == NSOrderedDescending)
+        {
+            [AlertHelper initWithTitle:@"提示" message:@"有限日期起始时间不能大于结束时间!"];
+            return;
+        }
+        
+    }
     if (![self existsLimitedTime]) {
         [AlertHelper initWithTitle:@"提示" message:@"请至少选择一项有限时间!"];
         return;
@@ -572,7 +595,7 @@
     args.serviceNameSpace=DataNameSpace1;
     args.methodName=@"SaveRuleDateAndTime";
     args.soapParams=params;
-    NSLog(@"soap=%@",args.soapMessage);
+    //NSLog(@"soap=%@",args.soapMessage);
     [self showLoadingAnimatedWithTitle:@"正在执行,请稍后..."];
     [self.serviceHelper asynService:args success:^(ServiceResult *result) {
         BOOL boo=NO;

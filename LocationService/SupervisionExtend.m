@@ -21,8 +21,8 @@
 @interface SupervisionExtend ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>{
     UITableView *_tableView;
     LoginButtons *_toolBar;
-    BOOL isKeyBoardShow;
 }
+@property (nonatomic,assign) CGRect tableRect;
 - (void)buttonSubmit;
 - (void)buttonCancel;
 - (CGRect)fieldToRect:(UITextField*)field;
@@ -35,6 +35,7 @@
     [super dealloc];
     [_toolBar release];
     [_tableView release];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -78,7 +79,7 @@
     
     self.SysID=@"";
     
-    
+    self.tableRect=r;
     _tableView=[[UITableView alloc] initWithFrame:r style:UITableViewStylePlain];
     _tableView.delegate=self;
     _tableView.dataSource=self;
@@ -141,8 +142,47 @@
     
     self.cells=[NSMutableArray arrayWithObjects:cell1,cell2,cell3,cell4,cell5,cell6,cell7,cell8,cell9,cell10, nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleKeyboardWillShowHideNotification:)
+                                                 name:UIKeyboardDidShowNotification
+                                               object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleKeyboardWillShowHideNotification:)
+                                                 name:UIKeyboardDidHideNotification
+                                               object:nil];
    
+}
+#pragma mark - Notifications
+- (void)handleKeyboardWillShowHideNotification:(NSNotification *)notification
+{
+    NSDictionary *info = [notification userInfo];
+    //取得键盘的大小
+    CGRect kbFrame = [[info valueForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    if ([notification.name isEqualToString:UIKeyboardDidShowNotification]) {//显示键盘
+        CGRect r=_tableView.frame;
+        CGRect r1=_toolBar.frame;
+        r.size.height=self.tableRect.size.height-kbFrame.size.height;
+        
+        
+        r1.origin.y=r.origin.y+r.size.height;
+        _toolBar.frame=r1;
+        [UIView animateWithDuration:[[info valueForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue] animations:^{
+            _tableView.frame=r;
+        }];
+        
+    }
+    else if ([notification.name isEqualToString:UIKeyboardDidHideNotification]) {//隐藏键盘
+        CGRect r=_tableView.frame;
+        CGRect r1=_toolBar.frame;
+        r.size.height=self.tableRect.size.height;
+        
+        r1.origin.y=self.tableRect.origin.y+r.size.height;
+        _toolBar.frame=r1;
+        [UIView animateWithDuration:[[info valueForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue] animations:^{
+            _tableView.frame=r;
+        }];
+    }
 }
 //获取修改信息
 - (void)loadingEditInfo{
@@ -477,53 +517,10 @@
     }
     return boo;
 }
--(void)textFieldDidBeginEditing:(UITextField *)textField {
-    if (!isKeyBoardShow) {
-        isKeyBoardShow=YES;
-        CGRect r=_tableView.frame;
-        r.size.height-=216;
-        
-        CGRect r1=_toolBar.frame;
-        r1.origin.y-=216;
-        [UIView animateWithDuration:0.3f animations:^{
-            _tableView.frame=r;
-            _toolBar.frame=r1;
-        }];
-    }
-    /***
-    CGRect frame = [self fieldToRect:textField];
-    int offset = frame.origin.y + 36 - (self.view.frame.size.height - 216.0);//键盘高度216
-    
-    NSTimeInterval animationDuration = 0.30f;
-    [UIView beginAnimations:@"ResizeForKeyboard" context:nil];
-    [UIView setAnimationDuration:animationDuration];
-    
-    //将视图的Y坐标向上移动offset个单位，以使下面腾出地方用于软键盘的显示
-    if(offset > 0)
-        self.view.frame = CGRectMake(0.0f, -offset, self.view.frame.size.width, self.view.frame.size.height);
-    [UIView commitAnimations];
-     ***/
-}
-- (void)textFieldDidEndEditing:(UITextField *)textField;
-{
-    //self.view.frame =CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
-}
+
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{
     [textField resignFirstResponder];
-    if (isKeyBoardShow) {
-        isKeyBoardShow=NO;
-        CGRect r=_tableView.frame;
-        r.size.height+=216;
-        
-        
-        CGRect r1=_toolBar.frame;
-        r1.origin.y+=216;
-        [UIView animateWithDuration:0.3f animations:^{
-            _tableView.frame=r;
-            _toolBar.frame=r1;
-        }];
-    }
     return YES;
 }
 - (void)didReceiveMemoryWarning

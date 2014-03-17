@@ -127,10 +127,20 @@
         
        
         r1.origin.y=r.origin.y+r.size.height;
-        [UIView animateWithDuration:[[info valueForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue] animations:^{
+        //_tableView.frame=r;
+        // _buttons.frame=r1;
+        
+        NSNumber *curve = [info objectForKey:UIKeyboardAnimationCurveUserInfoKey];
+        NSNumber *duration = [info objectForKey:UIKeyboardAnimationDurationUserInfoKey];
+        // 添加移动动画，使视图跟随键盘移动
+        [UIView animateWithDuration:duration.doubleValue animations:^{
+            [UIView setAnimationBeginsFromCurrentState:YES];
+            [UIView setAnimationCurve:[curve intValue]];
+            
             _tableView.frame=r;
             _buttons.frame=r1;
         }];
+        
         
     }
     else if ([notification.name isEqualToString:UIKeyboardDidHideNotification]) {//隐藏键盘
@@ -139,6 +149,7 @@
         r.size.height=self.tableRect.size.height;
         
         r1.origin.y=self.tableRect.origin.y+r.size.height;
+        
         [UIView animateWithDuration:[[info valueForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue] animations:^{
             _tableView.frame=r;
             _buttons.frame=r1;

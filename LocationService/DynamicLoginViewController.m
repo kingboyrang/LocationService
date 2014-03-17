@@ -125,9 +125,11 @@
         
         
         r1.origin.y=r.origin.y+r.size.height;
+         _tableView.frame=r;
+         _buttons.frame=r1;
         [UIView animateWithDuration:[[info valueForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue] animations:^{
-            _tableView.frame=r;
-            _buttons.frame=r1;
+           
+           
         }];
         
     }
@@ -137,9 +139,10 @@
         r.size.height=self.tableRect.size.height;
         
         r1.origin.y=self.tableRect.origin.y+r.size.height;
+        
         [UIView animateWithDuration:[[info valueForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue] animations:^{
+             _buttons.frame=r1;
             _tableView.frame=r;
-            _buttons.frame=r1;
         }];
     }
 }

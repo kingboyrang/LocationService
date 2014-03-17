@@ -231,7 +231,7 @@
     args.serviceNameSpace=DataNameSpace1;
     args.methodName=@"GetAreaCar";
     args.soapParams=[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:self.AreaId,@"areaID", nil], nil];
-   NSLog(@"soap=%@",args.soapMessage);
+    //NSLog(@"soap=%@",args.soapMessage);
     ASIHTTPRequest *request1=[ServiceHelper commonSharedRequest:args];
     [request1 setUserInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"car",@"name", nil]];
     [self.serviceHelper addQueue:request1];
