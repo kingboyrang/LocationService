@@ -18,4 +18,5 @@
 @property (nonatomic,assign) int index;
 @property (nonatomic,readonly) NSString *timeSlot;//时间段
 @property (nonatomic,readonly) BOOL hasValue;//是否有值
+@property (nonatomic,readonly) BOOL hasTimeSlotOut;//判断开始时间是否大于结束时间
 @end

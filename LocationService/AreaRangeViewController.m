@@ -37,6 +37,7 @@
 - (void)closedOpenCellRow:(NSMutableDictionary*)dic;
 - (BOOL)formVerify;//表单验证
 - (BOOL)singleWeekVerifyWithRow:(int)row week:(int)week;
+- (BOOL)existsHasTimeOut;//判断是否存在有起始时间大于结束时间的设置
 @end
 
 @implementation AreaRangeViewController
@@ -175,7 +176,7 @@
     }
 }
 - (void)closedOpenCellRow:(NSMutableDictionary*)dic{
-    int total=self.cells.count;
+    NSInteger total=self.cells.count;
     for (int i=0; i<total; i++) {
         id v=self.cells[i];
         if ([v isKindOfClass:[TKAreaWeekCell class]]) {
@@ -195,7 +196,7 @@
    
     //起始时间
     NSDate *sdate=[NSDate dateFromString:_sCalendar.popoverText.popoverTextField.text withFormat:@"yyyy-MM-dd"];
-    int weekDay=[sdate dayOfWeek]-1;
+    NSInteger weekDay=[sdate dayOfWeek]-1;
     NSMutableDictionary *dic=[NSMutableDictionary dictionary];
     [dic setValue:@"0" forKey:[NSString stringWithFormat:@"%d",weekDay]];
     for (int a=1; a<7; a++) {
@@ -259,7 +260,7 @@
                 if (cell.isOpen) {//打开的
                     NSIndexPath *indexPath=[_tableView indexPathForCell:cell];
                     int total=0;
-                    int row=indexPath.row;
+                    NSInteger row=indexPath.row;
                     id elem=self.cells[row+1];
                     while (![elem isKindOfClass:[TKAreaWeekCell class]]) {
                         row++;
@@ -372,7 +373,7 @@
 }
 - (int)getCellRow:(TKAreaRangeCell*)cell{
     NSIndexPath *indexPath=[_tableView indexPathForCell:cell];
-    int row=indexPath.row-1;
+    NSInteger row=indexPath.row-1;
     id v=self.cells[row];
     int total=0;
     
@@ -393,6 +394,7 @@
     }
     return dic;
 }
+
 - (BOOL)existsLimitedTime{
     NSDictionary *dic=[self getRuleTimeXml];
     if ([dic count]>0) {
@@ -402,6 +404,26 @@
         }
     }
     return NO;
+}
+//判断是否存在有起始时间大于结束时间的设置
+- (BOOL)existsHasTimeOut{
+    for (int i=0; i<self.cells.count; i++) {
+        if ([self.cells[i] isKindOfClass:[TKAreaWeekCell class]]) {
+            TKAreaWeekCell *cell=self.cells[i];
+            if (cell.hasSelected) {//表示选中
+                NSArray *arr=[self.cellChilds objectForKey:[NSString stringWithFormat:@"%d",cell.index]];
+                for (TKAreaRangeCell *item in arr) {
+                    if (item.hasValue&&item.hasTimeSlotOut) {
+                        NSString *errMsg=[NSString stringWithFormat:@"星期%@设置的时间段%@,起始时间段大于结束时间段!",[dicWeeks objectForKey:[NSString stringWithFormat:@"%d",cell.index+1]],item.timeSlot];
+                        [AlertHelper initWithTitle:@"提示" message:errMsg];
+                        return NO;
+                    }
+                }
+            }
+        }
+    }
+
+    return YES;
 }
 - (NSString*)enableDayTimeXml{
     if (self.cellChilds&&[self.cellChilds count]>0) {
@@ -580,6 +602,9 @@
         return;
     }
     if (![self formVerify]) {//验证
+        return;
+    }
+    if (![self existsHasTimeOut]) {//验证时间段
         return;
     }
     

@@ -319,11 +319,17 @@
             }
             if (!boo) {
                 NSString *errorMsg=@"新增监管目标失败!";
+                if ([status isEqualToString:@"2"]) {
+                    errorMsg=@"输入的手机号码已绑定终端,无法新增!";
+                }
                 if ([status isEqualToString:@"5"]) {
-                    errorMsg=@"密码与IMEI的密码不匹配,无法新增!";
+                    errorMsg=@"输入的密码与IMEI的密码不匹配,无法新增!";
                 }
                 if ([status isEqualToString:@"6"]) {
-                    errorMsg=@"SIM卡号与IMEI的SIM卡不匹配,无法新增!";
+                    errorMsg=@"输入的SIM卡号与IMEI的SIM卡不匹配,无法新增!";
+                }
+                if ([status isEqualToString:@"7"]) {
+                    errorMsg=@"已存在该终端的目标,无法新增!";
                 }
                 if ([status isEqualToString:@"Exists"]) {
                     errorMsg=@"名称已存在!";
@@ -426,6 +432,19 @@
             if ([status isEqualToString:@"Exists"]) {
                 errorMsg=@"名称重复!";
             }
+            if ([status isEqualToString:@"2"]) {
+                errorMsg=@"输入的手机号码已绑定终端,无法修改!";
+            }
+            if ([status isEqualToString:@"5"]) {
+                errorMsg=@"输入的密码与IMEI的密码不匹配,无法修改!";
+            }
+            if ([status isEqualToString:@"6"]) {
+                errorMsg=@"输入的SIM卡号与IMEI的SIM卡不匹配,无法修改!";
+            }
+            if ([status isEqualToString:@"7"]) {
+                errorMsg=@"已存在该终端的目标,无法修改!";
+            }
+
             [self hideLoadingFailedWithTitle:errorMsg completed:nil];
         }
     } failed:^(NSError *error, NSDictionary *userInfo) {

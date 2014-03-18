@@ -423,15 +423,16 @@
         affection=[NSString stringWithFormat:@"%@|%@,3",affection,cell6.textField.text];
     }
     
-   
+    NSString *sos=cell2.hasValue?[NSString stringWithFormat:@"%@,1",[cell2.textField.text Trim]]:@"";
+    NSString *moniter=cell3.hasValue?[NSString stringWithFormat:@"%@,1",[cell3.textField.text Trim]]:@"";
     
     NSMutableArray *params=[NSMutableArray arrayWithCapacity:6];
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"15",@"OperateValue", nil]];
     //[params addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"15",@"OperateValue", nil]];
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:self.SysID,@"SysID", nil]];
-    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%@,1",[cell2.textField.text Trim]],@"SOS_Order", nil]];//sos号码+顺序
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:sos,@"SOS_Order", nil]];//sos号码+顺序
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:affection,@"KinShip_Order", nil]];//亲情号码+顺序
-    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%@,1",[cell3.textField.text Trim]],@"Moniter_Order", nil]];//监听号码+顺序
+    [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:moniter,@"Moniter_Order", nil]];//监听号码+顺序
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:[[NSDate date] stringWithFormat:@"yyyy-MM-dd HH:mm:ss"],@"CurDateTime", nil]];
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:acc.WorkNo,@"CurWorkNo", nil]];
     [params addObject:[NSDictionary dictionaryWithObjectsAndKeys:self.DeviceCode,@"DeviceCode", nil]];//终端唯一ID
@@ -446,7 +447,7 @@
     NSString *memo=self.operateType==1?@"新增":@"修改";
     [self showLoadingAnimatedWithTitle:[NSString stringWithFormat:@"正在%@,请稍后...",memo]];
     [self.serviceHelper asynService:args success:^(ServiceResult *result) {
-       NSLog(@"xml=%@",result.request.responseString);
+       //NSLog(@"xml=%@",result.request.responseString);
         BOOL boo=NO;
         if (result.hasSuccess) {
             NSDictionary *dic=(NSDictionary*)[result json];

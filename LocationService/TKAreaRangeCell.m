@@ -7,11 +7,14 @@
 //
 
 #import "TKAreaRangeCell.h"
-
+#import "NSDate+TPCategory.h"
+#import "AlertHelper.h"
 @implementation TKAreaRangeCell
 - (void)dealloc{
     [super dealloc];
     [_labLine release];
+    [_startField.popoverText.popoverTextField removeObserver:self forKeyPath:@"text"];
+    [_endField.popoverText.popoverTextField removeObserver:self forKeyPath:@"text"];
 }
 - (id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
 	if(!(self=[super initWithStyle:style reuseIdentifier:reuseIdentifier])) return nil;
@@ -19,9 +22,7 @@
     _startField=[[CVUICalendar alloc] initWithFrame:CGRectZero];
     _startField.datePicker.datePickerMode=UIDatePickerModeTime;
     [_startField.dateForFormat setDateFormat:@"HH:mm"];
-    //_startField.borderStyle=UITextBorderStyleRoundedRect;
-    //_startField.contentVerticalAlignment=UIControlContentVerticalAlignmentCenter;
-    //_startField.delegate=self;
+   [_startField.popoverText.popoverTextField addObserver:self forKeyPath:@"text" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:nil];
     [self.contentView addSubview:_startField];
     
     NSString *title=@"~";
@@ -36,11 +37,10 @@
     _endField=[[CVUICalendar alloc] initWithFrame:CGRectZero];
     _endField.datePicker.datePickerMode=UIDatePickerModeTime;
     [_endField.dateForFormat setDateFormat:@"HH:mm"];
+    [_endField.popoverText.popoverTextField addObserver:self forKeyPath:@"text" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:nil];
     [self.contentView addSubview:_endField];
     
-    //_addButton=[UIButton buttonWithType:UIButtonTypeContactAdd];
-    //_addButton.frame=CGRectMake(0, 0, 29, 29);
-    //[self.contentView addSubview:_addButton];
+
     
     _button=[UIButton buttonWithType:UIButtonTypeContactAdd];
     _button.frame=CGRectMake(0, 0, 29, 29);
@@ -58,6 +58,25 @@
 - (id) initWithFrame:(CGRect)frame reuseIdentifier:(NSString *)reuseIdentifier {
 	return [self initWithStyle:UITableViewCellStyleDefault  reuseIdentifier:reuseIdentifier];
 }
+//事件改变事件
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    if ([keyPath isEqualToString:@"text"]) {
+        if (![[change objectForKey:@"new"] isEqualToString:[change objectForKey:@"old"]]) {//处理改变事件
+            if ([self hasTimeSlotOut]) {
+                NSString *memo=@"";
+                if (object==_startField.popoverText.popoverTextField) {
+                    memo=[NSString stringWithFormat:@"起始时间段必须小于结束时间段%@!",_endField.popoverText.popoverTextField.text];
+                }else{
+                    memo=[NSString stringWithFormat:@"结束时间段必须大于起始时间段%@!",_startField.popoverText.popoverTextField.text];
+                }
+                [AlertHelper initWithTitle:@"提示" message:memo];
+                return;
+            }
+        }
+    }
+   
+}
 - (NSString*)timeSlot{
     NSString *str1=[_startField.popoverText.popoverTextField.text Trim];
     NSString *str2=[_endField.popoverText.popoverTextField.text Trim];
@@ -70,6 +89,22 @@
     NSString *str=[self timeSlot];
     if ([str length]>0) {
         return YES;
+    }
+    return NO;
+}
+- (BOOL)hasTimeSlotOut{
+    NSString *sdate=_startField.popoverText.popoverTextField.text,*edate=_endField.popoverText.popoverTextField.text;
+    if ([sdate length]>0&&[edate length]>0) {
+        NSString *str1=[NSString stringWithFormat:@"2011-11-11 %@",sdate];
+        NSString *str2=[NSString stringWithFormat:@"2011-11-11 %@",edate];
+        NSDate *date1=[NSDate dateFromString:str1 withFormat:@"yyyy-MM-dd HH:mm"];
+        NSDate *date2=[NSDate dateFromString:str2 withFormat:@"yyyy-MM-dd HH:mm"];
+        
+        NSComparisonResult result = [date1 compare:date2];
+        if (result == NSOrderedDescending)
+        {
+            return YES;
+        }
     }
     return NO;
 }

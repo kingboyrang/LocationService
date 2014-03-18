@@ -143,6 +143,7 @@
     TKTextFieldCell *cell6=[[[TKTextFieldCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
     cell6.textField.placeholder=@"请输入手机号码";
     cell6.textField.delegate=self;
+    [cell6.textField addTarget:self action:@selector(textUserChange:) forControlEvents:UIControlEventValueChanged];
     
     TKLabelCell *cell7=[[[TKLabelCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
     cell7.label.text=@"密码";
@@ -256,6 +257,12 @@
         [cell4.textField becomeFirstResponder];
         return;
     }
+    if(strlen([cell4.textField.text UTF8String])<6)
+    {
+        [AlertHelper initWithTitle:@"提示" message:@"密码不能少于6位大于12位！"];
+        [cell4.textField becomeFirstResponder];
+        return;
+    }
     TKTextFieldCell *cell5=self.cells[9];
     if (!cell5.hasValue) {
         [AlertHelper initWithTitle:@"提示" message:@"确认密码不为空!"];
@@ -348,6 +355,17 @@
         }else{
             _showInfo.text=@"";
             _accountImageView.hidden=YES;
+        }
+    }
+    TKTextFieldCell *cell1=self.cells[5];
+    if (cell1.textField==field) {//手机号码检测
+        //检测手机号码
+        NSString *phone=[field.text Trim];
+        if ([phone length]==11) {
+            [self checkPhone:cell1.textField.text];
+        }else{
+            _phoneShowInfo.text=@"";
+            _phoneImageView.hidden=YES;
         }
     }
 }
@@ -486,13 +504,7 @@
     if (cell.textField==textField||cell3.textField==textField) {
         if (cell3.textField==textField) {//手机号码
             [self replacePhonestring];
-            //检测手机号码
-            if ([cell3.textField.text length]== 10&&[string isNumberString]) {
-                [self checkPhone:[NSString stringWithFormat:@"%@%@",cell3.textField.text,string]];
-            }else{
-                _phoneShowInfo.text=@"";
-                _phoneImageView.hidden=YES;
-            }
+           
             if(strlen([textField.text UTF8String]) >= 11 && range.length != 1)
                 boo=NO;
         }else{//帐号
