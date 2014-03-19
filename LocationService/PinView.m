@@ -42,7 +42,7 @@
         
         //topY+=image1.size.height-10;
         topY+=image1.size.height;
-        UIImage *image2=[UIImage imageNamed:@"pinArrow.png"];
+        UIImage *image2=[UIImage imageNamed:@"pinArrow_r.png"];
         _circuleView=[[UIImageView alloc] initWithFrame:CGRectMake((frame.size.width-image2.size.width)/2, topY, image2.size.width, image2.size.height)];
         [_circuleView setImage:image2];
         [self addSubview:_circuleView];

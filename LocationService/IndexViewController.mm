@@ -84,6 +84,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
+    //self.navigationController.navigationBar.translucent = NO;
     self.navigationController.delegate=self;
     
     isFirstLoad=YES;
@@ -456,6 +458,7 @@
              newAnnotation.annotation = annotation;
              //自定义气泡
              TrajectoryPaoView *_areaPaoView=[[[TrajectoryPaoView alloc] initWithFrame:CGRectMake(0, 0, 250, 350)] autorelease];
+             _areaPaoView.tag=200+pos;
              _areaPaoView.controls=self;
              [_areaPaoView setDataSource:self.cells[pos]];
              BMKActionPaopaoView *paopao=[[BMKActionPaopaoView alloc] initWithCustomView:_areaPaoView];
@@ -568,10 +571,19 @@
 {
    
     if ([view.annotation isKindOfClass:[KYPointAnnotation class]]) {//选中监管目标
+        
+       
+        
         KYPointAnnotation *elem=(KYPointAnnotation*)view.annotation;
         int index=elem.tag-100;
         SupervisionPerson *entity=self.cells[index];
         [self setRecetiveSupersion:entity];
+        
+        if ([[view.paopaoView viewWithTag:200+index] isKindOfClass:[TrajectoryPaoView class]]) {
+            TrajectoryPaoView *pao=(TrajectoryPaoView*)[view.paopaoView viewWithTag:200+index];
+            [pao loadDataSource];//重载数据
+        }
+         //BMKPinAnnotationView *newAnnotation = (BMKPinAnnotationView*)[mapView viewForAnnotation:annotation];
     }
 }
 //双击事件

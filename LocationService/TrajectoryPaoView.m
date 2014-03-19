@@ -9,11 +9,13 @@
 #import "TrajectoryPaoView.h"
 #import "TKLabelLabelCell.h"
 #import "TKTrajectoryPaoCell.h"
+#import "ServiceHelper.h"
 @interface TrajectoryPaoView ()<UITableViewDataSource,UITableViewDelegate>{
     UITableView *_tableView;
 }
 - (CGFloat)getTableHeight;
 - (void)relayout;
+- (void)reloadTableSource:(SupervisionPerson*)entity;
 @end
 @implementation TrajectoryPaoView
 - (void)dealloc{
@@ -90,8 +92,7 @@
     }
     return self;
 }
-- (void)setDataSource:(SupervisionPerson*)entity{
-    self.Entity=entity;
+- (void)reloadTableSource:(SupervisionPerson*)entity{
     TKLabelLabelCell *cell1=self.cells[0];
     cell1.showLabel.text=entity.Name;
     
@@ -116,10 +117,15 @@
     
     //重设大小
     [self relayout];
+}
+- (void)setDataSource:(SupervisionPerson*)entity{
+    self.Entity=entity;
+    [self reloadTableSource:entity];
     
 }
 - (void)setDataSourceHistory:(TrajectoryHistory*)entity name:(NSString*)name{
     SupervisionPerson *elem=[[[SupervisionPerson alloc] init] autorelease];
+    
     elem.Name=name;
     elem.Address=entity.address;
     elem.angle=entity.angle;
@@ -154,6 +160,36 @@
     [_tableView reloadData];
     //重设大小
     [self relayout];
+}
+//重新获取最新信息
+- (void)loadDataSource{
+    ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
+    args.serviceURL=DataWebservice1;
+    args.serviceNameSpace=DataNameSpace1;
+    args.methodName=@"GetSingleDetail";
+    args.soapParams=[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:self.Entity.ID,@"id", nil], nil];
+    
+    [ServiceHelper asynService:args success:^(ServiceResult *result) {
+        if (result.hasSuccess) {
+            NSDictionary *dic=[result json];
+            NSArray *arr=[dic objectForKey:@"Person"];
+            if (arr&&[arr count]>0) {
+                NSDictionary *item=[arr objectAtIndex:0];
+                self.Entity.Name=[item objectForKey:@"Name"];
+                self.Entity.PCTime=[item objectForKey:@"PCTime"];
+                self.Entity.Address=[item objectForKey:@"Address"];
+                self.Entity.speed=[item objectForKey:@"speed"];
+                self.Entity.angle=[item objectForKey:@"angle"];
+                self.Entity.oil=[item objectForKey:@"oil"];
+                self.Entity.temper=[item objectForKey:@"temper"];
+                self.Entity.extend=[item objectForKey:@"extend"];
+                //NSLog(@"pctime=%@",self.Entity.PCTime);
+                [self reloadTableSource:self.Entity];
+            }
+        }
+    } failed:^(NSError *error, NSDictionary *userInfo) {
+        
+    }];
 }
 - (CGFloat)getTableHeight{
     CGFloat total=0;

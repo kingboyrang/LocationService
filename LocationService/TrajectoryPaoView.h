@@ -15,4 +15,5 @@
 @property (nonatomic,assign) id controls;
 - (void)setDataSource:(SupervisionPerson*)entity;
 - (void)setDataSourceHistory:(TrajectoryHistory*)entity name:(NSString*)name;
+- (void)loadDataSource;
 @end

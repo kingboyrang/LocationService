@@ -265,17 +265,17 @@
     
     NSString *lab1Title=@"时间";
     CGSize size=[lab1Title textSize:[UIFont fontWithName:DeviceFontName size:DeviceFontSize] withWidth:self.view.bounds.size.width];
-    UILabel *lab1=[[UILabel alloc] initWithFrame:CGRectMake(20,(bgView.frame.size.height-size.height)/2, size.width,size.height)];
+    UILabel *lab1=[[UILabel alloc] initWithFrame:CGRectMake((self.view.bounds.size.width/2-size.width)/2,(bgView.frame.size.height-size.height)/2, size.width,size.height)];
     lab1.text=lab1Title;
     lab1.font=[UIFont fontWithName:DeviceFontName size:DeviceFontSize];
     lab1.backgroundColor=[UIColor clearColor];
     [bgView addSubview:lab1];
     [lab1 release];
     
-    
+    CGFloat w=self.view.bounds.size.width/2;
     NSString *lab2Title=@"位置";
     size=[lab2Title textSize:[UIFont fontWithName:DeviceFontName size:DeviceFontSize] withWidth:self.view.bounds.size.width];
-    UILabel *lab2=[[UILabel alloc] initWithFrame:CGRectMake(self.view.bounds.size.width/2-20,(bgView.frame.size.height-size.height)/2, size.width,size.height)];
+    UILabel *lab2=[[UILabel alloc] initWithFrame:CGRectMake(w+(w-size.width)/2,(bgView.frame.size.height-size.height)/2, size.width,size.height)];
     lab2.text=lab2Title;
     lab2.font=[UIFont fontWithName:DeviceFontName size:DeviceFontSize];
     lab2.backgroundColor=[UIColor clearColor];

@@ -79,6 +79,7 @@
     cell2.textField.layer.cornerRadius=5.0;
     cell2.textField.layer.borderColor=[UIColor colorFromHexRGB:@"4a7ebb"].CGColor;
     cell2.textField.delegate=self;
+    cell2.textField.keyboardType=UIKeyboardTypeAlphabet;
     
     TKLabelCell *cell3=[[[TKLabelCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
     cell3.label.text=@"密码";

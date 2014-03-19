@@ -80,7 +80,7 @@
     cell4.textField.delegate=self;
     
     TKLabelCell *cell5=[[[TKLabelCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
-    cell5.label.text=@"妮称";
+    cell5.label.text=@"昵称";
     
     TKTextFieldCell *cell6=[[[TKTextFieldCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
     cell6.textField.layer.borderWidth=2.0;
@@ -88,6 +88,7 @@
     cell6.textField.layer.borderColor=[UIColor colorFromHexRGB:@"4a7ebb"].CGColor;
     cell6.textField.text=acc.Name;
     cell6.textField.delegate=self;
+    cell6.textField.keyboardType=UIKeyboardTypeAlphabet;
     
     self.cells=[NSMutableArray arrayWithObjects:cell1,cell2,cell3,cell4,cell5,cell6, nil];
     
@@ -238,6 +239,10 @@
             boo=NO;
     }
     TKTextFieldCell *cell2=self.cells[5];
+    if (cell2.textField==textField) {
+        if([textField.text length] >= 20 && range.length != 1)
+            boo=NO;
+    }
     if ([[cell1.textField.text Trim] length]==0||[[cell2.textField.text Trim] length]==0) {
         _buttons.submit.enabled=NO;
     }else{

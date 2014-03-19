@@ -49,7 +49,7 @@
         _startCalendar.datePicker.datePickerMode=UIDatePickerModeDateAndTime;
         [_startCalendar.dateForFormat setDateFormat:@"yyyy/MM/dd HH:mm"];
         //_startCalendar.datePicker.maximumDate=[NSDate date];
-        _startCalendar.popoverText.popoverTextField.text=[[time dateByAddingMinutes:-120] stringWithFormat:@"yyyy/MM/dd HH:mm"];
+        _startCalendar.popoverText.popoverTextField.text=[[time dateByAddingMinutes:-60] stringWithFormat:@"yyyy/MM/dd HH:mm"];
         [self addSubview:_startCalendar];
         
         

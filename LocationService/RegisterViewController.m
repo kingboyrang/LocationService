@@ -115,6 +115,7 @@
     TKTextFieldCell *cell2=[[[TKTextFieldCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
     cell2.textField.placeholder=@"请输入帐号";
     cell2.textField.delegate=self;
+    cell2.textField.keyboardType=UIKeyboardTypeAlphabet;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textUserChange:) name:UITextFieldTextDidChangeNotification object:nil];
     [cell2.textField addTarget:self action:@selector(textUserChange:) forControlEvents:UIControlEventValueChanged];
     
@@ -124,6 +125,7 @@
     TKTextFieldCell *cell4=[[[TKTextFieldCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
     cell4.textField.placeholder=@"请输入妮称";
     cell4.textField.delegate=self;
+    cell4.textField.keyboardType=UIKeyboardTypeAlphabet;
     
     TKLabelCell *cell5=[[[TKLabelCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
     cell5.label.text=@"手机号码";
@@ -160,6 +162,7 @@
     cell10.textField.placeholder=@"请输入确认密码";
     cell10.textField.secureTextEntry=YES;
     cell10.textField.delegate=self;
+    
 
     self.cells=[NSMutableArray arrayWithObjects:cell1,cell2,cell3,cell4,cell5,cell6,cell7,cell8,cell9,cell10, nil];
     
@@ -499,7 +502,8 @@
 {
     // return NO to not change text
     BOOL boo=YES;
-    TKTextFieldCell *cell=self.cells[1];
+    TKTextFieldCell *cell=self.cells[1];//帐号
+     TKTextFieldCell *cell4=self.cells[3];//昵称
     TKTextFieldCell *cell3=self.cells[5];
     if (cell.textField==textField||cell3.textField==textField) {
         if (cell3.textField==textField) {//手机号码
@@ -508,9 +512,13 @@
             if(strlen([textField.text UTF8String]) >= 11 && range.length != 1)
                 boo=NO;
         }else{//帐号
-            if(strlen([textField.text UTF8String]) >= 12 && range.length != 1)
+            if(strlen([textField.text UTF8String]) >= 20 && range.length != 1)
                 boo=NO;
             }
+    }
+    if (cell4.textField==textField) {
+        if([textField.text length] >= 20 && range.length != 1)
+            boo=NO;
     }
     TKTextFieldCell *cell1=self.cells[7];//密码
     TKTextFieldCell *cell2=self.cells[9];//确认密码
