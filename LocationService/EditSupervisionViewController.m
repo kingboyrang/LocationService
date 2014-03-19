@@ -144,12 +144,13 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(handleKeyboardWillShowHideNotification:)
-                                                 name:UIKeyboardDidShowNotification
+                                                 name:UIKeyboardWillShowNotification
                                                object:nil];
+    
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(handleKeyboardWillShowHideNotification:)
-                                                 name:UIKeyboardDidHideNotification
+                                                 name:UIKeyboardWillHideNotification
                                                object:nil];
 
 }
@@ -159,28 +160,27 @@
     NSDictionary *info = [notification userInfo];
     //取得键盘的大小
     CGRect kbFrame = [[info valueForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
-    if ([notification.name isEqualToString:UIKeyboardDidShowNotification]) {//显示键盘
+    if ([notification.name isEqualToString:UIKeyboardWillShowNotification]) {//显示键盘
         CGRect r=_tableView.frame;
         CGRect r1=_toolBar.frame;
         r.size.height=self.tableRect.size.height-kbFrame.size.height;
         
-        
         r1.origin.y=r.origin.y+r.size.height;
-        _toolBar.frame=r1;
         [UIView animateWithDuration:[[info valueForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue] animations:^{
             _tableView.frame=r;
+            _toolBar.frame=r1;
         }];
-        
     }
-    else if ([notification.name isEqualToString:UIKeyboardDidHideNotification]) {//隐藏键盘
+    else {//隐藏键盘
         CGRect r=_tableView.frame;
         CGRect r1=_toolBar.frame;
         r.size.height=self.tableRect.size.height;
         
         r1.origin.y=self.tableRect.origin.y+r.size.height;
-        _toolBar.frame=r1;
+       
         [UIView animateWithDuration:[[info valueForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue] animations:^{
             _tableView.frame=r;
+            _toolBar.frame=r1;
         }];
     }
 }

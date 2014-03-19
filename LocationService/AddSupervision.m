@@ -134,6 +134,7 @@
     TKTextFieldCell *cell4=[[[TKTextFieldCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
     cell4.textField.placeholder=@"请输入IMEI号码";
     cell4.textField.delegate=self;
+    cell4.textField.keyboardType=UIKeyboardTypeAlphabet;
     
     TKLabelCell *cell5=[[[TKLabelCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
     cell5.label.text=@"SIM卡号";
@@ -141,6 +142,7 @@
     TKTextFieldCell *cell6=[[[TKTextFieldCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
     cell6.textField.placeholder=@"请输入SIM卡号";
     cell6.textField.delegate=self;
+    cell6.textField.keyboardType=UIKeyboardTypeAlphabet;
     
     TKLabelCell *cell7=[[[TKLabelCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
     cell7.label.text=@"密码";
@@ -154,12 +156,13 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(handleKeyboardWillShowHideNotification:)
-                                                 name:UIKeyboardDidShowNotification
+                                                 name:UIKeyboardWillShowNotification
                                                object:nil];
+    
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(handleKeyboardWillShowHideNotification:)
-                                                 name:UIKeyboardDidHideNotification
+                                                 name:UIKeyboardWillHideNotification
                                                object:nil];
 }
 #pragma mark - Notifications
@@ -168,28 +171,26 @@
     NSDictionary *info = [notification userInfo];
     //取得键盘的大小
     CGRect kbFrame = [[info valueForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
-    if ([notification.name isEqualToString:UIKeyboardDidShowNotification]) {//显示键盘
+    if ([notification.name isEqualToString:UIKeyboardWillShowNotification]) {//显示键盘
         CGRect r=_tableView.frame;
         CGRect r1=_toolBar.frame;
         r.size.height=self.tableRect.size.height-kbFrame.size.height;
         
-        
         r1.origin.y=r.origin.y+r.size.height;
-        _toolBar.frame=r1;
         [UIView animateWithDuration:[[info valueForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue] animations:^{
             _tableView.frame=r;
+            _toolBar.frame=r1;
         }];
         
     }
-    else if ([notification.name isEqualToString:UIKeyboardDidHideNotification]) {//隐藏键盘
+    else {//隐藏键盘
         CGRect r=_tableView.frame;
         CGRect r1=_toolBar.frame;
         r.size.height=self.tableRect.size.height;
-        
         r1.origin.y=self.tableRect.origin.y+r.size.height;
-        _toolBar.frame=r1;
         [UIView animateWithDuration:[[info valueForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue] animations:^{
             _tableView.frame=r;
+            _toolBar.frame=r1;
         }];
     }
 }
