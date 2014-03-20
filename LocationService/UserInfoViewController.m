@@ -59,7 +59,7 @@
     Account *acc=[Account unarchiverAccount];
     
     TKLabelCell *cell1=[[[TKLabelCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
-    cell1.label.text=@"帐号";
+    cell1.label.text=@"账号";
     
     TKTextFieldCell *cell2=[[[TKTextFieldCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
     cell2.textField.layer.borderWidth=2.0;
@@ -79,6 +79,7 @@
     cell4.textField.text=acc.Phone;
     cell4.textField.keyboardType=UIKeyboardTypeAlphabet;
     cell4.textField.delegate=self;
+    cell4.textField.placeholder=@"请输入手机号码";
     
     TKLabelCell *cell5=[[[TKLabelCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
     cell5.label.text=@"昵称";
@@ -89,7 +90,8 @@
     cell6.textField.layer.borderColor=[UIColor colorFromHexRGB:@"4a7ebb"].CGColor;
     cell6.textField.text=acc.Name;
     cell6.textField.delegate=self;
-    cell6.textField.keyboardType=UIKeyboardTypeAlphabet;
+    cell6.textField.placeholder=@"请输入昵称";
+    //cell6.textField.keyboardType=UIKeyboardTypeAlphabet;
     
     self.cells=[NSMutableArray arrayWithObjects:cell1,cell2,cell3,cell4,cell5,cell6, nil];
     

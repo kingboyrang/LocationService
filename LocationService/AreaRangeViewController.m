@@ -94,7 +94,7 @@
     
     topY+=30+5;
     RangHeader *bgView=[[RangHeader alloc] initWithFrame:CGRectMake(0, topY, self.view.bounds.size.width, 30)];
-    bgView.label.text=@"有限日期";
+    bgView.label.text=@"有效日期";
     [self.view addSubview:bgView];
     [bgView release];
     
@@ -125,7 +125,7 @@
     topY+=35+5;
     
     RangHeader *header1=[[RangHeader alloc] initWithFrame:CGRectMake(0, topY, self.view.bounds.size.width, 30)];
-    header1.label.text=@"有限时间";
+    header1.label.text=@"有效时间";
     [self.view addSubview:header1];
     [header1 release];
     
@@ -414,7 +414,7 @@
                 NSArray *arr=[self.cellChilds objectForKey:[NSString stringWithFormat:@"%d",cell.index]];
                 for (TKAreaRangeCell *item in arr) {
                     if (item.hasValue&&item.hasTimeSlotOut) {
-                        NSString *errMsg=[NSString stringWithFormat:@"星期%@设置的时间段%@,起始时间段大于结束时间段!",[dicWeeks objectForKey:[NSString stringWithFormat:@"%d",cell.index+1]],item.timeSlot];
+                        NSString *errMsg=[NSString stringWithFormat:@"星期%@设置的时间段%@,起始时间段大于结束时间段,请重新输入!",[dicWeeks objectForKey:[NSString stringWithFormat:@"%d",cell.index+1]],item.timeSlot];
                         [AlertHelper initWithTitle:@"提示" message:errMsg];
                         return NO;
                     }
@@ -577,11 +577,11 @@
 - (void)buttonSubmitClick:(id)sender{
     
     if ([_sCalendar.popoverText.popoverTextField.text length]==0) {
-        [AlertHelper initWithTitle:@"提示" message:@"请选择有限日期开始时间!"];
+        [AlertHelper initWithTitle:@"提示" message:@"请选择有效日期开始时间!"];
         return;
     }
     if ([_eCalendar.popoverText.popoverTextField.text length]==0) {
-        [AlertHelper initWithTitle:@"提示" message:@"请选择有限日期结速时间!"];
+        [AlertHelper initWithTitle:@"提示" message:@"请选择有效日期结速时间!"];
         return;
     }
     NSString *sdate=_sCalendar.popoverText.popoverTextField.text,*edate=_eCalendar.popoverText.popoverTextField.text;
@@ -592,13 +592,13 @@
         NSComparisonResult result = [date1 compare:date2];
         if (result == NSOrderedDescending)
         {
-            [AlertHelper initWithTitle:@"提示" message:@"有限日期起始时间不能大于结束时间!"];
+            [AlertHelper initWithTitle:@"提示" message:@"有效日期起始时间不能大于结束时间!"];
             return;
         }
         
     }
     if (![self existsLimitedTime]) {
-        [AlertHelper initWithTitle:@"提示" message:@"请至少选择一项有限时间!"];
+        [AlertHelper initWithTitle:@"提示" message:@"请至少选择一项有效时间!"];
         return;
     }
     if (![self formVerify]) {//验证

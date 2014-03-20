@@ -10,7 +10,7 @@
 
 @interface Account : NSObject<NSCoding>
 @property(nonatomic,copy) NSString *Way;//登录方式(1:普通登录 2:手机动态登录)
-@property(nonatomic,copy) NSString *UserId;//帐号
+@property(nonatomic,copy) NSString *UserId;//账号
 @property(nonatomic,copy) NSString *Password;//密码
 @property(nonatomic,copy) NSString *encryptPwd;//加密密码
 @property(nonatomic,copy) NSString *Name;//姓名
@@ -34,7 +34,7 @@
 + (void)editPwd:(NSString*)pwd encrypt:(NSString*)encrypt;
 //更新个人信息
 + (void)updateInfo:(NSString*)tel nick:(NSString*)nick;
-//帐号
+//账号
 + (Account*)unarchiverAccount;
 //第一次启动
 + (BOOL)firstRunning;

@@ -262,7 +262,7 @@
             }
         }
         if (!boo) {
-            NSString *msg=@"修改失败,帐号不存在!";
+            NSString *msg=@"修改失败,账号不存在!";
             if ([stauts isEqualToString:@"1"]) {
                 msg=@"修改失败,原密码错误!";
             }

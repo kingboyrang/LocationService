@@ -416,15 +416,21 @@
         return;
     }
 
-    NSString *affection=@"";
+    NSMutableArray *affects=[NSMutableArray array];
+    NSMutableString *affection=[NSMutableString stringWithString:@""];
     if ([cell4.textField.text length]>0) {
-        affection=[NSString stringWithFormat:@"%@,1",cell4.textField.text];
+        [affects addObject:cell4.textField.text];
     }
     if ([cell5.textField.text length]>0) {
-        affection=[NSString stringWithFormat:@"%@|%@,2",affection,cell5.textField.text];
+        [affects addObject:cell5.textField.text];
     }
     if ([cell6.textField.text length]>0) {
-        affection=[NSString stringWithFormat:@"%@|%@,3",affection,cell6.textField.text];
+        [affects addObject:cell6.textField.text];
+    }
+    NSString *str=@"";
+    for (int i=0; i<affects.count; i++) {
+        str=i!=affects.count-1?@"|":@"";
+        [affection appendFormat:@"%@,%d%@",[affects objectAtIndex:i],i+1,str];
     }
     
     NSString *sos=cell2.hasValue?[NSString stringWithFormat:@"%@,1",[cell2.textField.text Trim]]:@"";
