@@ -400,10 +400,24 @@
     UIButton *btn=(UIButton*)[self.navBarView viewWithTag:301];
     if ([btn.currentTitle isEqualToString:@"编辑"]) {
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
+          TrajectoryMessage *entity=self.cells[indexPath.row];
         ExceptionViewController *control=[[ExceptionViewController alloc] init];
-        control.Entity=self.cells[indexPath.row];
+        control.Entity=entity;
         [self.navigationController pushViewController:control animated:YES];
         [control release];
+        
+        //删除行
+        if (self.removeList&&[self.removeList count]>0&&[self.removeList.allKeys containsObject:entity.ID]) {
+            [self.removeList removeObjectForKey:entity.ID];
+        }
+        if (self.readList&&[self.readList count]>0&&[self.readList.allKeys containsObject:entity.ID]) {
+           [self.readList removeObjectForKey:entity.ID];
+        }
+        [self.cells removeObjectAtIndex:indexPath.row];
+        [_tableView beginUpdates];
+        [_tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationNone];
+        [_tableView endUpdates];
+        
     }else{
         if (!self.removeList) {
             self.removeList=[NSMutableDictionary dictionary];

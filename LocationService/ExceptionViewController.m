@@ -9,7 +9,8 @@
 #import "ExceptionViewController.h"
 #import "ExceptionPaoView.h"
 @interface ExceptionViewController ()
--(void)cleanMap;
+- (void)cleanMap;
+- (void)readRemove;
 @end
 
 @implementation ExceptionViewController
@@ -58,6 +59,23 @@
     r.size.height-=44;
     _mapView= [[BMKMapView alloc]initWithFrame:r];
     [self.view addSubview:_mapView];
+    
+    //标记已读
+    [self readRemove];
+    
+}
+//标记已读
+- (void)readRemove{
+    ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
+    args.serviceURL=DataWebservice1;
+    args.serviceNameSpace=DataNameSpace1;
+    args.methodName=@"BatchHandleAlarmData";
+    args.soapParams=[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:self.Entity.ID,@"id", nil], nil];
+    [self.serviceHelper asynService:args success:^(ServiceResult *result) {
+        
+    } failed:^(NSError *error, NSDictionary *userInfo) {
+        
+    }];
 }
 -(void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];

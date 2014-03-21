@@ -84,7 +84,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
     //self.navigationController.navigationBar.translucent = NO;
     self.navigationController.delegate=self;
     
@@ -299,6 +298,15 @@
 }
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    //更新记录总数
+    if([self canShowTrajectory])
+    {
+        [self loadingReadCountWithId:self.selectedSupervision.ID];
+    }else{
+        [self updateInfoUI:0];
+    }
+    
     [self.navBarView setCompassButtonWithTarget:self action:@selector(buttonCompassClick)];
     [self.navBarView setTargetButtonWithTarget:self action:@selector(buttonTargetClick)];
     [self.navBarView setMonitorButtonWithTarget:self action:@selector(buttonMonitorClick)];
@@ -348,8 +356,7 @@
     _mapView.showsUserLocation = YES;//显示定位图层
 }
 - (void)loadSupervision{
-    
-    
+
     Account *acc=[Account unarchiverAccount];
     ServiceArgs *args=[[[ServiceArgs alloc] init] autorelease];
     args.serviceURL=DataWebservice1;
@@ -574,9 +581,6 @@
 {
    
     if ([view.annotation isKindOfClass:[KYPointAnnotation class]]) {//选中监管目标
-        
-       
-        
         KYPointAnnotation *elem=(KYPointAnnotation*)view.annotation;
         int index=elem.tag-100;
         SupervisionPerson *entity=self.cells[index];
