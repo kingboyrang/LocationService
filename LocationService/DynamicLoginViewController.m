@@ -282,15 +282,15 @@
                 }];
                 
             }else{
-               [self hideLoadingFailedWithTitle:@"输入的账号或密码错误,请重新输入!" completed:nil];
+               [self hideLoadingFailedWithTitle:@"输入的帐号或密码错误,请重新输入!" completed:nil];
             }
             
         }else{
-           [self hideLoadingFailedWithTitle:@"输入的账号或密码错误,请重新输入!" completed:nil];
+           [self hideLoadingFailedWithTitle:@"输入的帐号或密码错误,请重新输入!" completed:nil];
         }
         
     } failed:^(NSError *error, NSDictionary *userInfo) {
-        [self hideLoadingFailedWithTitle:@"输入的账号或密码错误,请重新输入!" completed:nil];
+        [self hideLoadingFailedWithTitle:@"输入的帐号或密码错误,请重新输入!" completed:nil];
     }];
 
 }

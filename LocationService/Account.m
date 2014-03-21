@@ -115,6 +115,7 @@
 }
 + (void)registerLoginWithAccount:(Account*)entity{
     Account *acc=[Account unarchiverAccount];
+    acc.WorkNo=entity.WorkNo;
     acc.isLogin=YES;
     acc.Way=@"1";
     acc.UserId=entity.UserId;

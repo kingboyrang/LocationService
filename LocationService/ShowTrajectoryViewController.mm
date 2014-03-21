@@ -22,6 +22,8 @@
 - (void)cleanMap;
 - (void)loadingHistory;
 - (void)loadingPointAnnotations;
+//画简头
+- (void)addArrow:(CLLocationCoordinate2D *)coords count:(NSInteger)count arrowDegrees:(float)degree arrowLength:(double)length;
 @end
 
 @implementation ShowTrajectoryViewController
@@ -77,6 +79,7 @@
         isFirstLoad=NO;
         [self cleanMap];
         [self loadingHistory];
+        //[self loadingPointAnnotations];
     }
     
 }
@@ -206,18 +209,13 @@
                         
                     };
                     self.list=[arr sortedArrayUsingComparator:cmptr];//降序排序
-//                    for (TrajectoryHistory *item in self.list) {
-//                        NSLog(@"time=%@",item.pctime);
-//                    }
                     
                 }else{
                     self.list=[NSArray array];
                 }
                 //重新加载地图
                 [self loadingPointAnnotations];
-                [self hideLoadingViewAnimated:^(AnimateLoadView *hideView) {
-                  
-                }];
+                [self hideLoadingViewAnimated:nil];
             }
         }
         if (!boo) {
@@ -232,6 +230,23 @@
 - (void)loadingPointAnnotations
 {
     [self cleanMap];
+    /***
+    if (self.list&&[self.list count]>0) {
+        NSInteger len=self.list.count;
+       
+         CLLocationCoordinate2D *coors = (CLLocationCoordinate2D*)malloc( len * sizeof( CLLocationCoordinate2D));
+        for (int i=0; i<self.list.count; i++) {
+            TrajectoryHistory *entity=self.list[i];
+            coors[i].latitude=[entity.Latitude floatValue];
+            coors[i].longitude=[entity.Longitude floatValue];
+
+        }
+        //画箭头
+        [self addArrow:coors count:len arrowDegrees:45 arrowLength:8];
+       
+        return;
+    }
+     ***/
     if (self.list&&[self.list count]>0) {
         int numPoints=self.list.count;
         // 添加折线覆盖物
@@ -263,10 +278,74 @@
         [_mapView addOverlay:polyline];
     }
 }
+//画箭头
+- (void)addArrow:(CLLocationCoordinate2D *)coords count:(NSInteger)count arrowDegrees:(float)degree arrowLength:(double)r{
+    if (count<2) {
+        return;
+    }
+    double angle=degree*M_PI/180;//箭头和主线的夹角
+    for(NSInteger i =1;i<count;i++){ //在拐点处绘制箭头
+        BMKMapPoint pixelStart=BMKMapPointForCoordinate(coords[i-1]);
+        BMKMapPoint pixelEnd=BMKMapPointForCoordinate(coords[i]);
+        double delta=0; //主线斜率，垂直时无斜率
+        double param=0; //代码简洁考虑
+        double pixelTemX,pixelTemY;//临时点坐标
+        double pixelX,pixelY,pixelX1,pixelY1;//箭头两个点
+        if(pixelEnd.x-pixelStart.x==0){ //斜率不存在是时
+            pixelTemX=pixelEnd.x;
+            if(pixelEnd.y>pixelStart.y)
+            {
+                pixelTemY=pixelEnd.y-r;
+            }
+            else
+            {
+                pixelTemY=pixelEnd.y+r;
+            }
+            //已知直角三角形两个点坐标及其中一个角，求另外一个点坐标算法
+            pixelX=pixelTemX-r*tan(angle);
+            pixelX1=pixelTemX+r*tan(angle);
+            pixelY=pixelY1=pixelTemY;
+        }
+        else  //斜率存在时
+        {
+            delta=(pixelEnd.y-pixelStart.y)/(pixelEnd.x-pixelStart.x);
+            param=sqrt(delta*delta+1);
+            
+            if((pixelEnd.x-pixelStart.x)<0) //第二、三象限
+            {
+                pixelTemX=pixelEnd.x+ r/param;
+                pixelTemY=pixelEnd.y+delta*r/param;
+            }
+            else//第一、四象限
+            {
+                pixelTemX=pixelEnd.x- r/param;
+                pixelTemY=pixelEnd.y-delta*r/param;
+            }
+            //已知直角三角形两个点坐标及其中一个角，求另外一个点坐标算法
+            pixelX=pixelTemX+ tan(angle)*r*delta/param;
+            pixelY=pixelTemY-tan(angle)*r/param;
+            
+            pixelX1=pixelTemX- tan(angle)*r*delta/param;
+            pixelY1=pixelTemY+tan(angle)*r/param;
+        }
+        CLLocationCoordinate2D pointArrow=BMKCoordinateForMapPoint(BMKMapPointMake(pixelX, pixelY));
+        CLLocationCoordinate2D pointArrow1=BMKCoordinateForMapPoint(BMKMapPointMake(pixelX1, pixelY1));
+        
+        CLLocationCoordinate2D coors[3] = {0};
+        coors[0]=pointArrow;
+        coors[1]=coords[i];
+        coors[2]=pointArrow1;
+        BMKPolyline* polyline = [BMKPolyline polylineWithCoordinates:coors count:3];
+        [_mapView addOverlay:polyline];
+    }
+    
+    //画线
+    BMKPolyline* polyline = [BMKPolyline polylineWithCoordinates:coords count:count];
+    [_mapView addOverlay:polyline];
+}
 -(void)cleanMap
 {
     [_mapView removeOverlays:_mapView.overlays];
-    //[_mapView removeAnnotations:_mapView.annotations];
     NSArray* array = [NSArray arrayWithArray:_mapView.annotations];
     [_mapView removeAnnotations:array];
 }

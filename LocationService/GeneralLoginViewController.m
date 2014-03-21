@@ -71,10 +71,10 @@
     [self.view addSubview:_tableView];
     
     TKLabelCell *cell1=[[[TKLabelCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
-    cell1.label.text=@"账号";
+    cell1.label.text=@"帐号";
     
     TKTextFieldCell *cell2=[[[TKTextFieldCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
-    cell2.textField.placeholder=@"请输入账号/手机号";
+    cell2.textField.placeholder=@"请输入帐号/手机号";
     cell2.textField.layer.borderWidth=2.0;
     cell2.textField.layer.cornerRadius=5.0;
     cell2.textField.layer.borderColor=[UIColor colorFromHexRGB:@"4a7ebb"].CGColor;
@@ -263,12 +263,12 @@
     
     TKTextFieldCell *cell1=self.cells[1];
     if (!cell1.hasValue) {
-        [AlertHelper initWithTitle:@"提示" message:@"请输入账号/手机号!"];
+        [AlertHelper initWithTitle:@"提示" message:@"请输入帐号/手机号!"];
         [cell1.textField becomeFirstResponder];
         return;
     }
     if (![self isUIDString]) {
-        [AlertHelper initWithTitle:@"提示" message:@"账号只能输入字母、数字、下划线!"];
+        [AlertHelper initWithTitle:@"提示" message:@"帐号只能输入字母、数字、下划线!"];
         [cell1.textField becomeFirstResponder];
         return;
     }
@@ -332,13 +332,13 @@
             }
         }
         if (!boo) {
-            [self hideLoadingFailedWithTitle:@"输入的账号或密码错误,请重新输入!" completed:^(AnimateErrorView *failedView) {
+            [self hideLoadingFailedWithTitle:@"输入的帐号或密码错误,请重新输入!" completed:^(AnimateErrorView *failedView) {
                 submit.enabled=YES;
             }];
         }
         
     } failed:^(NSError *error, NSDictionary *userInfo) {
-        [self hideLoadingFailedWithTitle:@"输入的账号或密码错误,请重新输入!" completed:^(AnimateErrorView *failedView) {
+        [self hideLoadingFailedWithTitle:@"输入的帐号或密码错误,请重新输入!" completed:^(AnimateErrorView *failedView) {
             submit.enabled=YES;
         }];
     }];

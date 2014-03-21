@@ -59,7 +59,7 @@
     Account *acc=[Account unarchiverAccount];
     
     TKLabelCell *cell1=[[[TKLabelCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
-    cell1.label.text=@"账号";
+    cell1.label.text=@"帐号";
     
     TKTextFieldCell *cell2=[[[TKTextFieldCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
     cell2.textField.layer.borderWidth=2.0;
@@ -211,14 +211,14 @@
             NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:[node.InnerText dataUsingEncoding:NSUTF8StringEncoding] options:1 error:nil];
             if ([[dic objectForKey:@"Result"] isEqualToString:@"1"]) {
                 boo=YES;
+                [self hideLoadingViewAnimated:^(AnimateLoadView *hideView) {
+                    [Account updateInfo:[cell1.textField.text Trim] nick:[cell2.textField.text Trim]];
+                    [self.navigationController popViewControllerAnimated:YES];
+                }];
+                return;
             }
         }
-        if (boo) {
-            [self hideLoadingViewAnimated:^(AnimateLoadView *hideView) {
-                [Account updateInfo:[cell1.textField.text Trim] nick:[cell2.textField.text Trim]];
-                [self.navigationController popViewControllerAnimated:YES];
-            }];
-        }else{
+        if (!boo) {
             [self hideLoadingFailedWithTitle:@"个人信息更新失败!" completed:nil];
         }
     } failed:^(NSError *error, NSDictionary *userInfo) {

@@ -25,7 +25,7 @@
     UIImageView *_accountImageView;
     UIImageView *_phoneImageView;
     
-    BOOL isExistsNumber;//账号是否已存在
+    BOOL isExistsNumber;//帐号是否已存在
     BOOL isExistsPhone;//手机号码是否已存在
     
     LoginButtons *_toolBar;
@@ -97,7 +97,7 @@
     
     
     TKLabelCell *cell1=[[[TKLabelCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
-    cell1.label.text=@"账号";
+    cell1.label.text=@"帐号";
     
     _showInfo=[[UILabel alloc] initWithFrame:CGRectMake(50, 5, self.view.bounds.size.width-50, 20)];
     _showInfo.textColor=[UIColor redColor];
@@ -113,7 +113,7 @@
     
     
     TKTextFieldCell *cell2=[[[TKTextFieldCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
-    cell2.textField.placeholder=@"请输入账号";
+    cell2.textField.placeholder=@"请输入帐号";
     cell2.textField.delegate=self;
     cell2.textField.keyboardType=UIKeyboardTypeAlphabet;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textUserChange:) name:UITextFieldTextDidChangeNotification object:nil];
@@ -215,13 +215,13 @@
     
     TKTextFieldCell *cell1=self.cells[1];
     if (!cell1.hasValue) {
-        [AlertHelper initWithTitle:@"提示" message:@"账号不为空!"];
+        [AlertHelper initWithTitle:@"提示" message:@"帐号不为空!"];
         [cell1.textField becomeFirstResponder];
         return;
     }
     if(isExistsNumber)
     {
-        [AlertHelper initWithTitle:@"提示" message:@"账号已被注册,请重新输入!"];
+        [AlertHelper initWithTitle:@"提示" message:@"帐号已被注册,请重新输入!"];
         [cell1.textField becomeFirstResponder];
         return;
     }
@@ -309,6 +309,7 @@
                 [self hideLoadingViewAnimated:nil];
                 boo=YES;
                 Account *acc=[[[Account alloc] init] autorelease];
+                acc.WorkNo=node.Value;
                 acc.UserId=[cell1.textField.text Trim];
                 acc.Password=[cell4.textField.text Trim];
                 acc.Name=[cell2.textField.text Trim];
@@ -323,7 +324,7 @@
         if(!boo)
         {
             if ([status isEqualToString:@"Exists"]) {
-                msg=@"账号已存在!";
+                msg=@"帐号已存在!";
             }
             [self hideLoadingFailedWithTitle:msg completed:nil];
         }
@@ -345,12 +346,12 @@
     [self dismissViewControllerAnimated:YES completion:nil];
      ***/
 }
-//检测账号
+//检测帐号
 - (void)textUserChange:(NSNotification*)notifice{
     UITextField *field=[notifice object];
     TKTextFieldCell *cell=self.cells[1];
     if (cell.textField==field) {
-        //检测账号
+        //检测帐号
         NSString *acc=[field.text Trim];
         if([acc length]>0)
         {
@@ -372,7 +373,7 @@
         }
     }
 }
-//判断账号是否存在
+//判断帐号是否存在
 - (void)updateShowInfo:(NSString*)user{
    
     //TKTextFieldCell *cell=self.cells[1];
@@ -394,19 +395,19 @@
             }else{
                 isExistsNumber=YES;
                 _accountImageView.hidden=YES;
-                _showInfo.text=@"账号已被注册!";
+                _showInfo.text=@"帐号已被注册!";
                 _showInfo.textColor=[UIColor redColor];
             }
         }else{
             isExistsNumber=NO;
             _accountImageView.hidden=YES;
-            _showInfo.text=@"账号检测异常!";
+            _showInfo.text=@"帐号检测异常!";
             _showInfo.textColor=[UIColor redColor];
         }
     } failed:^(NSError *error, NSDictionary *userInfo) {
         isExistsNumber=NO;
         _accountImageView.hidden=YES;
-        _showInfo.text=@"账号检测异常!";
+        _showInfo.text=@"帐号检测异常!";
         _showInfo.textColor=[UIColor redColor];
     }];
 }
@@ -475,7 +476,7 @@
 {
     // return NO to not change text
     BOOL boo=YES;
-    TKTextFieldCell *cell=self.cells[1];//账号
+    TKTextFieldCell *cell=self.cells[1];//帐号
      TKTextFieldCell *cell4=self.cells[3];//昵称
     TKTextFieldCell *cell3=self.cells[5];
     if (cell.textField==textField||cell3.textField==textField) {
@@ -484,7 +485,7 @@
            
             if(strlen([textField.text UTF8String]) >= 11 && range.length != 1)
                 boo=NO;
-        }else{//账号
+        }else{//帐号
             if(strlen([textField.text UTF8String]) >= 20 && range.length != 1)
                 boo=NO;
             }

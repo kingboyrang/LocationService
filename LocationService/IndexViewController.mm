@@ -546,6 +546,9 @@
    
     [self setChoosetTarget];
    
+    if ([self.cells count]==0) {
+        [_mapView setCenterCoordinate:userLocation.coordinate];
+    }
     
     //当前中心点
    
