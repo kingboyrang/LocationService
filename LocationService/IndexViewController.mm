@@ -128,7 +128,6 @@
         coor.latitude=[entity.Latitude floatValue];
         coor.longitude=[entity.Longitude floatValue];
         [_mapView setCenterCoordinate:coor];
-        currentCenterCoor=coor;
         self.laglnt=entity.ID;
         //[NSString stringWithFormat:@"%@,%@",entity.Latitude,entity.Longitude];
         if (![NetWorkConnection locationServicesEnabled]) {//表示未开启定位功能
@@ -211,6 +210,7 @@
 //更新一次
 - (void)changedAdTimer:(NSTimer *)timer
 {
+    [self startUserLocation];//当前定位
     [self loadSupervision];
 }
 - (void)setOrginTrajectorySupersion{
@@ -383,8 +383,6 @@
                     coor.longitude=[entity.Longitude floatValue];
                     KYPointAnnotation* item = [[KYPointAnnotation alloc] init];
                     item.laglnt=entity.ID;
-                    //[NSString stringWithFormat:@"%@,%@",entity.Latitude,entity.Longitude];
-                    //NSLog(@"%@,%@",entity.Latitude,entity.Longitude);
                     item.coordinate =coor;
                     item.title=@"当前位置";
                     item.tag=100+i;
@@ -400,9 +398,9 @@
             }
            
         }
-      [self setOrginTrajectorySupersion];//重设
+      [self setOrginTrajectorySupersion];//加载记录总数
     } failed:^(NSError *error, NSDictionary *userInfo) {
-        [self setOrginTrajectorySupersion];//重设
+        [self setOrginTrajectorySupersion];//加载记录总数
     }];
 }
 -(void)cleanMap
@@ -445,14 +443,13 @@
 {
     
      BMKPinAnnotationView *newAnnotation = (BMKPinAnnotationView*)[mapView viewForAnnotation:annotation];
-     NSString *AnnotationViewID = @"renameMark";
+    NSString *AnnotationViewID =@"renameMark";
      if ([annotation isKindOfClass:[KYPointAnnotation class]]) {
         AnnotationViewID = [NSString stringWithFormat:@"renameMark%d",[(KYPointAnnotation*)annotation tag]];
      }
      if (newAnnotation == nil) {
          newAnnotation = [[BMKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:AnnotationViewID];
-         // 设置颜色
-         ((BMKPinAnnotationView*)newAnnotation).pinColor = BMKPinAnnotationColorRed;
+        
          if ([annotation isKindOfClass:[KYPointAnnotation class]]) {
              int pos=[(KYPointAnnotation*)annotation tag]-100;
              //自定义图片
@@ -472,8 +469,10 @@
              newAnnotation.paopaoView=paopao;
              [paopao release];
          }else{
+             // 设置颜色
+             ((BMKPinAnnotationView*)newAnnotation).pinColor = BMKPinAnnotationColorRed;
              // 从天上掉下效果
-             //((BMKPinAnnotationView*)newAnnotation).animatesDrop = YES;
+             ((BMKPinAnnotationView*)newAnnotation).animatesDrop = YES;
          }
      }else{
          if ([annotation isKindOfClass:[KYPointAnnotation class]]) {
@@ -485,7 +484,7 @@
 }
 - (void)mapView:(BMKMapView *)mapView1 didUpdateUserLocation:(BMKUserLocation *)userLocation
 {
-   /***
+   /******/
     BMKCoordinateRegion region;
     region.center.latitude  = userLocation.location.coordinate.latitude;
     region.center.longitude = userLocation.location.coordinate.longitude;
@@ -495,7 +494,7 @@
     {
         _mapView.region = region;
     }
-    ***/
+    
     _mapView.showsUserLocation=NO;
 }
 //定位失败
@@ -508,30 +507,28 @@
 
 }
 - (void)setChoosetTarget{
-    //NSLog(@"lat=%f,log=%f",currentCenterCoor.latitude,currentCenterCoor.longitude);
-    if (currentCenterCoor.latitude>0&&currentCenterCoor.longitude>0) {
-        //设置监管目标选中
-        if (_mapView.annotations&&[_mapView.annotations count]>0) {
-            NSArray* arr = [NSArray arrayWithArray:_mapView.annotations];
-            for (NSInteger i = 0;i<[arr count];i++) {
-                id elem = [arr objectAtIndex:i];
-                if ([elem isKindOfClass:[KYPointAnnotation class]]) {
-                    KYPointAnnotation *annotation=(KYPointAnnotation*)elem;
-                    if([annotation.laglnt isEqualToString:self.laglnt])
-                    {
-                        [_mapView selectAnnotation:annotation animated:YES];
-                         [_mapView setCenterCoordinate:currentCenterCoor];
-                        self.laglnt=@"";
-                        currentCenterCoor.latitude=0.0;
-                        currentCenterCoor.longitude=0.0;
-                        break;
-                    }
-                }
-                
-            }
-        }
-       
+    if ([self canShowTrajectory]) {
+        self.laglnt=self.selectedSupervision.ID;
     }
+    //设置监管目标选中
+    if (_mapView.annotations&&[_mapView.annotations count]>0) {
+        NSArray* arr = [NSArray arrayWithArray:_mapView.annotations];
+        for (NSInteger i = 0;i<[arr count];i++) {
+            id elem = [arr objectAtIndex:i];
+            if ([elem isKindOfClass:[KYPointAnnotation class]]) {
+                KYPointAnnotation *annotation=(KYPointAnnotation*)elem;
+                if([annotation.laglnt isEqualToString:self.laglnt])
+                {
+                    [_mapView selectAnnotation:annotation animated:YES];
+                    [_mapView setCenterCoordinate:annotation.coordinate];
+                    self.laglnt=@"";
+                    break;
+                }
+            }
+            
+        }
+    }
+
 }
 //定位停止
 -(void)mapViewDidStopLocatingUser:(BMKMapView *)mapView{
@@ -541,7 +538,6 @@
     userLocation.title = @"当前位置";
     currentCoor= userLocation.coordinate;//保存当前定位
     [_mapView addAnnotation:userLocation];
-    
     /***
     BMKPointAnnotation *annotation=[[BMKPointAnnotation alloc] init];
     annotation.title=@"当前位置";
