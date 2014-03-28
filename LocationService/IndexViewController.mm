@@ -484,7 +484,7 @@
 }
 - (void)mapView:(BMKMapView *)mapView1 didUpdateUserLocation:(BMKUserLocation *)userLocation
 {
-   /******/
+   /***
     BMKCoordinateRegion region;
     region.center.latitude  = userLocation.location.coordinate.latitude;
     region.center.longitude = userLocation.location.coordinate.longitude;
@@ -494,7 +494,7 @@
     {
         _mapView.region = region;
     }
-    
+    ***/
     _mapView.showsUserLocation=NO;
 }
 //定位失败
@@ -507,9 +507,11 @@
 
 }
 - (void)setChoosetTarget{
+    /***
     if ([self canShowTrajectory]) {
         self.laglnt=self.selectedSupervision.ID;
     }
+     ***/
     //设置监管目标选中
     if (_mapView.annotations&&[_mapView.annotations count]>0) {
         NSArray* arr = [NSArray arrayWithArray:_mapView.annotations];
