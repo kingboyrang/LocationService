@@ -19,6 +19,10 @@
 		010516EF1887C2300013C59F /* circule.png in Resources */ = {isa = PBXBuildFile; fileRef = 010516EE1887C2300013C59F /* circule.png */; };
 		010813A01862D04500EB3EC1 /* RegisterSuccessViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0108139F1862D04400EB3EC1 /* RegisterSuccessViewController.m */; };
 		0110088118C42C4C00112E46 /* libbaidumapapi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0110088018C42C4C00112E46 /* libbaidumapapi.a */; };
+		01161DC619176197006E9352 /* load01.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 01161DC219176197006E9352 /* load01.jpg */; };
+		01161DC719176197006E9352 /* load01@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 01161DC319176197006E9352 /* load01@2x.jpg */; };
+		01161DC819176197006E9352 /* load02.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 01161DC419176197006E9352 /* load02.jpg */; };
+		01161DC919176197006E9352 /* load02@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 01161DC519176197006E9352 /* load02@2x.jpg */; };
 		011B7A961887B63700785C57 /* BMKAnnotationView+TPCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 011B7A951887B63700785C57 /* BMKAnnotationView+TPCategory.m */; };
 		012097CF185ECA6600437EA3 /* load01.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 012097CB185ECA6600437EA3 /* load01.jpg */; };
 		012097D0185ECA6600437EA3 /* load01@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 012097CC185ECA6600437EA3 /* load01@2x.jpg */; };
@@ -67,7 +71,6 @@
 		016924C818618DE60040E0C9 /* WBSuccessNoticeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 016924BA18618DE60040E0C9 /* WBSuccessNoticeView.m */; };
 		016924CA18618ECE0040E0C9 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 016924C918618ECE0040E0C9 /* CoreLocation.framework */; };
 		016924CD1862984C0040E0C9 /* LoginButtons.m in Sources */ = {isa = PBXBuildFile; fileRef = 016924CC1862984C0040E0C9 /* LoginButtons.m */; };
-		016924CF1862A33C0040E0C9 /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 016924CE1862A33C0040E0C9 /* Entitlements.plist */; };
 		0171E32D1887753C0090E02B /* ico14.png in Resources */ = {isa = PBXBuildFile; fileRef = 0171E32B1887753C0090E02B /* ico14.png */; };
 		0171E32E1887753C0090E02B /* ico13.png in Resources */ = {isa = PBXBuildFile; fileRef = 0171E32C1887753C0090E02B /* ico13.png */; };
 		0173DFE218B1E93300215FBE /* dirce2.png in Resources */ = {isa = PBXBuildFile; fileRef = 0173DFE118B1E93300215FBE /* dirce2.png */; };
@@ -282,6 +285,10 @@
 		0108139E1862D04400EB3EC1 /* RegisterSuccessViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegisterSuccessViewController.h; sourceTree = "<group>"; };
 		0108139F1862D04400EB3EC1 /* RegisterSuccessViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegisterSuccessViewController.m; sourceTree = "<group>"; };
 		0110088018C42C4C00112E46 /* libbaidumapapi.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libbaidumapapi.a; sourceTree = "<group>"; };
+		01161DC219176197006E9352 /* load01.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = load01.jpg; sourceTree = "<group>"; };
+		01161DC319176197006E9352 /* load01@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "load01@2x.jpg"; sourceTree = "<group>"; };
+		01161DC419176197006E9352 /* load02.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = load02.jpg; sourceTree = "<group>"; };
+		01161DC519176197006E9352 /* load02@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "load02@2x.jpg"; sourceTree = "<group>"; };
 		011B7A941887B63700785C57 /* BMKAnnotationView+TPCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "BMKAnnotationView+TPCategory.h"; sourceTree = "<group>"; };
 		011B7A951887B63700785C57 /* BMKAnnotationView+TPCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "BMKAnnotationView+TPCategory.m"; sourceTree = "<group>"; };
 		012097CB185ECA6600437EA3 /* load01.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = load01.jpg; sourceTree = "<group>"; };
@@ -398,7 +405,6 @@
 		016924C918618ECE0040E0C9 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		016924CB1862984C0040E0C9 /* LoginButtons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginButtons.h; sourceTree = "<group>"; };
 		016924CC1862984C0040E0C9 /* LoginButtons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginButtons.m; sourceTree = "<group>"; };
-		016924CE1862A33C0040E0C9 /* Entitlements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Entitlements.plist; sourceTree = "<group>"; };
 		0171E32B1887753C0090E02B /* ico14.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ico14.png; sourceTree = "<group>"; };
 		0171E32C1887753C0090E02B /* ico13.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ico13.png; sourceTree = "<group>"; };
 		0173DFE118B1E93300215FBE /* dirce2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dirce2.png; sourceTree = "<group>"; };
@@ -1287,7 +1293,6 @@
 		01BE3FCE185EACB6005C25D9 = {
 			isa = PBXGroup;
 			children = (
-				016924CE1862A33C0040E0C9 /* Entitlements.plist */,
 				01BE3FE0185EACB6005C25D9 /* LocationService */,
 				01BE3FD9185EACB6005C25D9 /* Frameworks */,
 				01BE3FD8185EACB6005C25D9 /* Products */,
@@ -1383,6 +1388,10 @@
 		01BE4002185EAFD2005C25D9 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				01161DC219176197006E9352 /* load01.jpg */,
+				01161DC319176197006E9352 /* load01@2x.jpg */,
+				01161DC419176197006E9352 /* load02.jpg */,
+				01161DC519176197006E9352 /* load02@2x.jpg */,
 				01553E9018D920940048627B /* pinArrow_r.png */,
 				01799C8218B5D4C00098C151 /* Icon-120.png */,
 				01799C8018B5D4240098C151 /* Icon-80.png */,
@@ -1678,7 +1687,6 @@
 				01BE3FEF185EACB6005C25D9 /* Default@2x.png in Resources */,
 				01BE3FF1185EACB6005C25D9 /* Default-568h@2x.png in Resources */,
 				01FCC2D3188638C9008F7B5D /* InfoPlist.strings in Resources */,
-				016924CF1862A33C0040E0C9 /* Entitlements.plist in Resources */,
 				0195139718852887003255D5 /* Icon-Small@2x.png in Resources */,
 				019513A118852A06003255D5 /* ico15.png in Resources */,
 				0195139818852887003255D5 /* Icon.png in Resources */,
@@ -1710,6 +1718,7 @@
 				0104B628186BC752009C7507 /* corner.png in Resources */,
 				0195139F18852997003255D5 /* topico.png in Resources */,
 				015B62891869599300E488F2 /* bg02.png in Resources */,
+				01161DC719176197006E9352 /* load01@2x.jpg in Resources */,
 				0171E32D1887753C0090E02B /* ico14.png in Resources */,
 				0195139518852887003255D5 /* Icon-Small-50.png in Resources */,
 				012B32A61869881C00717CDD /* MonitorView.xib in Resources */,
@@ -1720,17 +1729,20 @@
 				01C5FB90186C134B009986BF /* blueArrowDown.png in Resources */,
 				01C5FB91186C134B009986BF /* blueArrowDown@2x.png in Resources */,
 				019513B118852AA7003255D5 /* ico11.png in Resources */,
+				01161DC619176197006E9352 /* load01.jpg in Resources */,
 				01C5FB97186C2153009986BF /* MessageView.xib in Resources */,
 				01A4C78F187BE54E00B3963D /* ico05.png in Resources */,
 				0171E32E1887753C0090E02B /* ico13.png in Resources */,
 				0142C1A318C46E9600000FD6 /* mapapi.bundle in Resources */,
 				01A4C78D187BE54E00B3963D /* ico04.png in Resources */,
+				01161DC919176197006E9352 /* load02@2x.jpg in Resources */,
 				019513AC18852AA7003255D5 /* ico06.png in Resources */,
 				01799C8118B5D4240098C151 /* Icon-80.png in Resources */,
 				01A4C788187BE54E00B3963D /* ico01f.png in Resources */,
 				019513A518852A14003255D5 /* ico17.png in Resources */,
 				0128098F187AAAC5009AE37D /* RightAccessory.png in Resources */,
 				019513A318852A0E003255D5 /* ico16.png in Resources */,
+				01161DC819176197006E9352 /* load02.jpg in Resources */,
 				01BD3A28187A5E7100B2F513 /* DownAccessory.png in Resources */,
 				01BD3A29187A5E7100B2F513 /* DownAccessory@2x.png in Resources */,
 				01280990187AAAC5009AE37D /* RightAccessory@2x.png in Resources */,
@@ -1938,9 +1950,9 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
+				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: 澜洲 吴 (M3F85US4G2)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Bai Fu (KJ93M4ECNB)";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -1962,8 +1974,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "-lxml2";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "C5363CB4-D274-4533-9F69-AC4DDCB33C8C";
-				SDKROOT = iphoneos6.1;
+				PROVISIONING_PROFILE = "CE0F8A35-B83F-4EA0-9508-C7467501BCEF";
+				SDKROOT = iphoneos7.1;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = "armv7 armv7s";
 			};
@@ -1980,9 +1992,9 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
+				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Maxense Corp. (B9R2MVL97F)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Bai Fu (KJ93M4ECNB)";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -1997,8 +2009,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				OTHER_LDFLAGS = "-lxml2";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "28B27919-62E2-4773-BCFE-115E5918FF5C";
-				SDKROOT = iphoneos6.1;
+				PROVISIONING_PROFILE = "CE0F8A35-B83F-4EA0-9508-C7467501BCEF";
+				SDKROOT = iphoneos7.1;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VALID_ARCHS = "armv7 armv7s";
@@ -2008,20 +2020,21 @@
 		01BE3FFE185EACB6005C25D9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: 澜洲 吴 (M3F85US4G2)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Bai Fu (KJ93M4ECNB)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LocationService/LocationService-Prefix.pch";
 				INFOPLIST_FILE = "LocationService/LocationService-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\\\"$(SRCROOT)/LocationService\\\"",
 					/Users/aJia/Desktop/Project/LocationService/LocationService,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "C5363CB4-D274-4533-9F69-AC4DDCB33C8C";
-				SDKROOT = iphoneos;
+				PROVISIONING_PROFILE = "CE0F8A35-B83F-4EA0-9508-C7467501BCEF";
+				SDKROOT = iphoneos7.1;
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
@@ -2031,20 +2044,21 @@
 		01BE3FFF185EACB6005C25D9 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Maxense Corp. (B9R2MVL97F)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Bai Fu (KJ93M4ECNB)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LocationService/LocationService-Prefix.pch";
 				INFOPLIST_FILE = "LocationService/LocationService-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\\\"$(SRCROOT)/LocationService\\\"",
 					/Users/aJia/Desktop/Project/LocationService/LocationService,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "28B27919-62E2-4773-BCFE-115E5918FF5C";
-				SDKROOT = iphoneos;
+				PROVISIONING_PROFILE = "CE0F8A35-B83F-4EA0-9508-C7467501BCEF";
+				SDKROOT = iphoneos7.1;
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;

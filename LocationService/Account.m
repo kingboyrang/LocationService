@@ -78,6 +78,9 @@
         if ([dic objectForKey:@"WorkNo"]!=nil) {
             acc.WorkNo=[dic objectForKey:@"WorkNo"];
         }
+        if ([dic objectForKey:@"Account"]!=nil) {
+            acc.UserId=[dic objectForKey:@"Account"];
+        }
     }
     [acc save];
 }
@@ -97,6 +100,9 @@
         }
         if ([dic objectForKey:@"WorkNo"]!=nil) {
             acc.WorkNo=[dic objectForKey:@"WorkNo"];
+        }
+        if ([dic objectForKey:@"Account"]!=nil) {
+            acc.UserId=[dic objectForKey:@"Account"];
         }
     }
     [acc save];
